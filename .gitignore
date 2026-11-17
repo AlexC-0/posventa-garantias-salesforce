@@ -1,0 +1,39 @@
+# Autenticación y configuración local Salesforce
+.sf/
+.sfdx/
+.local/
+.auth/
+auth/
+*auth-url*
+*sfdx-url*
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+credentials*.json
+secrets*.json
+.env
+.env.*
+!.env.example
+
+# Dependencias, resultados y temporales
+node_modules/
+coverage/
+test-results/
+playwright-report/
+logs/
+*.log
+dist/
+build/
+tmp/
+temp/
+.dx-staging/
+*.tsbuildinfo
+.eslintcache
+
+# Configuración local del editor y sistema
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
