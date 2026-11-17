@@ -1,0 +1,21 @@
+# Archivos excluidos de las operaciones de metadatos de Salesforce CLI.
+# More information: https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_exclude_source.htm
+#
+
+package.xml
+
+# LWC configuration files
+**/jsconfig.json
+**/.eslintrc.json
+
+# LWC Jest
+**/__tests__/**
+
+node_modules/
+# Autenticación, herramientas locales y marcadores de directorio
+.sf/
+.sfdx/
+.local/
+.dx-staging/
+.vscode/
+**/.gitkeep

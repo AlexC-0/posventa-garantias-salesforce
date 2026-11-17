@@ -6,15 +6,15 @@ Trabaja exclusivamente en `posventa-garantias-salesforce`. No inspecciones, copi
 
 Antes de modificar, confirma ruta, instrucciones aplicables y existencia de Git; si existe, comprueba raíz, rama, remotos y `git status --short --branch`. Conserva cambios del usuario. Lee README.md, docs/PROJECT_BRIEF.md, docs/STATUS.md y docs/ENVIRONMENT.md. Escribe principalmente en castellano.
 
-Sesión 01: inspección, viabilidad y documentación inicial. No implementar todavía aplicación, modelo, permisos, Flow, Apex ni LWC; tampoco desplegar ni modificar organizaciones. El siguiente encargo debe delimitar la continuación.
+Encargo vigente — sesión 02: completar herramientas, autenticar una organización independiente identificada, comprobar sus capacidades solo en lectura y generar una estructura Salesforce DX mínima cuando la CLI esté operativa. La sesión 01 queda como histórico documental. No implementar todavía objetos/campos personalizados, permisos funcionales, Flow, Apex ni LWC; no desplegar ni crear datos o configuración de negocio. No declarar terminado el entorno mientras falten herramientas operativas, organización comprobada o API contrastada.
 
 ## Protección de organizaciones y datos
 
-Preferir Developer Edition independiente si las capacidades reales permiten la V1. No reutilizar automáticamente Playground, organización autenticada ni destino predeterminado. Antes de conectar, confirmar que el destino pertenece a este proyecto y está autorizado; usar alias explícito en cada comando remoto. Un alias por sí solo no prueba la identidad.
+Preferir Developer Edition independiente si las capacidades reales permiten la V1. No reutilizar automáticamente Playground, organización autenticada ni destino predeterminado. Antes de conectar, confirmar que el destino pertenece a este proyecto y está autorizado. Comprobar que el alias p04-posventa-dev no esté ocupado por otra organización antes de autenticar mediante navegador; usar destino explícito en cada comando remoto. Un alias por sí solo no prueba la identidad. La creación de cuenta, activación, contraseña y MFA corresponden a Alex.
 
 No cambiar destinos globales ni configuraciones de otras tareas. No imprimir ni versionar tokens, contraseñas, claves, archivos de autenticación, URLs reutilizables de acceso ni salidas completas que puedan contenerlos. No usar `sf org display` para producir informes ni exportar autenticaciones. Acceso y MFA exclusivamente mediante navegador oficial, nunca credenciales por chat.
 
-Datos de aplicación ficticios y política de garantía simulada. Sin producción, compras de licencias, comunicaciones reales ni integraciones externas. No instalar ni actualizar herramientas globales automáticamente. Documentar los requisitos que falten.
+Datos de aplicación ficticios y política de garantía simulada. Sin producción, compras de licencias, comunicaciones reales ni integraciones externas. No instalar ni actualizar herramientas globales automáticamente salvo autorización expresa. En la sesión 02 Alex autorizó a Codex instalar Salesforce CLI, Salesforce Extension Pack y JDK 21; conservar Java 8 y configurar el nuevo JDK solo para este proyecto. También autorizó conectar Playwright a su perfil de Chrome para trabajar exclusivamente en Salesforce. Estas autorizaciones no permiten consultar otras pestañas ni modificar organizaciones ajenas. Documentar versiones, verificaciones y límites reales.
 
 ## Diseño y verificación
 
@@ -30,4 +30,4 @@ Alex realiza exclusivamente staging, commits, push y creación del remoto. A pet
 
 Dejar archivos sin staging. Entregar ruta y estado Git inicial/final, archivos, versiones, comprobaciones y límites, intervención de Alex y siguiente paso.
 
-Convención inicial propuesta: `tipo(ámbito): descripción en castellano`, con tipos como docs, chore, feat, fix o test según el cambio real. No se ha recibido una nomenclatura previa más específica: adaptar si Alex la facilita. La Description explica resultado, verificación y pendientes sin atribuir funcionalidades inexistentes.
+Convención indicada por Alex: `tipo: descripción en castellano`, sin ámbitos innecesarios como `(inicio)`. Usar docs, chore, feat, fix o test según el cambio real. La Description explica resultado, verificación y pendientes sin atribuir funcionalidades inexistentes.

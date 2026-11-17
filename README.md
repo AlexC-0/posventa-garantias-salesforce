@@ -2,12 +2,12 @@
 
 Proyecto 04 de CHAMBA DIARIA. Aplicación interna propuesta para agentes de soporte y una persona responsable, con datos ficticios y una política de garantía simulada.
 
-## Estado inicial
+## Estado actual
 
-**Parcialmente preparado — sesión 01, 17 de noviembre de 2026.** Base documental independiente creada. Salesforce CLI y las extensiones Salesforce no se han detectado; la organización dedicada está pendiente de creación o identificación y autenticación. No hay aplicación, proyecto DX generado, API validada, despliegues ni pruebas de producto.
+**Parcialmente preparado — sesión 02, 17 de noviembre de 2026.** Salesforce CLI 2.158.7, Salesforce Extension Pack 68.10.0 y JDK 21.0.13 instalados; Java 8 conservado. Estructura DX mínima creada con API 68.0 provisional. El alta de Developer Edition devuelve un rechazo antifraude de Salesforce; no hay organización confirmada ni autenticación. Capacidades, licencias, API remota e integración Apex/JDK pendientes. Sin aplicación, pruebas de producto ni despliegues.
 
 Carpeta: `C:\Users\kaosk\source\repos\posventa-garantias-salesforce`.
-Repositorio local inicializado en `main` por Codex a petición expresa de Alex. Sin commits ni remoto; seis archivos sin staging. Alex lo añadirá a GitHub Desktop y realizará personalmente commits y publicación.
+Repositorio: [AlexC-0/posventa-garantias-salesforce](https://github.com/AlexC-0/posventa-garantias-salesforce), rama `main`, remoto `origin`. Base documental publicada por Alex en [d90c228](https://github.com/AlexC-0/posventa-garantias-salesforce/commit/d90c2286b9103aedf03a636567403c8369a2572d), comprobada localmente y mediante el conector GitHub. Los cambios de esta sesión quedan sin staging; Alex realiza commits y push.
 
 ## Alcance V1
 
@@ -22,4 +22,4 @@ Quedan fuera portal público, Experience Cloud, comunicaciones reales, OmniChann
 - [Estado y siguiente paso](docs/STATUS.md).
 - [Entorno, requisitos y preparación pendiente](docs/ENVIRONMENT.md).
 
-Primero completar el entorno y comprobar en lectura una organización independiente. La sesión 01 no autoriza implementar modelo, permisos, Flow, Apex ni LWC.
+El encargo vigente permite preparar las herramientas, autenticar la organización dedicada, comprobarla en lectura y generar DX mínimo. Completar primero los [pasos del entorno](docs/ENVIRONMENT.md). No implementar todavía modelo, permisos, Flow, Apex ni LWC.
