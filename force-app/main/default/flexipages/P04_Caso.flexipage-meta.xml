@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Ficha propia P04: acciones existentes, consulta de garantía y detalles estándar.</description>
+    <flexiPageRegions><itemInstances><componentInstance><componentName>force:highlightsPanel</componentName><identifier>p04Highlights</identifier></componentInstance></itemInstances><name>header</name><type>Region</type></flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances><componentInstance><componentName>c:p04ConsultaCaso</componentName><identifier>p04Consulta</identifier></componentInstance></itemInstances>
+        <itemInstances><componentInstance><componentName>force:detailPanel</componentName><identifier>p04Details</identifier></componentInstance></itemInstances>
+        <name>main</name><type>Region</type>
+    </flexiPageRegions>
+    <flexiPageRegions><itemInstances><componentInstance><componentName>forceChatter:recordFeedContainer</componentName><identifier>p04Feed</identifier></componentInstance></itemInstances><name>p04FeedContent</name><type>Facet</type></flexiPageRegions>
+    <flexiPageRegions><itemInstances><componentInstance>
+        <componentInstanceProperties><name>active</name><value>true</value></componentInstanceProperties>
+        <componentInstanceProperties><name>body</name><value>p04FeedContent</value></componentInstanceProperties>
+        <componentInstanceProperties><name>title</name><value>Gestión del caso</value></componentInstanceProperties>
+        <componentName>flexipage:tab</componentName><identifier>p04FeedTab</identifier>
+    </componentInstance></itemInstances><name>p04SidebarTabs</name><type>Facet</type></flexiPageRegions>
+    <flexiPageRegions><itemInstances><componentInstance>
+        <componentInstanceProperties><name>tabs</name><value>p04SidebarTabs</value></componentInstanceProperties>
+        <componentName>flexipage:tabset</componentName><identifier>p04Sidebar</identifier>
+    </componentInstance></itemInstances><name>sidebar</name><type>Region</type></flexiPageRegions>
+    <masterLabel>P04 Caso de posventa</masterLabel>
+    <sobjectType>Case</sobjectType>
+    <template><name>flexipage:recordHomeTemplateDesktop</name></template>
+    <type>RecordPage</type>
+</FlexiPage>

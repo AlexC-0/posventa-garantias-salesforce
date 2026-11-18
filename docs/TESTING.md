@@ -1,3 +1,63 @@
+# Comprobaciones de consulta — sesión 07
+
+Destino exclusivo p04-posventa-dev, API 68.0, base publicada eca51b8. Confirmar identidad con P04-Common y conservar cambios posteriores antes de desplegar. [CONSULTA](CONSULTA.md) define contrato, ubicación y demostración; [STATUS](STATUS.md) distingue pruebas ejecutadas y límites.
+
+## Frontend reproducible
+
+Node 24.x, npm 11.x y runner oficial 8.0.0 fijado. No había paquete frontend anterior. Desde la raíz P04:
+
+```powershell
+npm ci
+npm run test:lwc
+npm run test:lwc:coverage
+npm audit
+```
+
+Ejecutados realmente npm ci, pruebas con cobertura, npm ls --all y auditoría: 23/23 tests, 98,18 % líneas, 93,75 % ramas, cero vulnerabilidades y sin errores de engines/peers. Jest usa los stubs estándar para Lightning; navegación y respuesta Apex se simulan. No sustituye permisos, página real ni pruebas de integración. La configuración CJS resuelve el motor oficial para Jest 29 sin modificar dependencias instaladas. Los casos cubren carga, datos/fechas, ausencia, histórico, diferencias/nulls, vacío visible, refresco, navegación, error/reintento, limpieza y respuestas tardías.
+
+## Despliegue y Apex
+
+Manifiesto incremental de ocho componentes; requiere sesiones 03–06 presentes. Comando para repetir el despliegue con todas las suites:
+
+```powershell
+sf project deploy start --manifest manifest/sesion07.xml --target-org p04-posventa-dev --test-level RunSpecifiedTests --tests P04ModeloTest --tests P04SeguridadTest --tests P04GarantiaTest --tests P04CicloTest --tests P04ConsultaCasoTest --wait 5 --json
+```
+
+Despliegue satisfactorio real: ocho componentes con las 13 pruebas nuevas, cero errores. Ajuste final de FlexiPage: un componente, Succeeded, sin cambios Apex. Regresión posterior sobre el código final ejecutada de forma secuencial: 20 modelo + 20 seguridad + 25 garantía + 28 ciclo + 13 consulta = **106/106**. No se atribuyen los 106 a un despliegue único que solo ejecutó la suite nueva.
+
+Repetición de pruebas sobre lo desplegado:
+
+```powershell
+./scripts/Test-Consulta.ps1 -ExpectedOrgId '<identificador privado P04 verificado>'
+```
+
+El wrapper reproduce las cinco llamadas apex run test --synchronous --class-names <suite>, con cobertura. Se ejecutaron esas llamadas y se revisó la sintaxis del wrapper; no se duplicó la regresión solo para invocarlo. Evitar la ejecución asíncrona paralela de estas clases: sus fixtures comparten GroupMember de la cola y un intento produjo UNABLE_TO_LOCK_ROW. No se cambió la opción global de pruebas paralelas ni se modificaron las cuatro suites anteriores.
+
+| Consulta Apex | Evidencia |
+| --- | --- |
+| Agente propio / responsable permitido | Respuesta OK y valores correctos |
+| Ajeno / sin permisos / producto oculto | NO_DISPONIBLE, sin datos parciales |
+| FLS de serie retirada | Caso visible y Asset legible, SerialNumber no legible: rechazo completo |
+| Relacionados | Oculto más reciente excluido, cinco accesibles, actual excluido, orden y empate por Id |
+| Datos opcionales / sin evaluación / vacío | Nulls reales y lista vacía |
+| Consulta tras corrección de producto | Datos actuales distintos, instantánea preservada, cero DML y LastModifiedDate intacto |
+| Entradas inválidas / registro eliminado | Respuesta indistinguible de inaccesible |
+| Retirada de permisos | Nueva consulta denegada |
+
+Usuarios y permiso sin serie creados solo dentro de tests y revertidos. Shares administrativos de fixtures separados de consultas USER_MODE. Las fechas CreatedDate artificiales quedan limitadas a pruebas de orden: no se utilizan para preparar el fixture de evaluación. No se desactivan reglas, no hay SeeAllData ni bypass de test en producción.
+
+## Demostración real y limpieza
+
+Ejecutados con el usuario persistente en escenario Agente: Sin evaluar, datos actuales, relacionado permitido y navegación, evaluación explícita existente, Actualizar y resultado persistido, corrección administrativa del Asset temporal, aviso de reevaluación con instantánea conservada y serie ausente. Panel a anchos 1536/960; en el estrecho clientWidth=scrollWidth=456. Las lecturas administrativas contrastan persistencia/autoría, no se atribuyen al usuario ordinario.
+
+No se repitió el cierre UI ni la función responsable en esta sesión: cerrado histórico/errores/reintentos se prueban visualmente con Jest, permisos y acceso en Apex, y el ciclo conserva sus 28 pruebas. Procedimiento completo y paso opcional de cerrado en CONSULTA.
+
+Al terminar: salir de Login As, escenario Ninguno, eliminar solo los tres Cases identificados y después el Asset temporal; restaurar política previa false y recargar para comprobarla. Preservar ocho originales y sus dos casos sin evaluar. Evidencias privadas fuera de Git; no publicar IDs, usuarios internos, URLs de acceso o capturas sin revisar.
+
+## Histórico — Sesión 06
+
+Los resultados siguientes pertenecen al encargo anterior; no se han vuelto a ejecutar todas sus demostraciones UI.
+
 # Comprobaciones del ciclo — sesión 06
 
 Base publicada 70ecc63; destino exclusivo p04-posventa-dev, API 68.0. Leer [CICLO](CICLO.md) y [STATUS](STATUS.md). Confirmar organización y administrador con P04-Common antes de escribir. Revisar diferencias remotas pertinentes y conservar cambios posteriores del usuario. No usar destinos predeterminados, destructivos ni recuperaciones masivas.

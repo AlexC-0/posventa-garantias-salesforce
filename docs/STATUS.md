@@ -1,3 +1,90 @@
+# Estado — Sesión 07 completada, pendiente de commit y push de Alex
+
+18 de noviembre de 2026. LWC de consulta integrado y comprobado en Salesforce. Informe de pendientes, integraciones y cierre global V1 quedan fuera.
+
+## Git, alcance y entorno
+
+Ruta/raíz: C:\Users\kaosk\source\repos\posventa-garantias-salesforce. Rama main; origin https://github.com/AlexC-0/posventa-garantias-salesforce.git. Inicio limpio en HEAD/origin/main locales eca51b8e12a8af438859f80e214eca3a5497f602, sesión 06 publicada por Alex según el encargo. Sin nueva lectura de la punta remota. HEAD se conserva y los cambios quedan sin staging. No se hicieron commits, push, tags, releases ni publicaciones.
+
+Organización P04 y administrador contrastados antes de escribir; API 68.0 y alias explícito p04-posventa-dev. Sin Gmail, otras organizaciones, comunicaciones o cuentas persistentes nuevas. CLI 2.158.7, extensiones Salesforce 68.10.0 y JDK 21.0.13 conservados. Node 24.13.0 y npm 11.6.2 existentes. No había herramientas frontend en el repositorio: se añade un paquete raíz privado con el runner oficial sfdx-lwc-jest 8.0.0 y package-lock.json, exclusivamente desarrollo local.
+
+## Implementación
+
+`p04ConsultaCaso` usa componentes estándar Lightning, etiquetas castellanas y disposición adaptable. Muestra producto/serie/fechas actuales, incidencia, siete valores de evaluación y hasta cinco relacionados visibles. Distingue Sin evaluar y Pendiente_datos; compara cuatro fechas incluyendo ausencias para avisar de reevaluación en abiertos, sin calcular cobertura. Cerrados se presentan como históricos. Date conserva el día con UTC; DateTime muestra zona.
+
+`P04ConsultaCaso.consultar` acepta solo caseId, resuelve el Asset desde el caso autorizado, exige ámbito/permisos P04 y consulta con with sharing y USER_MODE. Rechazo completo y genérico ante falta de acceso a objetos, campos o relaciones; no presenta restricciones como null. Relacionados del mismo producto, P04, excluyendo actual, CreatedDate DESC e Id DESC, LIMIT 5 después del acceso, sin recuentos ni filtrado de ocultos en cliente. Sin DML ni helpers de integridad para retornar datos.
+
+Actualización imperativa sin caché de cliente, mediante Actualizar. La evaluación sigue siendo la acción existente y exige otra actualización del panel. Cada petición limpia contenido anterior; navegación, errores y desconexión invalidan respuestas tardías. Se conservan permisos de edición de los siete campos, compartición y todos los controles del ciclo.
+
+Página propia P04_Caso y asignaciones versionadas en P04_Posventa: Case.P04_Posventa, P04_Minimo y Admin, Large. Cabecera, detalles y publicador en pestaña estándar Gestión del caso. Los tres permission sets solo añaden acceso a la clase de consulta. La recuperación previa de la aplicación confirmó que no había asignaciones de página propias; sus cuatro flags de navegación existentes se preservan explícitamente. No se modifican otras aplicaciones, páginas, perfiles o ajustes globales de soporte. Detalle en [CONSULTA](CONSULTA.md).
+
+## Despliegue y pruebas reales
+
+Despliegue satisfactorio de **8 componentes**, con **13/13 pruebas nuevas**, cero errores. Después se ajustó únicamente la FlexiPage (un componente ya incluido), Succeeded y cero errores, para alojar el publicador en una pestaña estándar. El manifiesto final conserva ocho componentes distintos. La página final fue comprobada en la interfaz; no hubo cambios Apex después de la regresión satisfactoria.
+
+| Suite | Resultado final |
+| --- | --- |
+| P04ModeloTest | 20/20 |
+| P04SeguridadTest | 20/20 |
+| P04GarantiaTest | 25/25 |
+| P04CicloTest | 28/28 |
+| P04ConsultaCasoTest | 13/13 |
+| Total Apex | **106/106** |
+| LWC Jest | **23/23** |
+
+La regresión final se ejecutó clase por clase con apex run test --synchronous --code-coverage. Un intento asíncrono paralelo anterior produjo UNABLE_TO_LOCK_ROW en preparación de membresías de cola compartida entre suites; no cuenta como éxito. Se resolvió ejecutando secuencialmente, sin cambiar configuración global, aserciones ni clases anteriores. Test-Consulta reproduce los mismos comandos, con comprobación de destino; no se volvió a ejecutar otra regresión redundante usando el wrapper.
+
+Apex nuevo: agente propio, responsable permitido, ajeno y usuario sin permisos rechazados; FLS real de SerialNumber ausente mediante permiso aislado de test, con caso visible; producto inaccesible; cinco relacionados, orden/empate/exclusión y oculto más reciente; opcionales/null/sin evaluación/vacío; revocación; entradas inválidas/eliminadas; cero DML y conservación de instantánea/LastModifiedDate al consultar. Los usuarios son aislados; fixtures y shares administrativos se distinguen de llamadas restringidas USER_MODE. Las cuatro suites publicadas permanecen sin cambios.
+
+Jest: carga accesible, secciones y campos, fechas y zona, sin evaluar/Pendiente_datos, diferencias de las cuatro fechas y nulls, histórico cerrado, opcionales, vacío visible, navegación estándar, actualización tras evaluar, error/acceso/reintento, respuestas inválidas, respuesta/error tardíos y desconexión. Mocks de frontend no acreditan permisos Salesforce. Cobertura JavaScript del runner final: 98,18 % líneas y 93,75 % ramas; no es cobertura Apex ni una auditoría integral de accesibilidad.
+
+Instalación reproducible npm ci y npm ls --all sin problemas de engines/peers. npm audit final: **cero vulnerabilidades**, incluidas dependencias de desarrollo. Persisten avisos de obsolescencia de dependencias transitivas del runner oficial. No se usan force, legacy-peer-deps ni cambios globales.
+
+## Interfaz ordinaria comprobada
+
+Un único usuario reutilizable, perfil mínimo y escenario Agente temporal. Preparación administrativa: un Asset ficticio y tres Cases identificados (principal y relacionado propios; tercero reservado al administrador), referenciando cliente/contacto originales. Sin correos. Las escrituras de preparación no se atribuyen al usuario ordinario.
+
+1. Página P04 real: producto/fechas actuales, Sin evaluar y solo el relacionado visible. El caso reservado no aparece. Navegación estándar al relacionado confirmada por ruta, título y nuevo contenido.
+2. Evaluar garantía mediante la acción existente: confirmación guardada. Antes de pulsar Actualizar, el panel aún decía Sin evaluar; después mostró En cobertura y los siete valores persistidos. Lectura administrativa confirma propietario y autor ordinarios.
+3. Se corrigió solo el fin del producto temporal y se vació su serie. Actualizar mostró fin actual distinto, No consta en serie, instantánea anterior En cobertura y aviso de reevaluación. Lectura posterior confirmó que los siete campos y la autoría del caso no cambiaron.
+4. Revisión visual en escritorio a ancho de ventana 1536 y 960; panel estrecho de 456 px sin desbordamiento horizontal propio (scrollWidth=clientWidth). Se restauró el tamaño anterior. El aviso promocional estándar Go Mobile puede superponerse; no forma parte del LWC ni se cambió una preferencia global para ocultarlo.
+
+Los rechazos de acceso/relación/FLS, límites/empates y revocación se acreditan en Apex y estados visuales en Jest; no se afirma nueva UI de responsable/revocación ni REST ordinaria independiente. El histórico cerrado se prueba en Jest y se conserva la regresión del ciclo; esta sesión no repitió el cierre UI de sesión 06. Las consultas administrativas de contraste no son pruebas ejecutadas como usuario ordinario.
+
+## Incidencias resueltas y límites
+
+El primer despliegue se revirtió por el nombre del componente estándar de detalles; se corrigió a force:detailPanel. Un fixture nuevo combinaba modificación artificial de CreatedDate con escritura sellada de garantía y recibía GUARDADO_RECHAZADO; las fechas artificiales se acotaron a las pruebas de orden, manteniendo la aserción de evaluación y sin tocar el servicio publicado. Los posteriores 13 tests y la regresión completa pasaron.
+
+El runner inicialmente consultado por defecto era 7.9.0; la auditoría señalaba tres avisos bajos corregidos en 8.0.0, cuya disponibilidad se comprobó. Se fijó 8.0.0. Su resolver dirigía lwc al main ESM incompatible con Jest 29; jest.config.js lo dirige a la distribución CJS oficial del mismo paquete, sin parchear node_modules ni sustituir el motor por un mock. Las 23 pruebas volvieron a pasar después de npm ci.
+
+Tras activar la página, Lightning conservaba la presentación anterior hasta una recarga completa. El publicador mostró carga diferida inconsistente y se integró en Gestión del caso mediante componentes estándar; la evaluación real confirma su disponibilidad final. Los timeouts/selectores y capturas anteriores no se contabilizan como pruebas exitosas.
+
+No se acreditan concurrencia real, dispositivo móvil, API ordinaria con OAuth propio, producción ni CI remota. El panel requiere Actualizar después de otras acciones; no se promete sincronización automática. Informe, integraciones y cierre global V1 pendientes de otro encargo.
+
+## Restauración, revisión local y entrega
+
+Se salió de Login As, se retiraron conjuntos y membresías temporales y se eliminaron exclusivamente los tres casos registrados y después su Asset temporal, sin purga. Auditoría final: ocho originales preservados, dos casos originales sin evaluar, garantía/serie originales conservadas; usuario activo P04_Minimo sin rol, conjuntos adicionales, grupos ni casos propios; administrador preservado y dos licencias Salesforce ocupadas. Login Access Policies vuelve a false, verificado tras recarga.
+
+Revisión local final: 136 archivos UTF-8 válidos, 79 XML analizados, 13 scripts PowerShell sin errores sintácticos, 49 enlaces locales y 118 referencias de miembros de manifiestos resueltas. Cinco exclusiones privadas comprobadas, barrido de identidades/secretos y git diff --check satisfactorios. Git final: main en eca51b8, 13 archivos modificados y 16 nuevos, cero archivos en staging. No se versionan identidades, autenticaciones ni evidencias privadas. Resultados en .local/s07-local-verification.json, s07-deploy-4.json, s07-page-deploy.json, s07-tests-*.json, s07-jest.json, s07-npm-audit.json, s07-ui-*.json, s07-api-*.json, s07-final-audit.json y s07-policy-restored.json. Los intentos fallidos se conservan aparte como históricos de diagnóstico.
+
+Archivos: LWC y sus tests; P04ConsultaCaso/P04ConsultaCasoTest; FlexiPage y aplicación; tres accesos de clase; manifiesto; package/lock/Jest; Test-Consulta; documentación e instrucciones. Sin cambios en las cuatro suites publicadas, servicio de garantía, ciclo, triggers, modelo o compartición.
+
+Summary: `feat: añadir consulta de garantías en la ficha del caso`
+
+Description:
+
+- Incorpora un LWC de solo lectura con producto actual, evaluación registrada y hasta cinco casos relacionados visibles.
+- Protege consultas con CRUD/FLS y compartición; añade actualización explícita, estados accesibles y control de respuestas tardías.
+- Integra la página propia en P04 conservando evaluación, propietario y cierre.
+- Supera 106 pruebas Apex y 23 Jest; comprueba el panel con usuario ordinario y conserva los ocho originales tras limpiar temporales y restaurar concesiones.
+- Documenta contrato, despliegue, demostración y límites. Informe y cierre global V1 quedan para otro encargo.
+
+Alex revisa, hace staging, commit y push manuales. Después se podrá contrastar el commit publicado; no se inicia otro encargo.
+
+## Histórico — Sesión 06 publicada en eca51b8
+
+Los estados y pendientes siguientes pertenecen a aquella sesión; no describen la sesión 07 actual.
+
 # Estado — Sesión 06 completada, pendiente de commit y push de Alex
 
 18 de noviembre de 2026. Recorrido de creación, cola, gestión individual, evaluación explícita, seguimiento y cierre implementado y demostrado. Informe, LWC e integraciones quedan fuera; no se inicia otra fase.

@@ -1,0 +1,8 @@
+{
+  "name": "posventa-garantias-salesforce",
+  "private": true,
+  "version": "0.0.0",
+  "engines": { "node": "24.x", "npm": "11.x" },
+  "scripts": { "test:lwc": "sfdx-lwc-jest -- --runInBand", "test:lwc:coverage": "sfdx-lwc-jest -- --runInBand --coverage" },
+  "devDependencies": { "@salesforce/sfdx-lwc-jest": "8.0.0" }
+}

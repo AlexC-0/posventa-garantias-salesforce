@@ -1,0 +1,55 @@
+<template>
+    <lightning-card title="Consulta de posventa" icon-name="standard:asset_object">
+        <lightning-button slot="actions" label="Actualizar" title="Actualizar consulta sin evaluar ni guardar" onclick={actualizar} disabled={cargando}></lightning-button>
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <p class="slds-text-body_small slds-m-bottom_small">Solo consulta. Después de evaluar o editar, pulsa Actualizar.</p>
+            <template lwc:if={cargando}>
+                <div class="carga" role="status"><lightning-spinner alternative-text="Cargando consulta de posventa" size="small"></lightning-spinner></div>
+            </template>
+            <template lwc:elseif={error}><p role="alert" class="slds-text-color_error">{error}</p></template>
+            <template lwc:elseif={datos}>
+                <p role="status" class="aviso slds-m-bottom_medium">{aviso}</p>
+                <section aria-label="Datos actuales del producto" class="slds-m-bottom_medium">
+                    <h2 class="slds-text-heading_small slds-m-bottom_small">Datos actuales del producto</h2>
+                    <dl class="campos">
+                        <template for:each={actuales} for:item="campo">
+                            <div key={campo.etiqueta} class="campo"><dt>{campo.etiqueta}</dt><dd>
+                                <template lwc:if={campo.fecha}><lightning-formatted-date-time value={campo.valor} year="numeric" month="2-digit" day="2-digit" time-zone="UTC"></lightning-formatted-date-time></template>
+                                <template lwc:else><lightning-formatted-text value={campo.texto}></lightning-formatted-text></template>
+                            </dd></div>
+                        </template>
+                    </dl>
+                </section>
+                <section aria-label="Evaluación registrada" class="slds-m-bottom_medium">
+                    <h2 class="slds-text-heading_small slds-m-bottom_small">Evaluación registrada</h2>
+                    <p class="slds-text-title_bold slds-m-bottom_small" data-result>{resultado}</p>
+                    <dl class="campos">
+                        <template for:each={instantanea} for:item="campo">
+                            <div key={campo.etiqueta} class="campo"><dt>{campo.etiqueta}</dt><dd>
+                                <template lwc:if={campo.fecha}><lightning-formatted-date-time value={campo.valor} year="numeric" month="2-digit" day="2-digit" time-zone="UTC"></lightning-formatted-date-time></template>
+                                <template lwc:elseif={campo.momento}><lightning-formatted-date-time value={campo.valor} year="numeric" month="2-digit" day="2-digit" hour="2-digit" minute="2-digit" time-zone-name="short"></lightning-formatted-date-time></template>
+                                <template lwc:else><lightning-formatted-text value={campo.texto}></lightning-formatted-text></template>
+                            </dd></div>
+                        </template>
+                    </dl>
+                </section>
+                <section aria-label="Otros casos visibles del producto">
+                    <h2 class="slds-text-heading_small slds-m-bottom_small">Otros casos visibles del producto</h2>
+                    <p class="slds-text-body_small slds-m-bottom_small">Hasta cinco, del más reciente al más antiguo.</p>
+                    <template lwc:if={hayRelacionados}>
+                        <ul class="slds-has-dividers_bottom-space">
+                            <template for:each={relacionados} for:item="caso">
+                                <li key={caso.Id} class="slds-item relacionado">
+                                    <lightning-button variant="base" label={caso.CaseNumber} title={caso.enlace} data-id={caso.Id} onclick={navegar}></lightning-button>
+                                    <p><lightning-formatted-text value={caso.Subject}></lightning-formatted-text></p>
+                                    <p>{caso.estado} · <lightning-formatted-date-time value={caso.CreatedDate} year="numeric" month="2-digit" day="2-digit" hour="2-digit" minute="2-digit" time-zone-name="short"></lightning-formatted-date-time></p>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+                    <template lwc:else><p>No hay otros casos visibles de este producto</p></template>
+                </section>
+            </template>
+        </div>
+    </lightning-card>
+</template>

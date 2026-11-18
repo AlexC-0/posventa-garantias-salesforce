@@ -12,6 +12,10 @@
         <apexClass>P04EvaluarGarantiaAccion</apexClass>
         <enabled>true</enabled>
     </classAccesses>
+    <classAccesses>
+        <apexClass>P04ConsultaCaso</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
     <customPermissions>
         <enabled>true</enabled>
         <name>P04_Usar</name>

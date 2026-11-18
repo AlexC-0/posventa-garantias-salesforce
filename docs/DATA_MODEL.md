@@ -1,5 +1,7 @@
 # Modelo de datos — sesiones 03–05
 
+Sesión 07 añade [CONSULTA](CONSULTA.md), LWC de solo lectura sin nuevos campos ni cambios en las reglas de garantía/ciclo. Lecturas USER_MODE, hasta cinco relacionados visibles y actualización explícita; resultados actuales en STATUS.
+
 Contrato fijado antes de implementar. API 68.0. Datos ficticios; garantía simulada.
 
 La sesión 04 añade exclusivamente Account.P04_Posventa__c (Checkbox, false por defecto) como identificador de clientes del proyecto. El responsable crea clientes marcados mediante P04Autorizacion; no puede convertir cuentas ajenas ni desmarcar clientes. Solo administración incorpora los dos clientes de demostración existentes. Contact hereda el acceso de Account; productos y casos conservan sus tipos. Hay 13 campos propios en total. Autorización y compartición se detallan en [SECURITY](SECURITY.md); las restricciones de integridad siguientes permanecen vigentes. Las conversiones de registros ajenos mencionadas en el contrato original requieren ahora administración.
@@ -60,4 +62,4 @@ Layouts de producto/caso y aplicación Lightning P04 Posventa. Case incluye Supp
 5. Reevaluación explícita solo de abiertos; cerrados conservan evaluación.
 6. P04Ciclo exige propietario individual activo, habilitado y miembro; resolución/explicación; evaluación registrada y fechas vigentes. Pendiente_datos solo permite Sin_actuacion explicado. Matriz, inmutabilidad y Flow de cola en [CICLO](CICLO.md).
 
-Los puntos 1–5 corresponden al servicio único de sesión 05; el punto 6 se incorpora en sesión 06. La compra es opcional: sin ella puede existir cobertura si inicio y fin están presentes. Una edición posterior de producto o incidencia no recalcula la instantánea, que queda histórica hasta otra petición explícita. Detalle de atomicidad, seguridad y códigos en [GARANTIA](GARANTIA.md). No se añaden campos en sesiones 05–06. La sesión 06 incorpora transiciones y asignación; informes y LWC siguen pendientes.
+Los puntos 1–5 corresponden al servicio único de sesión 05; el punto 6 se incorpora en sesión 06. La compra es opcional: sin ella puede existir cobertura si inicio y fin están presentes. Una edición posterior de producto o incidencia no recalcula la instantánea, que queda histórica hasta otra petición explícita. Detalle de atomicidad, seguridad y códigos en [GARANTIA](GARANTIA.md). No se añaden campos en sesiones 05–06. La sesión 06 incorpora transiciones y asignación; el informe sigue pendiente; el LWC se incorpora en sesión 07.

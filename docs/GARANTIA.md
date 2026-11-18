@@ -1,5 +1,7 @@
 # Evaluación de garantía — sesiones 05–06
 
+Sesión 07 añade [CONSULTA](CONSULTA.md), LWC de solo lectura sin nuevos campos ni cambios en las reglas de garantía/ciclo. Lecturas USER_MODE, hasta cinco relacionados visibles y actualización explícita; resultados actuales en STATUS.
+
 Implementación: P04Garantia, adaptador P04EvaluarGarantiaAccion y pruebas P04GarantiaTest. API 68.0. Resultado de ejecución y límites de la evidencia en [STATUS](STATUS.md).
 
 ## Contrato de cálculo

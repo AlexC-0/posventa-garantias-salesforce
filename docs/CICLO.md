@@ -1,5 +1,7 @@
 # Ciclo de atención posventa — sesión 06
 
+Sesión 07 añade [CONSULTA](CONSULTA.md), LWC de solo lectura sin nuevos campos ni cambios en las reglas de garantía/ciclo. Lecturas USER_MODE, hasta cinco relacionados visibles y actualización explícita; resultados actuales en STATUS.
+
 El recorrido ordinario usa Case, la cola `P04_Entrada`, acciones estándar y la acción **Evaluar garantía**. No incorpora LWC, comunicaciones ni otro cálculo de cobertura. Los resultados ejecutados se registran en [STATUS](STATUS.md); este documento describe el contrato.
 
 ## Entrada y asignación

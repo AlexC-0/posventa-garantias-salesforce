@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types><members>P04ConsultaCaso</members><members>P04ConsultaCasoTest</members><name>ApexClass</name></types>
+    <types><members>p04ConsultaCaso</members><name>LightningComponentBundle</name></types>
+    <types><members>P04_Caso</members><name>FlexiPage</name></types>
+    <types><members>P04_Posventa</members><name>CustomApplication</name></types>
+    <types><members>P04_Agente</members><members>P04_Responsable</members><members>P04_DemoAdmin</members><name>PermissionSet</name></types>
+    <version>68.0</version>
+</Package>

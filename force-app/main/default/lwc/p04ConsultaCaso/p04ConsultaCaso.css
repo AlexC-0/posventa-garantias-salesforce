@@ -1,0 +1,7 @@
+:host { display: block; min-width: 0; }
+.campos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: .75rem 1rem; }
+.campo, .relacionado { min-width: 0; overflow-wrap: anywhere; }
+dt { font-weight: 600; }
+dd { margin: .125rem 0 0; }
+.aviso { border-inline-start: .25rem solid #0176d3; padding: .75rem; background: #f3f3f3; color: #181818; }
+.carga { position: relative; min-height: 5rem; }

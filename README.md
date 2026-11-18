@@ -4,36 +4,34 @@ Proyecto 04 de CHAMBA DIARIA. Aplicación interna con datos ficticios y garantí
 
 ## Estado actual
 
-**Sesión 06 completada y desplegada en P04:** creación ordinaria en Nuevo y cola, toma autorizada, gestión individual, evaluación explícita, seguimiento y cierre controlado en servidor. La asignación inicial mediante Flow solo se ejecuta al crear; editar no devuelve el caso a la cola.
+**Sesión 07 completada: consulta LWC integrada en la ficha P04.** El panel separa producto/fechas actuales de la evaluación registrada y permite navegar a un máximo de cinco casos relacionados accesibles. La página propia conserva detalles y acciones de evaluación, propietario y cierre; solo se asigna a P04 Posventa, tipo Case P04 y perfiles previstos, en escritorio.
 
-Los agentes necesitan permiso y membresía para consultar/tomar la cola. Tras la toma conservan la separación entre casos individuales. El responsable puede asignar y reasignar dentro del equipo habilitado. Los casos cerrados no admiten reapertura ni edición funcional. Cerrar exige propietario individual habilitado, resolución, explicación y evaluación vigente respecto a las cuatro fechas utilizadas; Pendiente_datos solo admite Sin_actuacion explicado.
+Sin evaluar, Pendiente de datos y evaluación histórica son estados distintos. En abiertos con fechas modificadas se avisa de reevaluación antes del cierre; los cerrados conservan su instantánea. **Actualizar solo consulta:** después de evaluar o editar hay que pulsarlo para recuperar datos nuevos. El panel no calcula cobertura ni escribe.
 
-La acción **Evaluar garantía** llama desde un Screen Flow al servicio único P04Garantia, mediante su adaptador. No duplica cálculo ni concede edición directa de los siete campos calculados. **Cerrar caso P04** es una acción estándar de actualización validada por el mismo servidor. Siguen existiendo 13 campos propios.
+P04ConsultaCaso aplica compartición explícita y USER_MODE, incluidos CRUD/FLS, ámbito y relaciones. El producto se resuelve desde el caso autorizado. Los relacionados se limitan en servidor tras aplicar acceso; sin recuentos de ocultos. Los errores no exponen detalles internos y las respuestas tardías no sustituyen el registro actual.
 
-Comprobado: **93/93 pruebas Apex**, incluidos lotes de 200, y recorrido real con el usuario ordinario hasta cierre, con rechazo de cierre incompleto, reapertura y reevaluación del cerrado. Las lecturas administrativas posteriores confirmaron persistencia. Despliegue principal de 16 componentes con las 93 pruebas; después, acción estándar de cierre y layout (dos componentes, sin cambios Apex), comprobados en la interfaz. El manifiesto final reúne 17 componentes distintos.
+Comprobado: **106/106 pruebas Apex** en cinco suites secuenciales y **23/23 pruebas Jest**. Demostración real con usuario ordinario: sin evaluar, relacionado visible y navegación, evaluación mediante la acción existente, actualización explícita, producto corregido frente a instantánea conservada y opcional ausente. Panel revisado a dos anchos, sin desbordamiento horizontal propio en el estrecho. Evidencias y límites en STATUS.
 
-Se conservan los ocho registros originales y sus dos casos sin evaluar. El único caso temporal de esta demostración se eliminó; usuario reutilizable activo en perfil mínimo, sin rol, conjuntos adicionales, grupos ni casos propios activos. Login Access Policies restaurada a false y verificada tras recarga. Ambas licencias Salesforce siguen ocupadas.
-
-Pendientes para otros encargos: informe y LWC. Sin integraciones, producción, pruebas de concurrencia real ni nueva autenticación REST ordinaria. No se atribuye esta ejecución a CI.
+Se conserva el ciclo publicado en sesión 06: alta ordinaria a cola, toma autorizada, gestión individual, evaluación explícita y cierre en servidor. Ocho originales preservados; tres casos y un producto temporales eliminados. Usuario reutilizable sin concesiones adicionales y Login As restaurado. No hay nuevas cuentas persistentes, Gmail ni comunicaciones.
 
 ## Proyecto y entrega
 
 Ruta: C:\Users\kaosk\source\repos\posventa-garantias-salesforce.
 
-Repositorio: [AlexC-0/posventa-garantias-salesforce](https://github.com/AlexC-0/posventa-garantias-salesforce), rama main. Inicio limpio en HEAD/origin/main locales 70ecc63cd69c9bdced0337ec686352199e90c97b, sesión 05 publicada por Alex según el encargo. No se ha vuelto a consultar la punta remota. Los resultados actuales corresponden al árbol local desplegado de sesión 06.
+Repositorio [AlexC-0/posventa-garantias-salesforce](https://github.com/AlexC-0/posventa-garantias-salesforce), rama main. Inicio limpio en eca51b8e12a8af438859f80e214eca3a5497f602, sesión 06 publicada por Alex según el encargo y coincidente con HEAD/origin/main locales. Sin nueva consulta de la punta remota. Los resultados actuales son del árbol local desplegado, no de ese commit ni de CI.
 
-Cambios sin staging: Alex hace staging, commit y push. API 68.0 y destino explícito p04-posventa-dev. CLI 2.158.7; extensiones Core/Apex/LWC 68.10.0 y JDK 21.0.13 conservados, sin reinstalaciones. No se crearon cuentas persistentes ni se accedió a Gmail.
+Cambios sin staging; Alex hace staging, commit y push. API 68.0 y destino explícito p04-posventa-dev. CLI 2.158.7 y herramientas Salesforce/Java conservadas. Node 24.13.0, npm 11.6.2; único paquete raíz privado y runner oficial sfdx-lwc-jest 8.0.0 con lockfile. Dependencias de desarrollo locales, sin instalaciones globales.
 
-## Documentación y demostración
+## Uso y documentación
 
-- [Ciclo, visibilidad y demostración paso a paso](docs/CICLO.md).
-- [Resultados, limpieza, límites y propuesta de commit](docs/STATUS.md).
-- [Despliegue y pruebas reproducibles](docs/TESTING.md).
+Abrir P04 Posventa → caso P04 → **Consulta de posventa**. Ejecutar **Evaluar garantía** en **Gestión del caso**, desplegando Create new... si está contraída, y pulsar **Actualizar** en el panel después de confirmar. Los casos relacionados se abren por su número. Puede ser necesaria una recarga completa tras desplegar la asignación de página.
+
+- [Consulta, seguridad, estados y demostración](docs/CONSULTA.md).
+- [Resultados, incidencias, limpieza y commit](docs/STATUS.md).
+- [Pruebas y despliegue reproducibles](docs/TESTING.md).
+- [Ciclo y cierre](docs/CICLO.md).
 - [Servicio único de garantía](docs/GARANTIA.md).
-- [Modelo e instantáneas](docs/DATA_MODEL.md).
-- [Seguridad por función](docs/SECURITY.md).
-- [Alcance V1](docs/PROJECT_BRIEF.md).
-- [Entorno histórico](docs/ENVIRONMENT.md).
-- [Reglas de trabajo](AGENTS.md).
+- [Modelo](docs/DATA_MODEL.md) y [seguridad por función](docs/SECURITY.md).
+- [Alcance V1](docs/PROJECT_BRIEF.md), [entorno histórico](docs/ENVIRONMENT.md) e [instrucciones](AGENTS.md).
 
-La demostración usa el usuario existente con escenario Agente temporal: crear → tomar → En curso → Evaluar garantía → Pendiente de información → Cerrar caso P04. Al terminar, eliminar solo el temporal identificado y volver a Ninguno. El procedimiento completo incluye verificaciones negativas y restauración. La sesión termina con la entrega para revisión y publicación manual de Alex.
+El informe de pendientes y el cierre global V1 quedan para otro encargo. No se han añadido integraciones ni se declara producción, concurrencia real, prueba móvil o nueva autenticación REST ordinaria. La sesión termina para revisión y publicación manual de Alex.

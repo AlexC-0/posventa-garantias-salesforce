@@ -1,6 +1,6 @@
 # Proyecto 04 — Alcance y diseño propuesto
 
-Actualizado en la sesión 06, 18 de noviembre de 2026. Se conserva el alcance V1. La base Account/Contact/Asset/Case, validaciones, seguridad por función y servicio único de evaluación explícita están implementados y desplegados en P04. Contrato en [DATA_MODEL](DATA_MODEL.md), permisos en [SECURITY](SECURITY.md), servicio en [GARANTIA](GARANTIA.md) y resultados en [STATUS](STATUS.md). La sesión 06 implementa ciclo y cola/asignación: [CICLO](CICLO.md). Informe y LWC siguen pendientes.
+Actualizado en la sesión 07, 18 de noviembre de 2026. Se conserva el alcance V1. La base Account/Contact/Asset/Case, validaciones, seguridad por función y servicio único de evaluación explícita están implementados y desplegados en P04. Contrato en [DATA_MODEL](DATA_MODEL.md), permisos en [SECURITY](SECURITY.md), servicio en [GARANTIA](GARANTIA.md) y resultados en [STATUS](STATUS.md). La sesión 06 implementa ciclo y cola/asignación: [CICLO](CICLO.md). La consulta LWC se incorpora en sesión 07; el informe sigue pendiente.
 
 ## Propósito y V1
 
@@ -21,7 +21,7 @@ Solo datos ficticios y garantía simulada. Excluidos: portal público, Experienc
 | Servicio Apex | Evaluación única de garantía |
 | LWC | Consulta desde la ficha del caso |
 
-Objetos y relaciones estándar verificados. La sesión 03 incorporó 12 campos, nueve reglas de validación, tipos/proceso propios y protecciones Apex. La sesión 04 añade un campo de ámbito de cliente (13 propios en total), seguridad por función, compartición y autorización separada de integridad. La sesión 05 incorpora evaluación/reevaluación explícita y un adaptador invocable, sin campos nuevos ni Flow. El cálculo se centraliza en P04Garantia; ningún otro componente lo duplica. La sesión 06 incorpora coordinación, asignación y cierre. Pendientes: informe y LWC.
+Objetos y relaciones estándar verificados. La sesión 03 incorporó 12 campos, nueve reglas de validación, tipos/proceso propios y protecciones Apex. La sesión 04 añade un campo de ámbito de cliente (13 propios en total), seguridad por función, compartición y autorización separada de integridad. La sesión 05 incorpora evaluación/reevaluación explícita y un adaptador invocable, sin campos nuevos ni Flow. El cálculo se centraliza en P04Garantia; ningún otro componente lo duplica. La sesión 06 incorpora coordinación, asignación y cierre. Sesión 07 incorpora la consulta LWC. Pendiente: informe.
 
 ## Estados y cierre
 
@@ -54,7 +54,7 @@ Decisiones fijadas en sesión 03 y concretadas en sesión 05: incoherencias se r
 
 La matriz de seguridad ordinaria ya está implementada y comprobada en sesión 04; la sesión 06 incorpora el acceso a cola con comprobación efectiva de membresía. Se utilizó un único usuario persistente con permisos secuenciales y dos agentes aislados en Apex, preservando al administrador. Los resultados y límites concretos prevalecen sobre las propuestas siguientes.
 
-El LWC en la ficha del caso mostrará producto, garantía, evaluación registrada y una lista acotada de casos relacionados accesibles. Debe cubrir carga, vacío, error y acceso restringido. El límite y la ordenación de casos relacionados están pendientes.
+El LWC implementado muestra producto/fechas actuales, evaluación registrada y hasta cinco casos P04 accesibles del mismo Asset, excluyendo actual, ordenados por CreatedDate DESC e Id DESC. Incluye carga, vacío, error/reintento, acceso restringido, Actualizar explícito y control de respuestas tardías. Contrato en [CONSULTA](CONSULTA.md).
 
 | Función | Acceso previsto |
 | --- | --- |
@@ -79,4 +79,4 @@ Comprobar licencias y usuarios disponibles antes de comprometer el esquema de pr
 11. Informe de pendientes coherente con los datos ficticios conocidos.
 12. Despliegue reproducible con resultados reales de pruebas.
 
-Los controles locales y una futura CI pueden comprobar formato, análisis y pruebas unitarias del LWC. Jest no acredita permisos ni integración Salesforce. La sesión 05 supera 65 pruebas (20 modelo, 20 seguridad y 25 garantía) y una demostración administrativa revertida. No se atribuyen UI/REST ordinarias nuevas a esta ejecución. Esto no acredita flujo completo ni todos los criterios V1. La sesión 06 se verifica por separado en STATUS: 93 pruebas y recorrido ordinario completo hasta cierre. Esa evidencia no se atribuye a los resultados históricos de sesión 05 ni completa los criterios de informe/LWC. La siguiente fase requiere otro encargo.
+Los controles locales y una futura CI pueden comprobar formato, análisis y pruebas unitarias del LWC. Jest no acredita permisos ni integración Salesforce. La sesión 05 supera 65 pruebas (20 modelo, 20 seguridad y 25 garantía) y una demostración administrativa revertida. No se atribuyen UI/REST ordinarias nuevas a esta ejecución. Esto no acredita flujo completo ni todos los criterios V1. La sesión 06 se verifica por separado en STATUS: 93 pruebas y recorrido ordinario completo hasta cierre. Esa evidencia no se atribuye a los resultados históricos de sesión 05 ni completa los criterios de informe/LWC. La sesión 07 supera 106 pruebas Apex y 23 Jest y demuestra la consulta con usuario ordinario. No completa el informe ni el cierre global V1; la siguiente fase requiere otro encargo.

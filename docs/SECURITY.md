@@ -1,5 +1,7 @@
 # Seguridad por función — sesiones 04–06
 
+Sesión 07 añade [CONSULTA](CONSULTA.md), LWC de solo lectura sin nuevos campos ni cambios en las reglas de garantía/ciclo. Lecturas USER_MODE, hasta cinco relacionados visibles y actualización explícita; resultados actuales en STATUS.
+
 Actualización de sesión 05: [P04Garantia](GARANTIA.md) permite evaluación explícita de casos propios del agente y casos editables del responsable. Conserva CRUD/FLS, grupos y compartición. Los conjuntos solo añaden acceso a las clases del servicio/adaptador. La excepción de escritura se limita a siete valores calculados e IDs autorizados mediante contexto privado, sin interruptor público; el guardián sigue rechazando ediciones directas. Regresión de estas 20 pruebas de seguridad y las 20 de modelo: sin fallos, junto con 25 pruebas nuevas de garantía. La evidencia UI descrita abajo sigue siendo la de sesión 04, no una ejecución nueva.
 
 Implementada en P04, API 68.0. Despliegue completo: 56 componentes y 40 pruebas Apex satisfactorias (20 de modelo y 20 de seguridad). Cierre operativo y revisión local en [STATUS](STATUS.md).
@@ -92,4 +94,4 @@ Los resultados privados están en .local, fuera de Git. El usuario permanece act
 
 Login Access Policies estaba desactivado y se habilitó temporalmente para Login As sin credenciales. Se cerró la sesión ordinaria y se restauró Administrators Can Log in as Any User a false, comprobado tras recarga. No se accedió a Gmail. Los fallos de selectores o intentos de guardado sin persistencia no se contaron como éxito.
 
-La evaluación pertenece a sesión 05 y queda descrita en GARANTIA. Sesión 06 completa cola, asignación, transiciones/cierre y acciones estándar, con 93 pruebas y demostración ordinaria. Su limpieza y restauración se registran por separado en STATUS. Informe y LWC quedan pendientes.
+La evaluación pertenece a sesión 05 y queda descrita en GARANTIA. Sesión 06 completa cola, asignación, transiciones/cierre y acciones estándar, con 93 pruebas y demostración ordinaria. Su limpieza y restauración se registran por separado en STATUS. El informe queda pendiente; la consulta LWC corresponde a sesión 07.
