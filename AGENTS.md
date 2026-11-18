@@ -6,9 +6,11 @@ Trabaja exclusivamente en `posventa-garantias-salesforce`. No inspecciones, copi
 
 Antes de modificar, confirma ruta, instrucciones aplicables y existencia de Git; si existe, comprueba raíz, rama, remotos y `git status --short --branch`. Conserva cambios del usuario. Lee README.md, docs/PROJECT_BRIEF.md, docs/STATUS.md y docs/ENVIRONMENT.md. Escribe principalmente en castellano.
 
-Encargo vigente — sesión 02: completar herramientas, autenticar una organización independiente identificada, comprobar sus capacidades solo en lectura y generar una estructura Salesforce DX mínima cuando la CLI esté operativa. La sesión 01 queda como histórico documental. No implementar todavía objetos/campos personalizados, permisos funcionales, Flow, Apex ni LWC; no desplegar ni crear datos o configuración de negocio. No declarar terminado el entorno mientras falten herramientas operativas, organización comprobada o API contrastada.
+Encargo vigente — sesión 03: implementar y desplegar exclusivamente en P04 el modelo mínimo Account/Contact/Asset/Case, campos, validaciones de coherencia y presentación administrativa. Se autorizan pruebas reales y una muestra ficticia pequeña, con rollback/limpieza acotada de pruebas. Preservar metadatos y datos de origen. Este encargo sustituye la prohibición temporal de implementación de la sesión 02.
 
-Estado al cierre del 18/11/2026: sesión 02 completada; organización dedicada identificada y autenticada, API 68.0 contrastada y capacidades/limitaciones documentadas. No hay despliegue ni pruebas de producto. La sesión 03 (modelo y reglas) queda propuesta, pendiente de encargo; este cierre no autoriza implementarla automáticamente.
+La evaluación automática, ciclo completo, asignación, LWC y seguridad por función quedan para fases posteriores. No crear usuarios. La siguiente fase será seguridad por función con la plaza Salesforce libre. Comprobar identidad antes de escribir; despliegue explícito sin destructivos ni recuperaciones masivas. Documentar diferencias entre pruebas administrativas, despliegue y comportamiento funcional. No declarar coherencia global sin cubrir las actualizaciones de padres y los límites conocidos.
+
+Estado de sesión 03: modelo y validaciones desplegados; 20 pruebas Apex y comprobaciones API/UI administrativas completadas. No atribuir esos resultados a roles ordinarios. La fase siguiente de seguridad requiere un nuevo encargo.
 
 ## Protección de organizaciones y datos
 
@@ -22,7 +24,7 @@ Datos de aplicación ficticios y política de garantía simulada. Sin producció
 
 ## Diseño y verificación
 
-Account, Contact, Asset y Case son la base propuesta. No sustituirlos por objetos personalizados sin documentar impedimento y alternativa. No presentar capacidades, licencias, API o resultados como verificados sin evidencia de la organización dedicada.
+Account, Contact, Asset y Case son la base implementada de la sesión 03. No sustituirlos por objetos personalizados sin documentar impedimento y alternativa. No presentar capacidades, licencias, API o resultados como verificados sin evidencia de la organización dedicada.
 
 La garantía debe tener una única lógica de evaluación; evitar duplicarla entre Flow, Apex y LWC. Las reglas funcionales y de autorización deberán aplicarse también fuera de la interfaz. Preservar evaluaciones cerradas; reevaluación explícita de abiertos. Estas son obligaciones futuras, no funcionalidades existentes.
 

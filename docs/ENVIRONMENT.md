@@ -1,5 +1,7 @@
 # Entorno y preparación — Sesión 02
 
+Este documento conserva la preparación y sus límites tal como quedaron al cerrar la sesión 02. La implementación, despliegue y pruebas posteriores de sesión 03 están en [STATUS](STATUS.md), [DATA_MODEL](DATA_MODEL.md) y [TESTING](TESTING.md); las afirmaciones históricas de ausencia de componentes no describen ya el estado actual.
+
 Fecha de cierre: 18 de noviembre de 2026. **Preparación completada dentro del alcance acordado.** La evidencia local y la inspección remota permiten comenzar el diseño del modelo; no acreditan todavía una aplicación, pruebas funcionales ni un despliegue.
 
 Proyecto: `C:\Users\kaosk\source\repos\posventa-garantias-salesforce`.

@@ -1,27 +1,34 @@
 # Atención posventa y seguimiento de garantías en Salesforce
 
-Proyecto 04 de CHAMBA DIARIA. Aplicación interna propuesta para agentes de soporte y una persona responsable, con datos ficticios y una política de garantía simulada.
+Proyecto 04 de CHAMBA DIARIA. Aplicación interna con datos ficticios y garantía simulada.
 
 ## Estado actual
 
-**Sesión 02 cerrada — 18 de noviembre de 2026.** Herramientas y arranque/indexación inicial de Apex con JDK 21 comprobados; Java 8 conservado. El Playground nuevo `P04 Posventa Garantías` está identificado como Developer Edition y autenticado por web en Salesforce CLI mediante el alias `p04-posventa-dev`, sin destinos predeterminados. API 68.0 contrastada; Account, Contact, Asset y Case, tipos de metadatos, permisos administrativos, licencias y límites comprobados por API. El alta directa sigue rechazada como antecedente, pero el entorno dedicado alternativo permite comenzar el modelo. Sin implementación funcional, pruebas de producto ni despliegues.
+**Sesión 03 completada: primera base funcional desplegada en P04.** Ya se pueden consultar y editar clientes/contactos, productos registrados y casos relacionados desde la aplicación Lightning **P04 Posventa**. Los productos y casos usan tipos de registro propios y validaciones en servidor para relaciones y fechas coherentes, también al escribir por API.
 
-Límites relevantes: dos licencias Salesforce, una usada y una libre; pruebas ordinarias propuestas de forma secuencial. Almacenamiento: 5 MB de datos y 20 MB de archivos; máximo de 15.000 solicitudes API/24 h. Manage Flow está habilitado; los indicadores separados Run Flows y Report Builder (Lightning Experience) figuran desactivados. Los permisos y accesos funcionales concretos se diseñarán y probarán después. Detalles en ENVIRONMENT y STATUS.
+Entregado: 12 campos propios, nueve reglas de validación, protecciones Apex para cambios en padres y borrados, cuatro estados de caso y proceso de soporte, dos layouts y acceso administrativo acotado. Se conservan los datos de origen, los cuatro estados estándar y las asignaciones de layout Master.
 
-Carpeta: `C:\Users\kaosk\source\repos\posventa-garantias-salesforce`.
-Repositorio: [AlexC-0/posventa-garantias-salesforce](https://github.com/AlexC-0/posventa-garantias-salesforce), rama `main`, remoto `origin`. La preparación de herramientas y DX fue publicada por Alex en [a9e7a96](https://github.com/AlexC-0/posventa-garantias-salesforce/commit/a9e7a9677232d36908a7d57e790abee0f93ed01d), comprobado en Git local y mediante el conector GitHub. La continuación del 18 de noviembre actualiza documentación y queda sin staging; Alex realiza commits y push.
+Comprobado: despliegue de 36 componentes, **20/20 pruebas Apex**, lotes de 200, cinco comprobaciones API y consulta/edición de producto y caso en la interfaz estándar con persistencia verificada por API. La muestra deja ocho registros ficticios: dos clientes, dos contactos, dos productos y dos casos. Un producto tiene garantía completa y otro incompleta; ambos casos siguen **sin evaluar**.
 
-## Alcance V1
+No están implementados el motor de evaluación, el ciclo completo de atención, la asignación automatizada, la seguridad por función, el informe ni el LWC. Las pruebas administrativas no acreditan permisos de agente/responsable ni concurrencia entre transacciones.
 
-Clientes y productos registrados, casos vinculados, evaluación de garantía, asignación inicial a cola, seguimiento y cierre, informe de pendientes, un LWC de consulta y permisos por función. Incluye como objetivos futuros pruebas, demostración y despliegue reproducibles.
+## Proyecto y revisión
 
-Quedan fuera portal público, Experience Cloud, comunicaciones reales, OmniChannel avanzado, IA, integraciones externas, conexión con proyectos anteriores, datos reales, compra de licencias y producción.
+Carpeta: C:\Users\kaosk\source\repos\posventa-garantias-salesforce.
 
-## Documentación
+Repositorio: [AlexC-0/posventa-garantias-salesforce](https://github.com/AlexC-0/posventa-garantias-salesforce), rama main. Base de esta sesión: cierre de entorno 4daa849421a9cfe91746a502cab6c2749eed1f83, publicado por Alex según el encargo y presente en HEAD/origin/main locales. No se atribuyen las comprobaciones nuevas a ese commit ni a CI.
 
+La entrega de sesión 03 queda local y sin staging; Alex realiza commit y push. API 68.0; alias explícito p04-posventa-dev, sin destinos predeterminados. Se conservan CLI 2.158.7, Core/Apex/LWC 68.10.0 y JDK 21.0.13; Java 8 del equipo no cambia.
+
+## Documentación y demostración
+
+- [Estado, resultados, incidencias y propuesta de commit](docs/STATUS.md).
+- [Modelo, campos y contratos implementados/futuros](docs/DATA_MODEL.md).
+- [Despliegue, pruebas y muestra reproducibles](docs/TESTING.md).
+- [Alcance V1](docs/PROJECT_BRIEF.md).
+- [Herramientas y evidencia histórica del entorno](docs/ENVIRONMENT.md).
 - [Reglas de trabajo](AGENTS.md).
-- [Alcance, diseño propuesto y aceptación](docs/PROJECT_BRIEF.md).
-- [Estado y siguiente paso](docs/STATUS.md).
-- [Entorno, requisitos y preparación pendiente](docs/ENVIRONMENT.md).
 
-El encargo vigente permite preparar las herramientas, autenticar la organización dedicada, comprobarla en lectura y generar DX mínimo. Las [comprobaciones del entorno](docs/ENVIRONMENT.md) quedan completadas dentro del alcance de lectura. Siguiente paso propuesto, pendiente del encargo de sesión 03: concretar modelo de datos y reglas de garantía. No implementar todavía modelo, permisos, Flow, Apex ni LWC.
+En Salesforce, abrir P04 Posventa y localizar los clientes P04 DEMO, sus contactos, productos y casos. El caso revisado desde la interfaz se titula **P04 DEMO - Caso revisado desde interfaz**; el producto Norte conserva la serie **P04-FICT-N1-REV**. Los identificadores privados están solo en .local, no en Git. No volver a crear la muestra si ya existe.
+
+Siguiente fase: **seguridad por función**, con pruebas secuenciales usando la única plaza Salesforce libre y conservando el administrador. No se crean usuarios ni se inicia esa fase automáticamente. Fuera de alcance: producción, datos reales, comunicaciones reales, compra de licencias e integración con otros proyectos.

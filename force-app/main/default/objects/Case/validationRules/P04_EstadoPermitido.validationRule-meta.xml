@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>P04_EstadoPermitido</fullName>
+    <active>true</active>
+    <description>Ámbito exclusivo del Proyecto 04.</description>
+    <errorConditionFormula>AND(RecordType.DeveloperName = "P04_Posventa", NOT(OR(ISPICKVAL(Status, "P04_Nuevo"), ISPICKVAL(Status, "P04_EnCurso"), ISPICKVAL(Status, "P04_PendienteInformacion"), ISPICKVAL(Status, "P04_Cerrado"))))</errorConditionFormula>
+    <errorDisplayField>Status</errorDisplayField>
+    <errorMessage>P04: seleccione uno de los cuatro estados de posventa.</errorMessage>
+</ValidationRule>

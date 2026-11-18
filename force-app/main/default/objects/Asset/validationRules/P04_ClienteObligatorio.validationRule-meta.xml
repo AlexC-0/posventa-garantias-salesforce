@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>P04_ClienteObligatorio</fullName>
+    <active>true</active>
+    <description>Ámbito exclusivo del Proyecto 04.</description>
+    <errorConditionFormula>AND(RecordType.DeveloperName = "P04_Producto", ISBLANK(AccountId))</errorConditionFormula>
+    <errorDisplayField>AccountId</errorDisplayField>
+    <errorMessage>P04: el producto requiere un cliente.</errorMessage>
+</ValidationRule>

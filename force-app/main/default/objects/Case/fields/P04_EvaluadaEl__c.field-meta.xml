@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>P04_EvaluadaEl__c</fullName>
+    <description>Proyecto 04. Momento de evaluación.</description>
+    <label>Momento de evaluación</label>
+    <required>false</required>
+    <type>DateTime</type>
+</CustomField>

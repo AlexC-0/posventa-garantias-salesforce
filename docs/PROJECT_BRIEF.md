@@ -1,6 +1,6 @@
 # Proyecto 04 — Alcance y diseño propuesto
 
-Fecha de referencia: 17 de noviembre de 2026. La elección del proyecto está cerrada. Las decisiones siguientes son propuestas pendientes de contraste con una organización Salesforce dedicada; no describen una aplicación implementada.
+Actualizado en la sesión 03, 18 de noviembre de 2026. Se conserva el alcance V1. La base Account/Contact/Asset/Case, campos propios y validaciones iniciales ya están implementados y desplegados en P04. El contrato concreto está en [DATA_MODEL](DATA_MODEL.md); resultados y límites en [STATUS](STATUS.md). La evaluación, ciclo completo, roles, informe y LWC siguen pendientes.
 
 ## Propósito y V1
 
@@ -21,7 +21,7 @@ Solo datos ficticios y garantía simulada. Excluidos: portal público, Experienc
 | Servicio Apex | Evaluación única de garantía |
 | LWC | Consulta desde la ficha del caso |
 
-La disponibilidad de objetos, campos y relaciones se comprobará antes de diseñar metadatos. No sustituir objetos estándar sin justificar un impedimento real. Pendientes: nombres API de campos, mecanismo de reevaluación, orden de validaciones, seguridad de registros y reparto preciso entre Flow y Apex.
+Objetos y relaciones estándar verificados. La sesión 03 incorpora 12 campos, nueve reglas de validación, tipos/proceso propios y protecciones Apex para cambios en padres y borrados. Los nombres API y la distinción entre vacío/sin evaluar y pendiente de datos están fijados en DATA_MODEL. No hay todavía servicio de evaluación, Flow ni LWC. Pendientes: seguridad por función, mecanismo de reevaluación y coordinación del ciclo.
 
 ## Estados y cierre
 
@@ -48,7 +48,7 @@ El cierre requiere responsable individual, tipo de resolución y explicación. T
 - Los casos abiertos podrán reevaluarse explícitamente. Los cerrados conservarán la evaluación.
 - Con evaluación pendiente de datos, solo admitir cierre sin actuación, explicado.
 
-Quedan por concretar la precedencia entre errores simultáneos, la referencia de fecha/zona horaria para incidencia futura y el tratamiento de cierre con dato inválido. No resolver estas ambigüedades silenciosamente durante la implementación.
+Decisiones fijadas en sesión 03: incoherencias se rechazan en servidor antes de evaluar; datos válidos incompletos podrán producir pendiente de datos; cobertura futura inclusiva. Incidencia futura respecto a TODAY() del usuario ejecutor, sin conversiones DateTime. Un guardado inválido, incluido un intento de cierre, se rechaza. El cierre con evaluación pendiente se limitará a Sin_actuacion explicado cuando se implemente el ciclo. Las validaciones pueden devolver más de un error; todavía no existe un servicio que ordene motivos de evaluación. Las instantáneas futuras no son fórmulas ni se actualizan automáticamente.
 
 ## Consulta y permisos propuestos
 
@@ -77,4 +77,4 @@ Comprobar licencias y usuarios disponibles antes de comprometer el esquema de pr
 11. Informe de pendientes coherente con los datos ficticios conocidos.
 12. Despliegue reproducible con resultados reales de pruebas.
 
-Los controles locales y una futura CI pueden comprobar formato, análisis y pruebas unitarias del LWC. Jest no acredita permisos ni integración Salesforce. Apex, automatizaciones, acceso efectivo, informes y despliegue requieren evidencia en una organización. No hay todavía tests, cobertura, despliegues ni criterios aceptados por ejecución.
+Los controles locales y una futura CI pueden comprobar formato, análisis y pruebas unitarias del LWC. Jest no acredita permisos ni integración Salesforce. Apex, automatizaciones, acceso efectivo, informes y despliegue requieren evidencia en una organización. La sesión 03 ya tiene despliegue y pruebas reales de integridad, incluidos lotes de 200, más comprobaciones API administrativas. Sus resultados no acreditan evaluación de cobertura, flujo completo, seguridad por roles ni todos los criterios V1. La siguiente sesión será seguridad por función, con pruebas secuenciales compatibles con la plaza Salesforce libre.

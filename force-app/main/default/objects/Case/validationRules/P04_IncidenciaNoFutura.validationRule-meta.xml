@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>P04_IncidenciaNoFutura</fullName>
+    <active>true</active>
+    <description>Ámbito exclusivo del Proyecto 04.</description>
+    <errorConditionFormula>AND(RecordType.DeveloperName = "P04_Posventa", AND(NOT(ISBLANK(P04_FechaIncidencia__c)), P04_FechaIncidencia__c &gt; TODAY()))</errorConditionFormula>
+    <errorDisplayField>P04_FechaIncidencia__c</errorDisplayField>
+    <errorMessage>P04: la incidencia no puede ser futura según el día del usuario.</errorMessage>
+</ValidationRule>

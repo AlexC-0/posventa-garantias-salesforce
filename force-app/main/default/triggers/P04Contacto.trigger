@@ -1,0 +1,1 @@
+trigger P04Contacto on Contact (before update, before delete) { if (Trigger.isUpdate) P04Integridad.actualizarContactos(Trigger.new, Trigger.oldMap); else P04Integridad.borrarContactos(Trigger.old); }

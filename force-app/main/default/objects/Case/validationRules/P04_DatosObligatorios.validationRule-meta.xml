@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>P04_DatosObligatorios</fullName>
+    <active>true</active>
+    <description>Ámbito exclusivo del Proyecto 04.</description>
+    <errorConditionFormula>AND(RecordType.DeveloperName = "P04_Posventa", OR(ISBLANK(AccountId), ISBLANK(ContactId), ISBLANK(AssetId), ISBLANK(P04_FechaIncidencia__c), ISBLANK(Subject)))</errorConditionFormula>
+    <errorMessage>P04: indique cliente, contacto, producto, fecha de incidencia y asunto.</errorMessage>
+</ValidationRule>

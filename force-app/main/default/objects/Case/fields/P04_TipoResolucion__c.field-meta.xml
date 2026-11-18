@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>P04_TipoResolucion__c</fullName>
+    <inlineHelpText>Preparado para el ciclo de atención posterior.</inlineHelpText>
+    <label>Tipo de resolución</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Reparacion</fullName>
+                <default>false</default>
+                <label>Reparación</label>
+            </value>
+            <value>
+                <fullName>Sustitucion</fullName>
+                <default>false</default>
+                <label>Sustitución</label>
+            </value>
+            <value>
+                <fullName>Fuera_cobertura</fullName>
+                <default>false</default>
+                <label>Atención fuera de cobertura</label>
+            </value>
+            <value>
+                <fullName>Sin_actuacion</fullName>
+                <default>false</default>
+                <label>Cierre sin actuación</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

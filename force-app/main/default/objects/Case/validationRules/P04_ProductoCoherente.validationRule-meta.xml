@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>P04_ProductoCoherente</fullName>
+    <active>true</active>
+    <description>Ámbito exclusivo del Proyecto 04.</description>
+    <errorConditionFormula>AND(RecordType.DeveloperName = "P04_Posventa", AND(NOT(ISBLANK(AssetId)), OR(ISBLANK(Asset.AccountId), Asset.AccountId &lt;&gt; AccountId, Asset.RecordType.DeveloperName &lt;&gt; "P04_Producto")))</errorConditionFormula>
+    <errorDisplayField>AssetId</errorDisplayField>
+    <errorMessage>P04: el producto debe ser de posventa y pertenecer al cliente.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>P04_ContactoCoherente</fullName>
+    <active>true</active>
+    <description>Ámbito exclusivo del Proyecto 04.</description>
+    <errorConditionFormula>AND(RecordType.DeveloperName = "P04_Producto", AND(NOT(ISBLANK(ContactId)), OR(ISBLANK(Contact.AccountId), Contact.AccountId &lt;&gt; AccountId)))</errorConditionFormula>
+    <errorDisplayField>ContactId</errorDisplayField>
+    <errorMessage>P04: el contacto del producto debe pertenecer al cliente.</errorMessage>
+</ValidationRule>

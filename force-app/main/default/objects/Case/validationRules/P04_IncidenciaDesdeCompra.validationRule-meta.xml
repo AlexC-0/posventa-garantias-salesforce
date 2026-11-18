@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>P04_IncidenciaDesdeCompra</fullName>
+    <active>true</active>
+    <description>Ámbito exclusivo del Proyecto 04.</description>
+    <errorConditionFormula>AND(RecordType.DeveloperName = "P04_Posventa", AND(NOT(ISBLANK(P04_FechaIncidencia__c)), NOT(ISBLANK(Asset.PurchaseDate)), P04_FechaIncidencia__c &lt; Asset.PurchaseDate))</errorConditionFormula>
+    <errorDisplayField>P04_FechaIncidencia__c</errorDisplayField>
+    <errorMessage>P04: la incidencia no puede ser anterior a la compra.</errorMessage>
+</ValidationRule>
