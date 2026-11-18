@@ -8,9 +8,13 @@ Antes de modificar, confirma ruta, instrucciones aplicables y existencia de Git;
 
 Encargo vigente — sesión 02: completar herramientas, autenticar una organización independiente identificada, comprobar sus capacidades solo en lectura y generar una estructura Salesforce DX mínima cuando la CLI esté operativa. La sesión 01 queda como histórico documental. No implementar todavía objetos/campos personalizados, permisos funcionales, Flow, Apex ni LWC; no desplegar ni crear datos o configuración de negocio. No declarar terminado el entorno mientras falten herramientas operativas, organización comprobada o API contrastada.
 
+Estado al cierre del 18/11/2026: sesión 02 completada; organización dedicada identificada y autenticada, API 68.0 contrastada y capacidades/limitaciones documentadas. No hay despliegue ni pruebas de producto. La sesión 03 (modelo y reglas) queda propuesta, pendiente de encargo; este cierre no autoriza implementarla automáticamente.
+
 ## Protección de organizaciones y datos
 
 Preferir Developer Edition independiente si las capacidades reales permiten la V1. No reutilizar automáticamente Playground, organización autenticada ni destino predeterminado. Antes de conectar, confirmar que el destino pertenece a este proyecto y está autorizado. Comprobar que el alias p04-posventa-dev no esté ocupado por otra organización antes de autenticar mediante navegador; usar destino explícito en cada comando remoto. Un alias por sí solo no prueba la identidad. La creación de cuenta, activación, contraseña y MFA corresponden a Alex.
+
+Alex ha prohibido acceder a su Gmail: no consultar su correo mediante navegador, conectores ni otras herramientas. Alex gestiona por su cuenta los enlaces de activación/restablecimiento y las respuestas de seguridad. El acceso autorizado a Salesforce no incluye su buzón.
 
 No cambiar destinos globales ni configuraciones de otras tareas. No imprimir ni versionar tokens, contraseñas, claves, archivos de autenticación, URLs reutilizables de acceso ni salidas completas que puedan contenerlos. No usar `sf org display` para producir informes ni exportar autenticaciones. Acceso y MFA exclusivamente mediante navegador oficial, nunca credenciales por chat.
 

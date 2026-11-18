@@ -1,8 +1,69 @@
-# Estado — Sesión 02
+# Estado — Sesión 02 cerrada
+
+Fecha: 18 de noviembre de 2026. **Entorno preparado para comenzar el diseño del modelo.** Herramientas operativas, integración inicial Apex/JDK comprobada, organización dedicada identificada y autenticada, API 68.0 contrastada y capacidades/limitaciones documentadas. No hay un bloqueo conocido para iniciar la sesión 03; su ejecución requiere el encargo correspondiente. Sin implementación funcional, pruebas de producto ni despliegues.
+
+## Git y publicación
+
+Ruta y raíz Git: `C:\Users\kaosk\source\repos\posventa-garantias-salesforce`.
+Rama main; origin: https://github.com/AlexC-0/posventa-garantias-salesforce.git.
+
+La continuación del 18 de noviembre comenzó con árbol limpio; al retomar la comprobación final ya había cuatro documentos modificados sin staging. Se conservaron y completaron. HEAD y referencia local origin/main permanecen en `a9e7a9677232d36908a7d57e790abee0f93ed01d`. El conector GitHub confirmó la existencia de [a9e7a96](https://github.com/AlexC-0/posventa-garantias-salesforce/commit/a9e7a9677232d36908a7d57e790abee0f93ed01d), `chore: preparar herramientas y estructura Salesforce DX`; esa comprobación no establece una nueva lectura de la punta remota actual.
+
+Ese commit publicado por Alex contiene la preparación anterior. Las comprobaciones de este cierre son posteriores y no se atribuyen a ese commit ni a CI. Estado local de entrega: main...origin/main, cuatro documentos modificados, sin archivos nuevos ni staging. Alex realiza exclusivamente staging, commit y push.
+
+## Problemas resueltos y evidencia
+
+- **Apex/JDK:** VS Code 1.146.0 reconoce el proyecto DX y activa Core/Apex 68.10.0. Árbol de procesos y registros de la ventana P04 vinculan ApexLanguageServerLauncher con Temurin 21.0.13+9. El canal Apex Language Server finaliza biblioteca e indexación inicial a las 15:21:47, con cero archivos Apex/objetos personalizados/archivos con error. java/javac terminan con salida 0. No se probó autocompletado interactivo ni compilación remota; Java predeterminado 1.8.0_503 se conserva.
+- **Organización:** el alta directa rechazada por Monocle queda histórica y sin causa concreta conocida. Tras explicar la alternativa, Alex creó P04 Posventa Garantías como Playground nuevo. Su identidad coincide entre Trailhead, Setup, autenticación y consulta API Organization; Developer Edition, IsSandbox=false. El Playground anterior no se reutiliza.
+- **Contraseña y usuario:** las capturas de los primeros correos correspondían al Playground antiguo. Se abrió la pantalla de credenciales del nuevo; Alex completó su contraseña. Después se corrigió el uso del correo receptor como nombre de usuario, proporcionando el usuario real de la organización. No se leyeron contraseñas ni respuestas de seguridad. Gmail queda expresamente fuera de acceso en AGENTS.
+- **CLI:** tras dos intentos caducados, autenticación web oficial completada con salida 0 y organización esperada. Alias p04-posventa-dev comprobado libre antes de conectarlo. Usuario activo con perfil System Administrator y licencia Salesforce. target-org y target-dev-hub siguen sin configurar; todas las lecturas usan destino explícito.
+- **API:** REST devuelve API 68.0, publicada como Winter '27 y Latest Release; HTTP 200. Metadata API describe correctamente los tipos en 68.0. sourceApiVersion conserva 68.0, ahora contrastada. La validación inicial que esperaba una única entrada se corrigió al observar las dos etiquetas para la misma versión.
+
+Herramientas conservadas: Git 2.56.1.windows.1, Node v24.13.0, npm 11.6.2, Salesforce CLI 2.158.7, VS Code 1.146.0, Core/Apex/LWC 68.10.0 y Temurin JDK 21.0.13+9. También está instalada Apex Language Server Extension 0.10.0; su servidor JavaScript no se usa como evidencia del JDK. No hubo reinstalaciones ni cambios de configuración global en este cierre.
+
+## Organización: capacidades y límites
+
+- Account, Contact, Asset y Case descritos por API como estándar; consulta y CRUD disponibles para el administrador. Relaciones principales confirmadas, incluido Case.OwnerId con Group/User. No se crearon ni consultaron registros de negocio.
+- Nueve tipos de metadatos relevantes habilitados: ApexClass, ApexTrigger, Flow, LightningComponentBundle, Queue, Report, ReportType, PermissionSet y CustomObject.
+- UserPermissionAccess confirma ApiEnabled, AuthorApex, ModifyMetadata, ModifyAllData, CustomizeApplication, ViewSetup, ManageInteraction, RunReports, CreateCustomizeReports y LightningExperienceUser. RunFlow y CreateReportInLightning figuran falsos y no se cambian. Se documenta la diferencia entre gestión de Flow, acceso específico de futuros flujos y diseñador Lightning de informes. Permisos observados no equivalen a despliegues ni tests ejecutados.
+- UserLicense: Salesforce 2/1/1, Platform 3/0/3, Integration 1/0/1 e Identity 10/0/10 (totales/usadas/libres), todas activas. Conservar administrador y proponer pruebas secuenciales de agente/responsable/sin permisos con la otra plaza Salesforce. No caben los tres simultáneamente; Platform/Identity no sustituyen automáticamente la licencia para Case. Identidades, activación, propiedad de registros y sesiones se concretarán antes de probar; no se crean usuarios ahora.
+- Límites API observados: 15.000 solicitudes/24 h, 5 MB de datos, 20 MB de archivos y 250.000 ejecuciones Apex asíncronas diarias. Instantánea y otros límites en [ENVIRONMENT](ENVIRONMENT.md). No se prueba carga ni se autorizan comunicaciones reales.
+
+La lectura de tipos y permisos verifica disponibilidad administrativa para el trabajo futuro. Las pruebas funcionales, el acceso de usuarios ordinarios, los flujos concretos, el diseñador de informes y el despliegue reproducible pertenecen a los encargos posteriores. No impiden comenzar el diseño del modelo y no se presentan como ya resueltos.
+
+## Verificación y archivos
+
+Archivos modificados: AGENTS.md, README.md, docs/ENVIRONMENT.md y docs/STATUS.md. AGENTS refleja la prohibición de Gmail y el estado de cierre; los otros documentos registran resultados, límites e históricos. PROJECT_BRIEF, sfdx-project.json, .gitignore, .forceignore y el marcador de fuente se conservan. Sin nuevas dependencias, código funcional ni configuración del editor.
+
+Comprobaciones locales finales: nueve archivos versionados revisados; siete enlaces internos válidos y cero rotos; cero archivos con coincidencias en los patrones acotados de secretos/identificadores privados o caracteres de sustitución. Once de once rutas locales/de autenticación ignoradas y cuatro de cuatro rutas DX versionables. JSON válido, API 68.0 contrastada, paquete force-app existente y un único archivo fuente: el marcador .gitkeep. Cero archivos en staging y git diff --check correcto. Las lecturas remotas anteriores terminaron con estado 0; las solicitudes REST contrastadas respondieron HTTP 200. No se ejecutaron suites, despliegues ni CI.
+
+La evidencia Apex/JDK conserva su alcance de arranque e indexación inicial. Durante el diagnóstico hubo restricciones del sandbox y avisos de las envolturas PowerShell; las lecturas autorizadas y ejecuciones directas posteriores dieron los resultados descritos. No se añadió safe.directory global ni se modificaron credenciales de otras tareas. Autenticaciones y diagnósticos permanecen fuera de Git.
+
+## Intervención de Alex y siguiente paso
+
+No queda ninguna intervención de acceso pendiente. Revisar los cuatro documentos y realizar staging, commit y push manuales desde GitHub Desktop; después contrastar el commit publicado. No se declara publicado este cierre antes de hacerlo.
+
+Sesión 03 propuesta: concretar campos/relaciones sobre Account, Contact, Asset y Case; resolver precedencia de errores de garantía, fecha y zona horaria de referencia, cierre con datos inválidos y reevaluación explícita de abiertos; definir evaluaciones cerradas inmutables y estrategia secuencial de usuarios para permisos. Esta sesión no se ha ejecutado ni se inicia automáticamente.
+
+## Propuesta para GitHub Desktop
+
+Summary: `docs: cerrar la preparación del entorno Salesforce`
+
+Description:
+
+- Registra la comprobación de Apex con JDK 21 en el proyecto y conserva Java 8.
+- Documenta la organización dedicada, la recuperación del acceso y la autenticación web de Salesforce CLI.
+- Contrasta API 68.0, objetos estándar, tipos de metadatos, permisos administrativos, licencias y límites mediante lecturas remotas.
+- Conserva el diagnóstico anterior como histórico y recoge la prohibición de acceder a Gmail.
+- Cierra la sesión 02 y propone el modelo de datos para la siguiente sesión, sin funcionalidades, tests de producto ni despliegues.
+
+## Histórico — entrega del 17 de noviembre, publicada en a9e7a96
+
+El texto siguiente conserva el estado y las comprobaciones anteriores a esa publicación. Su propuesta de commit ya fue utilizada por Alex; sus pendientes locales Apex/JDK quedan actualizados arriba.
 
 Fecha: 17 de noviembre de 2026. **Parcialmente preparado**. Herramientas instaladas y estructura DX mínima creada. El alta de la organización independiente está bloqueada por una respuesta de Salesforce; el entorno no está listo para implementar el modelo.
 
-## Git y evidencia de publicación
+### Git y evidencia de publicación
 
 Ruta: `C:\Users\kaosk\source\repos\posventa-garantias-salesforce`.
 Rama main, remoto origin: https://github.com/AlexC-0/posventa-garantias-salesforce.git.
@@ -13,7 +74,7 @@ La publicación de Alex se contrastó mediante el conector GitHub: existen main 
 
 Los cambios y verificaciones siguientes son posteriores al commit publicado. Codex no realizó staging, commits, push, tags ni publicación.
 
-## Preparación completada localmente
+### Preparación completada localmente
 
 Alex autorizó expresamente instalar las herramientas y acceder exclusivamente a Salesforce mediante su perfil de Chrome.
 
@@ -30,7 +91,7 @@ Alex autorizó expresamente instalar las herramientas y acceder exclusivamente a
 
 Comandos y detalles reproducibles en [ENVIRONMENT](ENVIRONMENT.md).
 
-## Bloqueo de la organización
+### Bloqueo de la organización
 
 La conexión con Chrome funcionó mediante Playwright CLI 0.1.24 y extensión 0.5.0 después de que Alex aceptara la conexión. Se consultó su perfil Trailblazer como contexto de formación; no equivale a una organización de desarrollo.
 
@@ -42,14 +103,14 @@ Se conoce el rechazo antifraude, no su causa concreta. Se detuvieron los reinten
 
 Pendientes: organización/edición, autenticación, API, objetos estándar, capacidades, permisos efectivos, licencias, plazas de usuarios y límites. No hay estrategia de usuarios restringidos validada. No se reutilizó un Playground ni se crearon datos o configuración de negocio.
 
-## Archivos de la entrega
+### Archivos de la entrega
 
 Modificados: README.md, AGENTS.md, docs/ENVIRONMENT.md y docs/STATUS.md.
 Nuevos: sfdx-project.json, .forceignore y force-app/main/default/.gitkeep.
 
 PROJECT_BRIEF.md y .gitignore se conservan. Descargas, plantilla temporal, diagnósticos de navegador y configuración local del editor están ignorados. Sin código funcional, permisos, Flow, Apex, LWC, CI, tests de producto ni despliegues.
 
-## Verificación local
+### Verificación local
 
 - Nueve archivos versionados o candidatos revisados; seis enlaces locales válidos, cero rotos.
 - git diff --check correcto para cambios existentes y revisión no-index correcta para los tres archivos nuevos.
@@ -61,19 +122,19 @@ PROJECT_BRIEF.md y .gitignore se conservan. Descargas, plantilla temporal, diagn
 - PROJECT_BRIEF.md y .gitignore sin cambios. Cero archivos en staging.
 - Estado final: main, cuatro documentos modificados y tres archivos nuevos; HEAD permanece en d90c228. No se ejecutaron pruebas de producto, despliegues ni consultas a una organización Salesforce.
 
-## Histórico
+### Histórico
 
 Sesión 01: se crearon cinco documentos y .gitignore. Codex inicializó Git por petición expresa; Alex publicó después d90c228. El estado anterior «sin commits ni remoto» queda histórico.
 
 Primera parte de sesión 02: se renovó la inspección y se actualizaron cuatro documentos; siete enlaces locales válidos, nueve exclusiones comprobadas, cuatro rutas DX no excluidas, diff --check correcto y ningún archivo en staging. Después Alex autorizó las instalaciones realizadas en esta continuación.
 
-## Intervención y siguiente paso
+### Intervención y siguiente paso
 
 Resolver el rechazo del alta mediante los canales oficiales de Salesforce; hay un texto preparado en ENVIRONMENT para envío manual de Alex. No se ha contactado a terceros automáticamente. La creación/activación, contraseña y MFA siguen en navegador.
 
 Una vez exista organización dedicada: comprobar identidad y alias, autenticar, verificar capacidades/licencias solo en lectura y contrastar API 68.0. Comprobar activación Apex/JDK en este workspace antes de declarar el entorno preparado. No avanzar automáticamente a funcionalidades.
 
-## Propuesta para GitHub Desktop
+### Propuesta para GitHub Desktop
 
 Summary: `chore: preparar herramientas y estructura Salesforce DX`
 
