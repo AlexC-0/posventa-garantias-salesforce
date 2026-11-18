@@ -1,3 +1,53 @@
+# Comprobaciones de evaluación — sesión 05
+
+Base publicada 4cfaf0b, exclusivamente organización P04. Leer GARANTIA para contrato, acceso y errores. Confirmar identidad mediante scripts/P04-Common.ps1 y revisar cambios remotos pertinentes antes de escribir; no usar alias predeterminado ni otra organización.
+
+## Despliegue y regresión ejecutados
+
+```powershell
+sf project deploy start --manifest manifest/sesion05.xml --target-org p04-posventa-dev --test-level RunSpecifiedTests --tests P04ModeloTest --tests P04SeguridadTest --tests P04GarantiaTest --wait 3 --json
+```
+
+Succeeded: siete componentes (servicio, adaptador, test, autorización y tres permission sets), 65 pruebas y cero errores. Un primer intento se revirtió por una conversión de Id que ocultaba el nombre del tipo en Apex; la corrección se desplegó con las tres suites completas. No se modificaron aserciones ni clases de tests anteriores.
+
+| Pruebas nuevas | Evidencia |
+| --- | --- |
+| Interior, ambos límites y días contiguos | Resultado y fechas persistidas |
+| Un solo día y 29/02/2024 | Cobertura inclusiva |
+| Inicio, fin o ambos ausentes | Pendiente_datos, motivo exacto y nulls |
+| Compra ausente/conocida | Ausencia permitida e instantánea completa |
+| Producto/incidencia modificados | Instantánea histórica hasta reevaluación explícita |
+| Cerrado evaluado/sin evaluar | Rechazo sin alterar instantánea |
+| Agente, responsable, sin permisos | Contextos System.runAs y lecturas USER_MODE |
+| Caso ajeno, Master o solo lectura | NO_AUTORIZADO |
+| Escritura directa tras evaluar | FLS y guardián siguen rechazándola |
+| Lote mixto válido/cerrado | Atomicidad y conservación anterior |
+| Vacíos, null, mal formados, otro objeto, inexistentes | Respuestas seguras y ordenadas |
+| Duplicados del invocable | Dos respuestas, mismo resultado, un registro |
+| 200 casos | Persistencia de los 200, un DML y como máximo ocho consultas |
+| 201 solicitudes | Rechazo sin escribir |
+| Datos inválidos imposibles de persistir | Validador privado con datos en memoria; reglas intactas |
+
+P04GarantiaTest: 25/25. P04ModeloTest: 20/20. P04SeguridadTest: 20/20. Los fixtures usan privilegios administrativos solo para preparar datos/comparticiones; la llamada al servicio se ejecuta como el usuario aislado. Su escritura SYSTEM_MODE limitada es parte del diseño comprobado, no una sustitución de la autorización.
+
+Cobertura informada de las clases desplegadas: P04Garantia 90/93, P04EvaluarGarantiaAccion 4/4 y P04Autorizacion 62/63; total 156/160 ubicaciones. No trasladar esa cifra a toda la organización o a P04Integridad, que no cambió. No se ha provocado un fallo real de concurrencia, de límite de plataforma ni un rechazo DML posterior a una prevalidación correcta; no atribuir esa evidencia al lote mixto, que se rechaza antes del DML.
+
+## Demostración ejecutada y repetición opcional
+
+```powershell
+./scripts/Demo-Garantia.ps1 -ExpectedOrgId '<identificador privado P04 verificado>'
+./scripts/Test-Garantia.ps1 -ExpectedOrgId '<identificador privado P04 verificado>'
+```
+
+Demo-Garantia sí se ejecutó: evaluación inicial persistida, conservación al corregir producto, reevaluación mediante el adaptador, rechazo de cerrado y reversión de los dos registros temporales. Es una comprobación administrativa. No hubo nueva UI ni REST con identidad ordinaria ni cambios de permisos del usuario persistente.
+
+Test-Garantia queda como wrapper reproducible y se comprueba su sintaxis; no se ejecutó una segunda suite innecesaria: las 65 pruebas se ejecutaron en el despliegue. La demo y los tests no modifican los ocho registros originales. Auditoría final en STATUS.
+
+## Histórico — sesiones 03 y 04
+
+El contenido siguiente conserva sus resultados y procedimientos; no describe una repetición de aquellas pruebas UI/API en sesión 05.
+
+
 # Comprobaciones de seguridad y modelo
 
 ## Sesión 04: preparación y despliegue

@@ -8,6 +8,8 @@
         <enabled>true</enabled>
         <name>P04_Usar</name>
     </customPermissions>
+    <classAccesses><apexClass>P04Garantia</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>P04EvaluarGarantiaAccion</apexClass><enabled>true</enabled></classAccesses>
     <description>Acceso ordinario P04 sin borrado ni escritura directa de evaluación. Requiere compartición y pertenencia al equipo.</description>
     <fieldPermissions>
         <editable>false</editable>

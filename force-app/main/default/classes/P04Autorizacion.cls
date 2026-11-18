@@ -78,7 +78,8 @@ public without sharing class P04Autorizacion {
             if(!gestiona){
                 permitido=permitido&&row.OwnerId==UserInfo.getUserId()&&(old==null||old.OwnerId==UserInfo.getUserId());
             }else if(old==null||row.OwnerId!=old.OwnerId){permitido=permitido&&equipo.contains(row.OwnerId);}
-            for(String field:EVALUACION)if(row.get(field)!=(old==null?null:old.get(field)))permitido=false;
+            Boolean escrituraServicio=!borrar&&P04Garantia.escrituraLegitima(row,old);
+            for(String field:EVALUACION)if(row.get(field)!=(old==null?null:old.get(field))&&!escrituraServicio)permitido=false;
             if(!permitido)row.addError(DENEGADO);
         }
     }

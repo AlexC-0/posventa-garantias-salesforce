@@ -1,5 +1,7 @@
 # Seguridad por función — sesión 04
 
+Actualización de sesión 05: [P04Garantia](GARANTIA.md) permite evaluación explícita de casos propios del agente y casos editables del responsable. Conserva CRUD/FLS, grupos y compartición. Los conjuntos solo añaden acceso a las clases del servicio/adaptador. La excepción de escritura se limita a siete valores calculados e IDs autorizados mediante contexto privado, sin interruptor público; el guardián sigue rechazando ediciones directas. Regresión de estas 20 pruebas de seguridad y las 20 de modelo: sin fallos, junto con 25 pruebas nuevas de garantía. La evidencia UI descrita abajo sigue siendo la de sesión 04, no una ejecución nueva.
+
 Implementada en P04, API 68.0. Despliegue completo: 56 componentes y 40 pruebas Apex satisfactorias (20 de modelo y 20 de seguridad). Cierre operativo y revisión local en [STATUS](STATUS.md).
 
 ## Matriz
@@ -25,7 +27,7 @@ Se comprobaron los permisos realmente desplegados: cero ViewAllData/ModifyAllDat
 
 P04_DemoAdmin continúa reservado al administrador. Añade P04_Administrar para el guardián y acceso al nuevo campo de ámbito. P04_Agente concede P04_Usar y P04_Responsable concede P04_Gestionar. No asignar estos permisos personalizados por separado a personas ordinarias. El responsable necesita TransferAnyCase para la acción estándar; el guardián restringe ámbito y destinatarios.
 
-Los campos protegidos de Case son P04_ResultadoGarantia__c, P04_MotivoGarantia__c, P04_CompraEvaluada__c, P04_InicioEvaluado__c, P04_FinEvaluado__c, P04_IncidenciaEvaluada__c y P04_EvaluadaEl__c. No existe todavía el motor que los calculará.
+Los campos protegidos de Case son P04_ResultadoGarantia__c, P04_MotivoGarantia__c, P04_CompraEvaluada__c, P04_InicioEvaluado__c, P04_FinEvaluado__c, P04_IncidenciaEvaluada__c y P04_EvaluadaEl__c. Desde sesión 05 los calcula exclusivamente el servicio explícito, manteniendo la prohibición de edición directa ordinaria.
 
 ## Compartición y efecto sobre la organización
 
@@ -87,4 +89,4 @@ Los resultados privados están en .local, fuera de Git. El usuario permanece act
 
 Login Access Policies estaba desactivado y se habilitó temporalmente para Login As sin credenciales. Se cerró la sesión ordinaria y se restauró Administrators Can Log in as Any User a false, comprobado tras recarga. No se accedió a Gmail. Los fallos de selectores o intentos de guardado sin persistencia no se contaron como éxito.
 
-Evaluación de garantía, transiciones/cierre completos, asignación automática, informes y LWC siguen fuera de esta sesión.
+La evaluación pertenece a sesión 05 y queda descrita en GARANTIA. Transiciones/cierre completos, asignación automática, informes y LWC siguen pendientes.

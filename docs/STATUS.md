@@ -1,3 +1,101 @@
+# Estado — Sesión 05 completada, pendiente de commit y push de Alex
+
+18 de noviembre de 2026. Servicio único de evaluación de garantía desplegado y comprobado en P04. La sesión termina aquí: Flow, cola, ciclo completo, informes y LWC no se han iniciado.
+
+## Punto de partida y Git
+
+Ruta/raíz: C:\Users\kaosk\source\repos\posventa-garantias-salesforce. Rama main, origin https://github.com/AlexC-0/posventa-garantias-salesforce.git. Inicio limpio en HEAD/origin/main locales 4cfaf0bf3709d373fcaa75fc7a76b73dbd2cbbb3, publicación de sesión 04 indicada por Alex. No se hizo una nueva comprobación de la punta remota.
+
+Se conservó ese HEAD y el trabajo queda sin staging. Codex no hizo commit, push, tags ni releases. Los resultados siguientes corresponden al árbol desplegado de sesión 05, no al commit anterior ni a CI.
+
+Organización dedicada y API 68.0 comprobadas antes de escribir; clases base activas en esa versión. Alias explícito p04-posventa-dev en cada operación. Herramientas conservadas, sin instalaciones: CLI 2.158.7, Core/Apex/LWC 68.10.0 y JDK 21.0.13. Sin Gmail, otras organizaciones ni nuevos usuarios persistentes.
+
+## Implementación y decisiones
+
+P04Garantia recibe solo identificadores, valida rol, CRUD, lectura de registros/campos y acceso efectivo de edición, recupera datos en USER_MODE y calcula cobertura respecto a incidencia. Límites inclusivos, compra opcional, garantía incompleta pendiente de datos con motivo específico; incoherencias son errores. Guarda los siete campos existentes sin añadir campos al modelo.
+
+P04EvaluarGarantiaAccion es un adaptador invocable sin cálculo ni DML propio. Los tres permission sets incorporan acceso a las dos clases; no se amplían CRUD/FLS, grupos ni compartición. P04Autorizacion solo permite los valores exactos calculados para los IDs autorizados por un contexto privado transitorio, sin setter público ni permiso global. Los campos continúan sin edición directa ordinaria.
+
+La instantánea permanece histórica al modificar producto o incidencia. La reevaluación requiere otra petición explícita y usa los datos actuales. Un caso cerrado se rechaza sin modificar su evaluación; no se implementa el resto del ciclo.
+
+Se decidió atomicidad por llamada (hasta 200 solicitudes). Duplicados se deduplican para consulta/cálculo/DML, manteniendo una respuesta por posición. Si una entrada falla, las otras no se guardan. Vacíos, mal formados, no visibles, fuera de ámbito y límites tienen códigos seguros. Detalle y ejemplos en [GARANTIA](GARANTIA.md).
+
+## Despliegue y pruebas reales
+
+Comando ejecutado, previa comprobación de identidad:
+
+```powershell
+sf project deploy start --manifest manifest/sesion05.xml --target-org p04-posventa-dev --test-level RunSpecifiedTests --tests P04ModeloTest --tests P04SeguridadTest --tests P04GarantiaTest --wait 3 --json
+```
+
+Resultado final: **Succeeded, siete componentes, 65 pruebas y cero errores**. Cuatro clases (servicio, adaptador, tests y autorización) y tres permission sets. El primer intento se revirtió por un error de conversión de Id en Apex; se corrigió sin cambiar el contrato ni reducir aserciones. El segundo despliegue ejecutó y superó las tres suites.
+
+| Contexto | Comprobación | Resultado |
+| --- | --- | --- |
+| P04GarantiaTest | 25 pruebas nuevas | 25/25 |
+| P04ModeloTest | Regresión del modelo | 20/20 |
+| P04SeguridadTest | Regresión de seguridad | 20/20 |
+| Agente, servicio bajo runAs | Evaluación propia y denegación ajena | Correcto |
+| Responsable, servicio bajo runAs | Casos editables de equipo / caso solo lectura | Permitido / rechazado |
+| Sin permisos | Operación, aunque sea propietario | Rechazada |
+| Cobertura persistida | Interior, límites, días contiguos, un día y bisiesto | Correcta |
+| Datos incompletos | Inicio, fin, ambos; compra opcional | Motivos y nulls correctos |
+| Instantánea | Producto/incidencia cambian sin recalcular | Conservada; reevaluación explícita correcta |
+| Cerrados | Con y sin evaluación anterior | Rechazados sin alterar instantánea |
+| Privilegios | Escritura directa después del servicio | Rechazada en USER_MODE y por guardián |
+| Lote mixto | Abierto válido y cerrado | Ninguna instantánea modificada |
+| Entradas | Duplicados, null/vacíos, otro objeto, inexistente | Correspondencia y errores seguros |
+| Lote de 200 | Todos persistidos | Un DML y como máximo ocho consultas |
+| Más de 200 | Rechazo sin escribir | Correcto |
+| Datos inválidos no persistibles | Validación defensiva en memoria | Rechazo; reglas no desactivadas |
+| Demo administrativa | Evaluar, conservar, reevaluar, rechazar cerrado | Correcto; temporales revertidos |
+
+Las llamadas restringidas usan usuarios Apex aislados; las lecturas dentro del servicio conservan USER_MODE. Los fixtures administrativos y la escritura privilegiada limitada del servicio se distinguen. No se modificaron P04ModeloTest ni P04SeguridadTest.
+
+Cobertura informada de clases desplegadas: P04Garantia 90/93 ubicaciones, P04EvaluarGarantiaAccion 4/4 y P04Autorizacion 62/63; 156/160 en total. No es cobertura global ni de P04Integridad, que permanece sin cambios.
+
+La demo se ejecutó mediante scripts/Demo-Garantia.ps1: dos registros temporales propios y savepoint, verificación de resultados persistidos dentro de la transacción, corrección del producto sin recálculo, reevaluación por invocable, cerrado rechazado y rollback comprobado. Es evidencia administrativa, no UI/REST ordinaria. El wrapper Test-Garantia.ps1 queda reproducible y se revisa sintaxis; las 65 pruebas reales se ejecutaron durante el despliegue, sin repetición innecesaria por documentos.
+
+## Estado final y límites
+
+Auditoría final satisfactoria: ocho registros originales (dos clientes/contactos/productos/casos), ambos casos de muestra sin evaluar y garantía/serie originales conservadas. Cero temporales de sesión 05, cero temporales activos de sesión 04. Administrador activo y P04_DemoAdmin reservado a él.
+
+Usuario persistente activo en P04_Minimo, sin rol, conjuntos adicionales, grupos ni casos propios activos. Dos licencias Salesforce ocupadas; no se creó otra cuenta. No se cambiaron asignaciones personales ni Login Access Policies en esta sesión, ni se utilizó el navegador o Gmail.
+
+No se han realizado nuevas pruebas UI/REST ordinarias: la autorización del servicio se acredita mediante Apex/runAs con lecturas USER_MODE y regresión. No se han provocado concurrencia real, límites irrecuperables ni rechazo DML posterior a prevalidación correcta. Los errores de datos que las reglas impiden guardar se verificaron en el validador privado con datos en memoria. No atribuir esas pruebas a una escritura inválida persistida.
+
+Evidencia privada, excluida de Git: .local/s05-deploy-1.json (fallo revertido), s05-deploy-2.json (éxito y tests) y s05-final-audit.json. Documentación funcional en GARANTIA, modelo en DATA_MODEL, seguridad en SECURITY y procedimiento en TESTING.
+
+Revisión local final: 106 archivos públicos comprobados como UTF-8 estricto, 65 XML válidos, 11 scripts PowerShell sin errores de sintaxis, 28 enlaces locales existentes y 93 referencias de manifiestos resueltas sin comodines. Cinco exclusiones comprobadas (.local, .sf, .sfdx, .env y node_modules); sin identidades privadas ni patrones de secretos en los archivos revisados. git diff --check correcto. Resultado: main/4cfaf0b conservados, 11 archivos modificados, 11 nuevos y cero en staging. Los avisos LF/CRLF corresponden a la configuración existente, que no se cambió. No se repitieron suites por cambios solo documentales.
+
+## Entrega y siguiente paso
+
+Cambios: P04Garantia/P04EvaluarGarantiaAccion/P04GarantiaTest con metadatos API 68; adaptación de P04Autorizacion; acceso a clases en tres conjuntos; manifest/sesion05.xml; Demo-Garantia y Test-Garantia con plantilla Apex de demo; documentación y AGENTS. No hay cambios de campos, reglas de validación, triggers, perfiles o compartición.
+
+Alex revisa y publica manualmente. Demostración breve:
+
+```powershell
+./scripts/Demo-Garantia.ps1 -ExpectedOrgId '<identificador privado P04 verificado>'
+```
+
+La siguiente fase se revisará antes de iniciarse. No se ha implementado automáticamente el ciclo/asignación ni otros componentes.
+
+Summary: `feat: implementar evaluación explícita de garantías`
+
+Description:
+
+- Centraliza cobertura, motivos e instantáneas en un servicio Apex con adaptador invocable.
+- Permite evaluación y reevaluación explícita de abiertos; conserva históricos y rechaza cerrados.
+- Mantiene FLS y autorización, limitando la escritura privilegiada a siete campos y casos autorizados.
+- Define lotes atómicos de hasta 200 solicitudes y respuestas ordenadas con errores seguros.
+- Despliega siete componentes y supera 65 pruebas: 25 de garantía y 40 de regresión.
+- Incluye demo administrativa revertida, documentación y verificación de conservación de la muestra; sin Flow, cola, informes ni LWC.
+
+## Histórico — Sesión 04 publicada en 4cfaf0b
+
+El contenido siguiente conserva la entrega anterior; sus estados de publicación y pruebas pertenecen a aquella sesión.
+
+
 # Estado — Sesión 04 completada, pendiente de commit y push de Alex
 
 18 de noviembre de 2026. Seguridad por función implementada, desplegada y comprobada exclusivamente en P04. No se ha iniciado la evaluación automática de garantía.

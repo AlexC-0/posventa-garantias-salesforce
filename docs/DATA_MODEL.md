@@ -1,4 +1,4 @@
-# Modelo de datos — base de sesión 03 y seguridad de sesión 04
+# Modelo de datos — sesiones 03–05
 
 Contrato fijado antes de implementar. API 68.0. Datos ficticios; garantía simulada.
 
@@ -27,13 +27,13 @@ Tipos de registro delimitan funcionalidad, no constituyen seguridad por función
 | Case | Status, OwnerId, Origin | Campos estándar | Estado P04, propietario estándar y origen; se conserva su mecánica de plataforma |
 | Case | P04_FechaIncidencia__c | Date | Requerida, <= día actual del usuario y >= compra conocida |
 | Case | P04_ResultadoGarantia__c | Picklist restringida | Vacío = sin evaluar; valores En_cobertura, Fuera_cobertura, Pendiente_datos, sin valor por defecto |
-| Case | P04_MotivoGarantia__c | Text(255) | Vacío hasta futura evaluación |
-| Case | P04_CompraEvaluada__c, P04_InicioEvaluado__c, P04_FinEvaluado__c, P04_IncidenciaEvaluada__c | Date | Instantánea futura; no fórmulas ni copias automáticas |
-| Case | P04_EvaluadaEl__c | DateTime | Momento de evaluación futura, vacío inicialmente |
+| Case | P04_MotivoGarantia__c | Text(255) | Motivo calculado por P04Garantia; vacío hasta evaluar |
+| Case | P04_CompraEvaluada__c, P04_InicioEvaluado__c, P04_FinEvaluado__c, P04_IncidenciaEvaluada__c | Date | Instantánea explícita de los datos usados; ausencias copiadas como null |
+| Case | P04_EvaluadaEl__c | DateTime | Momento de evaluación, vacío inicialmente |
 | Case | P04_TipoResolucion__c | Picklist restringida | Reparacion, Sustitucion, Fuera_cobertura, Sin_actuacion; sin defecto |
 | Case | P04_ExplicacionResolucion__c | LongTextArea(2000) | Explicación; obligatoriedad de cierre corresponde al ciclo posterior |
 
-Etiquetas y ayudas propias en castellano. Evaluación visible como solo lectura en el layout administrativo y permiso de demostración; esto no sustituye futuras restricciones de seguridad ni impide que un administrador use sus permisos generales. No se generan evaluaciones ficticias.
+Etiquetas y ayudas propias en castellano. Los siete campos de evaluación son de solo lectura para agente/responsable mediante FLS y guardián. P04Garantia permite exclusivamente su escritura calculada tras autorizar la operación. El administrador conserva sus permisos administrativos. Los ocho registros originales de muestra siguen sin evaluar; la demostración del servicio usa registros temporales revertidos.
 
 ## Reglas implementadas en esta sesión
 
@@ -41,7 +41,7 @@ Validaciones en servidor al guardar Asset/Case, también por API: campos obligat
 
 Se usa TODAY() para fechas futuras y Date.today() en las pruebas: día del usuario ejecutor, sin convertir a DateTime ni usar el reloj del equipo. Las fechas no tienen zona horaria; el límite diario sí depende de la zona del usuario. Un mismo instante puede dar días distintos a usuarios de zonas distintas. [Referencia de TODAY](https://help.salesforce.com/s/articleView?id=platform.customize_functions_today.htm&language=en_US&type=5).
 
-Protección de padres con Apex, sin motor de evaluación: rechazar cambio de cliente de un Contact referenciado por Asset/Case P04; rechazar cambio de cliente de Asset con Case P04; rechazar una nueva compra posterior a alguna incidencia de sus casos P04. Quitar la fecha de compra sigue permitido: dato válido incompleto. Corregir garantía no cambia campos de evaluación. Borrado de Account/Contact/Asset referenciados por relaciones P04 protegido para evitar referencias obligatorias vacías; borrar casos propios sí se permite.
+P04Integridad protege padres sin calcular cobertura: rechaza cambio de cliente de Contact referenciado, cambio de cliente de Asset con casos y compra posterior a una incidencia existente. Quitar la compra sigue permitido. Corregir garantía no cambia la evaluación. Protege el borrado de padres referenciados; el borrado administrativo ordenado de datos propios es posible, pero la seguridad de sesión 04 prohíbe borrado ordinario a agente/responsable.
 
 Los controles son masivos y se ejecutan sin depender de visibilidad ni permisos de campo (without sharing y consultas WITH SYSTEM_MODE explícitas, limitado a comprobaciones de integridad). No constituyen una API para leer datos. Se prueban escrituras secuenciales y lotes hasta 200; concurrencia entre transacciones, importaciones que omitan triggers y efectos especiales de fusiones/undelete no se declaran garantizados. No se deshabilitan automatismos de origen.
 
@@ -49,9 +49,9 @@ Los controles son masivos y se ejecutan sin depender de visibilidad ni permisos 
 
 Se añaden P04_Nuevo (Nuevo), P04_EnCurso (En curso), P04_PendienteInformacion (Pendiente de información) y P04_Cerrado (Cerrado, closed=true) a CaseStatus conservando todos los valores previos. Proceso de soporte P04_Posventa, por defecto P04_Nuevo, y tipo de registro propio. No se alteran procesos ajenos. La API se valida expresamente porque un tipo de registro no restringe por sí solo todos los valores escritos por API.
 
-Layouts de producto/caso y aplicación Lightning P04 Posventa. El layout Case incluye SuppliedEmail por requisito de plataforma, vacío en la muestra; OwnerId es editable. Asignación de esos layouts solo al administrador para esos tipos; los layouts ajenos se conservan. Permiso P04_DemoAdmin: acceso a la app, tipos y campos propios; sin ModifyAllData, sin CRUD amplio añadido y sin usuarios nuevos. Se asigna únicamente al administrador actual. No equivale a la seguridad de agente/responsable.
+Layouts de producto/caso y aplicación Lightning P04 Posventa. Case incluye SuppliedEmail por requisito de plataforma, vacío en la muestra; OwnerId tiene control estándar y autorización de servidor. Se conservan los layouts ajenos. Desde sesión 04, P04_Minimo también asigna los layouts propios y añade cliente/contacto; permisos ordinarios separados de P04_DemoAdmin, reservado al administrador. Desde sesión 05 los conjuntos incorporan acceso a las clases de evaluación sin ampliar FLS de edición.
 
-## Contrato de evaluación y ciclo futuro (no implementado)
+## Evaluación implementada y ciclo pendiente
 
 1. Rechazar primero relaciones y fechas incoherentes. Los errores no son un resultado de garantía.
 2. Con datos válidos pero sin fechas necesarias, resultado Pendiente_datos; no confundir con vacío/sin evaluar.
@@ -60,4 +60,4 @@ Layouts de producto/caso y aplicación Lightning P04 Posventa. El layout Case in
 5. Reevaluación explícita solo de abiertos; cerrados conservan evaluación.
 6. Datos inválidos impiden guardar/cerrar por las validaciones iniciales. Pendiente_datos solo permitirá cierre Sin_actuacion explicado cuando se implemente el ciclo. Esa condición, transiciones y cierre obligatorio todavía no están implementados.
 
-La siguiente fase es seguridad por función. Después: servicio único de evaluación, ciclo y asignación, informes y LWC. No duplicar la evaluación en fórmulas o JavaScript.
+Los puntos 1–5 están implementados por el servicio único de sesión 05; el punto 6 describe el ciclo futuro. La compra es opcional: sin ella puede existir cobertura si inicio y fin están presentes. Una edición posterior de producto o incidencia no recalcula la instantánea, que queda histórica hasta otra petición explícita. Detalle de atomicidad, seguridad y códigos en [GARANTIA](GARANTIA.md). No se añadieron campos en sesión 05 ni se implementaron transiciones, asignación, informes o LWC.

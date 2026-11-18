@@ -4,34 +4,41 @@ Proyecto 04 de CHAMBA DIARIA. Aplicación interna con datos ficticios y garantí
 
 ## Estado actual
 
-**Sesión 04: seguridad por función implementada y comprobada en P04.** El agente consulta clientes/contactos/productos compartidos y crea o edita sus casos. El responsable gestiona los casos del equipo y corrige clientes, contactos, productos y garantía. Ambos tienen los siete campos de evaluación en solo lectura y carecen de borrado. Sin permisos P04, el usuario no accede a los registros protegidos, aunque sea propietario.
+**Sesión 05: servicio único de evaluación de garantía implementado y desplegado en P04.** P04Garantia evalúa casos abiertos respecto a su fecha de incidencia y guarda resultado, motivo, fechas utilizadas y momento. P04EvaluarGarantiaAccion prepara la entrada para un futuro Flow reutilizando exactamente el mismo servicio.
 
-La protección combina perfil mínimo, conjuntos de permisos, compartición privada con reglas de criterios y autorización Apex. No depende de ocultar campos ni de los tipos de registro. No hay ViewAllData/ModifyAllData ni View All/Modify All de objetos en los permisos ordinarios.
+La cobertura incluye ambos límites. Si falta inicio o fin, el resultado es pendiente de datos y explica qué falta; la compra es opcional. Datos incoherentes son errores. La evaluación inicial y la reevaluación son explícitas: modificar producto o incidencia no recalcula la instantánea. Los casos cerrados se rechazan conservando su evaluación.
 
-Comprobado: despliegue de **56 componentes, 40/40 pruebas Apex**, auditoría de permisos y acceso efectivo, edición UI del agente, garantía y reasignación UI del responsable, denegación de caso ajeno y revocación por URL del caso propio. Las escrituras UI persistieron y se contrastaron con lecturas administrativas. No se presenta esa lectura como una prueba API ordinaria.
+Se mantienen las restricciones de sesión 04: agente sobre sus casos, responsable sobre casos editables del equipo, usuario sin permisos denegado. Los siete campos siguen sin edición directa ordinaria. La escritura privilegiada está limitada a los registros autorizados y valores calculados, sin bypass público.
 
-Se conservan los ocho registros ficticios de sesión 03 y sus validaciones. Solo se añade Account.P04_Posventa__c como identificador de ámbito: 13 campos propios en total. Los casos siguen sin evaluar. Los dos casos temporales de seguridad se eliminaron y la fecha de garantía modificada para la prueba volvió a su valor original.
+Comprobado en esta sesión: **7 componentes desplegados, 65/65 pruebas Apex** (25 de garantía, 20 de modelo y 20 de seguridad), lotes de 200 y demostración administrativa de evaluación/reevaluación/cierre con reversión de temporales. No se realizaron nuevas pruebas UI/REST con identidad ordinaria; esa autorización se comprobó en Apex bajo usuarios aislados.
 
-No están implementados el motor de evaluación, ciclo completo, asignación automatizada, cola, informes ni LWC. No hay prueba REST con autenticación ordinaria independiente ni pruebas de concurrencia. Detalles y límites en SECURITY y STATUS.
+El lote es atómico: un rechazo impide guardar todas sus evaluaciones. Duplicados se procesan una vez conservando una respuesta por solicitud. Se mantienen los ocho registros originales de muestra, con sus dos casos sin evaluar; la demostración usa registros temporales revertidos. No hay campos nuevos: siguen siendo 13.
 
-## Proyecto y revisión
+Continúan pendientes Flow de asignación, cola, ciclo completo de estados/cierre, informes y LWC. No hay pruebas de concurrencia entre transacciones ni despliegue de producción.
 
-Carpeta: C:\Users\kaosk\source\repos\posventa-garantias-salesforce.
+## Proyecto y entrega
 
-Repositorio: [AlexC-0/posventa-garantias-salesforce](https://github.com/AlexC-0/posventa-garantias-salesforce), rama main. Base de sesión 04: de1bfdb0f413ae750abbe39da83db1d62782c30f, presente en HEAD/origin/main locales y publicado por Alex según el encargo. No se hizo una nueva comprobación de la punta remota. Los resultados nuevos pertenecen al trabajo local y desplegado de sesión 04, no a ese commit ni a CI.
+Ruta: C:\Users\kaosk\source\repos\posventa-garantias-salesforce.
 
-Los cambios quedan **sin staging**; Alex realiza commit y push. API 68.0; alias explícito p04-posventa-dev, sin destinos predeterminados. Se conservan CLI 2.158.7, extensiones Core/Apex/LWC 68.10.0 y JDK 21.0.13, sin reinstalación en esta sesión ni cambios a Java 8.
+Repositorio: [AlexC-0/posventa-garantias-salesforce](https://github.com/AlexC-0/posventa-garantias-salesforce), main. Inicio limpio en 4cfaf0bf3709d373fcaa75fc7a76b73dbd2cbbb3, publicado por Alex según el encargo y presente en HEAD/origin/main locales. Sin nueva comprobación de la punta remota. Los resultados de sesión 05 corresponden al árbol nuevo desplegado, no al commit anterior ni a CI.
+
+Los cambios quedan sin staging; Alex hace commit y push. API 68.0 y destino explícito p04-posventa-dev. Herramientas conservadas: CLI 2.158.7, extensiones Core/Apex/LWC 68.10.0 y JDK 21.0.13. No hubo instalaciones, nuevas cuentas persistentes ni cambios de política de acceso.
 
 ## Documentación y demostración
 
-- [Estado, resultados y propuesta de commit](docs/STATUS.md).
-- [Seguridad, matriz, compartición y límites](docs/SECURITY.md).
+- [Servicio, invocación, atomicidad y seguridad](docs/GARANTIA.md).
+- [Resultados, límites y propuesta de commit](docs/STATUS.md).
 - [Despliegue y pruebas reproducibles](docs/TESTING.md).
-- [Modelo y contratos](docs/DATA_MODEL.md).
+- [Modelo e instantáneas](docs/DATA_MODEL.md).
+- [Seguridad por función](docs/SECURITY.md).
 - [Alcance V1](docs/PROJECT_BRIEF.md).
-- [Evidencia histórica del entorno](docs/ENVIRONMENT.md).
+- [Entorno histórico](docs/ENVIRONMENT.md).
 - [Reglas de trabajo](AGENTS.md).
 
-En P04 Posventa, el administrador conserva la muestra P04 DEMO: dos clientes, dos contactos, dos productos y dos casos. El caso revisado se titula **P04 DEMO - Caso revisado desde interfaz**; el producto Norte conserva la serie **P04-FICT-N1-REV**. Identificadores solo en .local, fuera de Git. No duplicar la muestra.
+```powershell
+./scripts/Demo-Garantia.ps1 -ExpectedOrgId '<identificador privado P04 verificado>'
+```
 
-El usuario de pruebas queda activo con perfil mínimo, sin rol, permisos P04 ni grupos. La segunda licencia queda ocupada para reutilizarlo secuencialmente; no crear otra cuenta. La próxima fase recomendada es el **servicio único de evaluación de garantía**, sin iniciarla automáticamente. Fuera de alcance: producción, datos reales, comunicaciones reales, compras e integración con otros proyectos.
+La demo administrativa evalúa un caso temporal, comprueba que corregir su producto no recalcula, reevalúa mediante el invocable y rechaza otra evaluación tras cerrar. Revierte producto/caso temporales y verifica su ausencia. No modifica la muestra ni envía correo.
+
+El usuario de pruebas permanece activo en perfil mínimo, sin rol, permisos P04 ni grupos; ambas licencias Salesforce siguen ocupadas. La siguiente fase se revisará antes de empezar. Esta sesión termina con la entrega para revisión y publicación manual de Alex.
