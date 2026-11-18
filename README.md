@@ -4,31 +4,34 @@ Proyecto 04 de CHAMBA DIARIA. Aplicación interna con datos ficticios y garantí
 
 ## Estado actual
 
-**Sesión 03 completada: primera base funcional desplegada en P04.** Ya se pueden consultar y editar clientes/contactos, productos registrados y casos relacionados desde la aplicación Lightning **P04 Posventa**. Los productos y casos usan tipos de registro propios y validaciones en servidor para relaciones y fechas coherentes, también al escribir por API.
+**Sesión 04: seguridad por función implementada y comprobada en P04.** El agente consulta clientes/contactos/productos compartidos y crea o edita sus casos. El responsable gestiona los casos del equipo y corrige clientes, contactos, productos y garantía. Ambos tienen los siete campos de evaluación en solo lectura y carecen de borrado. Sin permisos P04, el usuario no accede a los registros protegidos, aunque sea propietario.
 
-Entregado: 12 campos propios, nueve reglas de validación, protecciones Apex para cambios en padres y borrados, cuatro estados de caso y proceso de soporte, dos layouts y acceso administrativo acotado. Se conservan los datos de origen, los cuatro estados estándar y las asignaciones de layout Master.
+La protección combina perfil mínimo, conjuntos de permisos, compartición privada con reglas de criterios y autorización Apex. No depende de ocultar campos ni de los tipos de registro. No hay ViewAllData/ModifyAllData ni View All/Modify All de objetos en los permisos ordinarios.
 
-Comprobado: despliegue de 36 componentes, **20/20 pruebas Apex**, lotes de 200, cinco comprobaciones API y consulta/edición de producto y caso en la interfaz estándar con persistencia verificada por API. La muestra deja ocho registros ficticios: dos clientes, dos contactos, dos productos y dos casos. Un producto tiene garantía completa y otro incompleta; ambos casos siguen **sin evaluar**.
+Comprobado: despliegue de **56 componentes, 40/40 pruebas Apex**, auditoría de permisos y acceso efectivo, edición UI del agente, garantía y reasignación UI del responsable, denegación de caso ajeno y revocación por URL del caso propio. Las escrituras UI persistieron y se contrastaron con lecturas administrativas. No se presenta esa lectura como una prueba API ordinaria.
 
-No están implementados el motor de evaluación, el ciclo completo de atención, la asignación automatizada, la seguridad por función, el informe ni el LWC. Las pruebas administrativas no acreditan permisos de agente/responsable ni concurrencia entre transacciones.
+Se conservan los ocho registros ficticios de sesión 03 y sus validaciones. Solo se añade Account.P04_Posventa__c como identificador de ámbito: 13 campos propios en total. Los casos siguen sin evaluar. Los dos casos temporales de seguridad se eliminaron y la fecha de garantía modificada para la prueba volvió a su valor original.
+
+No están implementados el motor de evaluación, ciclo completo, asignación automatizada, cola, informes ni LWC. No hay prueba REST con autenticación ordinaria independiente ni pruebas de concurrencia. Detalles y límites en SECURITY y STATUS.
 
 ## Proyecto y revisión
 
 Carpeta: C:\Users\kaosk\source\repos\posventa-garantias-salesforce.
 
-Repositorio: [AlexC-0/posventa-garantias-salesforce](https://github.com/AlexC-0/posventa-garantias-salesforce), rama main. Base de esta sesión: cierre de entorno 4daa849421a9cfe91746a502cab6c2749eed1f83, publicado por Alex según el encargo y presente en HEAD/origin/main locales. No se atribuyen las comprobaciones nuevas a ese commit ni a CI.
+Repositorio: [AlexC-0/posventa-garantias-salesforce](https://github.com/AlexC-0/posventa-garantias-salesforce), rama main. Base de sesión 04: de1bfdb0f413ae750abbe39da83db1d62782c30f, presente en HEAD/origin/main locales y publicado por Alex según el encargo. No se hizo una nueva comprobación de la punta remota. Los resultados nuevos pertenecen al trabajo local y desplegado de sesión 04, no a ese commit ni a CI.
 
-La entrega de sesión 03 queda local y sin staging; Alex realiza commit y push. API 68.0; alias explícito p04-posventa-dev, sin destinos predeterminados. Se conservan CLI 2.158.7, Core/Apex/LWC 68.10.0 y JDK 21.0.13; Java 8 del equipo no cambia.
+Los cambios quedan **sin staging**; Alex realiza commit y push. API 68.0; alias explícito p04-posventa-dev, sin destinos predeterminados. Se conservan CLI 2.158.7, extensiones Core/Apex/LWC 68.10.0 y JDK 21.0.13, sin reinstalación en esta sesión ni cambios a Java 8.
 
 ## Documentación y demostración
 
-- [Estado, resultados, incidencias y propuesta de commit](docs/STATUS.md).
-- [Modelo, campos y contratos implementados/futuros](docs/DATA_MODEL.md).
-- [Despliegue, pruebas y muestra reproducibles](docs/TESTING.md).
+- [Estado, resultados y propuesta de commit](docs/STATUS.md).
+- [Seguridad, matriz, compartición y límites](docs/SECURITY.md).
+- [Despliegue y pruebas reproducibles](docs/TESTING.md).
+- [Modelo y contratos](docs/DATA_MODEL.md).
 - [Alcance V1](docs/PROJECT_BRIEF.md).
-- [Herramientas y evidencia histórica del entorno](docs/ENVIRONMENT.md).
+- [Evidencia histórica del entorno](docs/ENVIRONMENT.md).
 - [Reglas de trabajo](AGENTS.md).
 
-En Salesforce, abrir P04 Posventa y localizar los clientes P04 DEMO, sus contactos, productos y casos. El caso revisado desde la interfaz se titula **P04 DEMO - Caso revisado desde interfaz**; el producto Norte conserva la serie **P04-FICT-N1-REV**. Los identificadores privados están solo en .local, no en Git. No volver a crear la muestra si ya existe.
+En P04 Posventa, el administrador conserva la muestra P04 DEMO: dos clientes, dos contactos, dos productos y dos casos. El caso revisado se titula **P04 DEMO - Caso revisado desde interfaz**; el producto Norte conserva la serie **P04-FICT-N1-REV**. Identificadores solo en .local, fuera de Git. No duplicar la muestra.
 
-Siguiente fase: **seguridad por función**, con pruebas secuenciales usando la única plaza Salesforce libre y conservando el administrador. No se crean usuarios ni se inicia esa fase automáticamente. Fuera de alcance: producción, datos reales, comunicaciones reales, compra de licencias e integración con otros proyectos.
+El usuario de pruebas queda activo con perfil mínimo, sin rol, permisos P04 ni grupos. La segunda licencia queda ocupada para reutilizarlo secuencialmente; no crear otra cuenta. La próxima fase recomendada es el **servicio único de evaluación de garantía**, sin iniciarla automáticamente. Fuera de alcance: producción, datos reales, comunicaciones reales, compras e integración con otros proyectos.

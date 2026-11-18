@@ -1,4 +1,96 @@
-# Estado — Sesión 03 completada
+# Estado — Sesión 04 completada, pendiente de commit y push de Alex
+
+18 de noviembre de 2026. Seguridad por función implementada, desplegada y comprobada exclusivamente en P04. No se ha iniciado la evaluación automática de garantía.
+
+## Git y entorno
+
+Ruta y raíz: C:\Users\kaosk\source\repos\posventa-garantias-salesforce. Rama main; origin: https://github.com/AlexC-0/posventa-garantias-salesforce.git.
+
+Inicio limpio en HEAD/origin/main locales de1bfdb0f413ae750abbe39da83db1d62782c30f, sesión 03 publicada por Alex según el encargo. No se realizó una nueva lectura de la punta remota. HEAD se conserva; cambios locales sin staging. No hay commit, push, tags, releases ni CI atribuibles a esta sesión.
+
+API 68.0 y alias explícito p04-posventa-dev. Se contrastaron identidad Developer Edition y administrador antes de escribir. Sin otras organizaciones ni Gmail. Herramientas conservadas: CLI 2.158.7, extensiones Core/Apex/LWC 68.10.0 y JDK 21.0.13; sin instalaciones en esta sesión.
+
+## Implementación y despliegue
+
+- Perfil P04_Minimo; conjuntos P04_Agente/P04_Responsable y permiso administrativo reservado.
+- Tres permisos personalizados, dos grupos directos, cinco reglas de criterios y dos layouts adicionales de cliente/contacto.
+- Account.P04_Posventa__c como único campo adicional de ámbito; 13 campos propios totales.
+- Account/Asset/Case Private, Contact ControlledByParent y Opportunity Private por dependencia exigida. Se preservaron los 18 roles originales, los datos de formación y el administrador.
+- P04Autorizacion separado de P04Integridad; cuatro triggers extendidos. Sin evaluación de garantía ni cambio de las nueve validaciones funcionales.
+- P04SeguridadTest nuevo, más ajuste de dos fixtures Master de P04ModeloTest para preservar su ámbito bajo las concesiones actuales.
+
+Despliegues satisfactorios: compartición 30 componentes; preparación 49; completo manifest/sesion04.xml, **56 componentes, 40 pruebas y cero errores**. El manifiesto incluye objetos padres y sus hijos DX propios ya existentes; 56 no significa 56 componentes nuevos.
+
+El primer intento de preparación detectó la dependencia de Opportunity, requisitos de layout y orden de compartición, y se revirtió. Las primeras ejecuciones completas detectaron ContactAccessLevel no escribible con herencia de Account y selección implícita de tipo P04 en fixtures. Se corrigieron antes del despliegue final. Para los fixtures Master se usa un administrador aislado sin los tipos concedidos por P04_DemoAdmin, comprobando RecordTypeId null; no se retiraron permisos del administrador real ni se debilitaron aserciones.
+
+## Resultados comprobados
+
+| Contexto | Acción | Esperado | Obtenido |
+| --- | --- | --- | --- |
+| Agente, Apex USER_MODE | Crear y editar propios, lote de 200 | Permitido | Correcto |
+| Agente, Apex USER_MODE | Caso ajeno/no compartido; editar padres o garantía | Rechazo | Correcto |
+| Agente, UI ordinaria | Guardar asunto propio | Persistencia | Confirmada por lectura administrativa |
+| Agente, UI ordinaria | Producto y URL de otro caso | Solo lectura / denegación | Correcto, sin asunto del caso bloqueado |
+| Responsable, Apex USER_MODE | Altas, corrección y gestión de equipo | Permitido | Correcto |
+| Responsable, Apex USER_MODE | Reasignar dentro/fuera del equipo | Permitir/rechazar | Correcto |
+| Responsable, UI ordinaria | Garantía y reasignación al integrante activo | Persistencia, sin correo | Confirmadas; garantía restaurada |
+| Ambos, Apex USER_MODE | Siete campos de evaluación y borrados | Rechazo | Correcto |
+| Sin permisos, Apex USER_MODE | Lectura/escritura aun siendo dueño | Rechazo | Correcto |
+| Revocación, usuario persistente | Retirar permisos y grupos | Sin acceso a seis registros | Confirmado por UserRecordAccess |
+| Revocación, UI ordinaria | URL del caso propio | Denegación | «You don't have access to this record» |
+| Integridad bajo ambos roles | Relaciones/fechas incoherentes | Rechazo | Correcto |
+| Regresión P04ModeloTest | 20 pruebas previas | Sin fallos | 20/20 |
+| P04SeguridadTest | 20 pruebas nuevas | Sin fallos | 20/20 |
+
+Las acciones restringidas de Apex usan USER_MODE dentro de System.runAs. Fixtures administrativos y pruebas adicionales SYSTEM_MODE del guardián se identifican aparte. La compartición de fixtures no se confunde con las reglas reales: estas se contrastaron con el usuario persistente después del recálculo.
+
+Auditoría de permisos desplegados: cero ViewAllData/ModifyAllData, cero View All/Modify All de objetos, cero borrado y cero edición de evaluación. Perfil base sin lectura de los cuatro objetos. UserRecordAccess: agente lee cliente/contacto/producto, edita propio y no lee otros casos; responsable lee/edita todos los registros P04 comprobados; tras revocación, cero lectura/edición/borrado/transferencia en los seis registros consultados.
+
+Salesforce muestra Change Owner e indica HasTransferAccess al agente propietario; la reasignación está bloqueada por P04Autorizacion, comprobada en servidor. No se afirma que ocultar el botón sea una protección. La aplicación P04 Posventa y sus cuatro pestañas se vieron con el responsable.
+
+Cobertura informada del despliegue: P04Autorizacion 61/62 ubicaciones y cuatro triggers 10/10, total 71/72 de componentes informados. P04Integridad permaneció sin cambios y no está incluido en esa cifra. Sin nueva ejecución independiente de Test-Seguridad.ps1: el wrapper queda reproducible y las pruebas reales se ejecutaron durante el despliegue.
+
+Los fallos de selectores, aperturas o guardados no persistidos de Lightning no se contaron como éxito. Se comprobó identidad por indicador Login As/enlace del perfil y persistencia después de cada escritura positiva. No se omitieron validaciones. Una interrupción por límite de la revisión automática detuvo el cierre; se reanudó mediante la misma vía autorizada y se completó la limpieza.
+
+## Cierre de organización
+
+Auditoría final satisfactoria:
+
+- Administrador activo y P04_DemoAdmin exclusivamente asignado a él.
+- Usuario de pruebas activo, P04_Minimo, sin rol, conjuntos adicionales ni grupos; cero casos propios activos. Dos licencias Salesforce disponibles y dos ocupadas, para reutilizar este usuario secuencialmente.
+- Ocho registros originales conservados: dos clientes, dos contactos, dos productos y dos casos sin evaluar. Clientes marcados P04; serie y asunto revisados de sesión 03 conservados.
+- Garantía Norte restaurada al 19/10/2027; compra/inicio 19/10/2026. Cero casos temporales activos. Eliminación acotada mediante Remove-SecuritySample, sin purga de papelera.
+- Sesión ordinaria cerrada. Administrators Can Log in as Any User restaurado a false, comprobado tras recargar. El acceso administrativo se conserva.
+
+Evidencias privadas: .local/s04-full-4.json, s04-effective-metadata.json, s04-access-Agente/Responsable/Ninguno.json, s04-agent-persisted.json, s04-manager-persisted.json, s04-transfer-persisted.json, s04-revoked-own-case.json, s04-final-audit.json y s04-policy-final.json. No incluirlas en Git ni publicar identificadores.
+
+## Límites y revisión local
+
+No hay autenticación OAuth ordinaria independiente: no se afirma una prueba REST con token ordinario. UI ordinaria y Apex USER_MODE acreditan restricciones; CLI/API administrativos preparan y contrastan. No se probaron concurrencia, colas, nuevas jerarquías, fusiones/undelete ni concesiones futuras. Los rótulos de pestañas previamente abiertas pueden quedar en caché; la revocación impide nuevas consultas, no borra lo ya visto.
+
+No hay motor de evaluación, ciclo completo, asignación automática, informe ni LWC. Detalle en [SECURITY](SECURITY.md) y [TESTING](TESTING.md).
+
+Revisión local final: 95 archivos públicos leídos como UTF-8 estricto, 61 XML válidos, nueve scripts PowerShell sin errores de sintaxis, 22 enlaces locales existentes y 86 referencias de miembros de manifiestos resueltas sin comodines. Cinco exclusiones comprobadas (.local, .sf, .sfdx, .env y node_modules); sin identidades privadas ni patrones de secretos en los archivos revisados. git diff --check correcto. Estado final: 12 archivos modificados, 36 nuevos y cero en staging; HEAD de1bfdb y main conservados. Los avisos LF/CRLF corresponden a la configuración existente de Git; no se modificó configuración global. Estas comprobaciones incluyen archivos nuevos, que git diff por sí solo no enumera.
+
+## Entrega y siguiente paso
+
+Archivos de implementación: clases P04Autorizacion/P04SeguridadTest, fixtures de P04ModeloTest, cuatro triggers, perfil, permisos/grupos/reglas, layouts y configuración de compartición. Tres manifiestos acotados. Procedimientos New-SecurityUser, New-SecuritySample, Set-SecurityScenario, Remove-SecuritySample y Test-Seguridad, con plantillas Apex. Documentación: README, AGENTS, SECURITY, TESTING, DATA_MODEL, PROJECT_BRIEF y este STATUS.
+
+Alex revisa el diff, hace staging, commit y push manualmente. Después se podrá comprobar el nuevo commit sin atribuirle automáticamente las pruebas de un árbol distinto. Próxima fase recomendada: servicio único de evaluación de garantía; no iniciada.
+
+Summary: `feat: implementar seguridad por función en posventa`
+
+Description:
+
+- Añade perfil mínimo, permisos de agente/responsable, compartición acotada y autorización Apex.
+- Protege casos por propietario, compra/garantía, evaluación, borrado y reasignación dentro del equipo.
+- Despliega 56 componentes y supera 40 pruebas Apex, incluidas las 20 de regresión.
+- Comprueba edición y restricciones en UI ordinaria, permisos efectivos y revocación por URL.
+- Conserva la muestra original, elimina temporales, retira concesiones de prueba y restaura la política administrativa.
+- Documenta procedimientos y límites; la evaluación de garantía queda para la siguiente fase.
+
+
+## Histórico — Sesión 03 completada
 
 18 de noviembre de 2026. Primera base funcional implementada, desplegada y comprobada en P04. El usuario ya puede trabajar con los datos ficticios relacionados desde la interfaz estándar. Evaluación de garantía, ciclo completo y seguridad por función siguen pendientes.
 

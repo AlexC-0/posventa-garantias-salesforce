@@ -1,6 +1,8 @@
-# Modelo de datos — sesión 03
+# Modelo de datos — base de sesión 03 y seguridad de sesión 04
 
 Contrato fijado antes de implementar. API 68.0. Datos ficticios; garantía simulada.
+
+La sesión 04 añade exclusivamente Account.P04_Posventa__c (Checkbox, false por defecto) como identificador de clientes del proyecto. El responsable crea clientes marcados mediante P04Autorizacion; no puede convertir cuentas ajenas ni desmarcar clientes. Solo administración incorpora los dos clientes de demostración existentes. Contact hereda el acceso de Account; productos y casos conservan sus tipos. Hay 13 campos propios en total. Autorización y compartición se detallan en [SECURITY](SECURITY.md); las restricciones de integridad siguientes permanecen vigentes. Las conversiones de registros ajenos mencionadas en el contrato original requieren ahora administración.
 
 ## Ámbito y relaciones
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>P04_Posventa__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Ámbito del cliente P04. Alta ordinaria marcada por el servidor; incorporación de existentes solo administrativa.</description>
+    <label>Cliente de posventa P04</label>
+    <type>Checkbox</type>
+</CustomField>

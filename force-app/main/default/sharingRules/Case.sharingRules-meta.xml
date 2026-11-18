@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SharingRules xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sharingCriteriaRules>
+        <fullName>P04_Responsables</fullName>
+        <accessLevel>Edit</accessLevel>
+        <label>P04 Responsables</label>
+        <sharedTo><group>P04_Responsables</group></sharedTo>
+        <criteriaItems><field>RecordTypeId</field><operation>equals</operation><value>Caso de posventa</value></criteriaItems>
+    </sharingCriteriaRules>
+</SharingRules>

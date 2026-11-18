@@ -4,6 +4,10 @@
         <application>P04_Posventa</application>
         <visible>true</visible>
     </applicationVisibilities>
+    <customPermissions>
+        <enabled>true</enabled>
+        <name>P04_Administrar</name>
+    </customPermissions>
     <description>Solo demostración por el administrador; no implementa roles de negocio.</description>
     <fieldPermissions>
         <editable>true</editable>
@@ -63,6 +67,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Case.P04_TipoResolucion__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Account.P04_Posventa__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <label>P04 Demostración administrativa</label>

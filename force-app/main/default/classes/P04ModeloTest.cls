@@ -35,6 +35,19 @@ private class P04ModeloTest {
         System.assertEquals(StatusCode.FIELD_CUSTOM_VALIDATION_EXCEPTION, r.getErrors()[0].getStatusCode());
         System.assert(r.getErrors()[0].getMessage().contains(pista), r.getErrors()[0].getMessage());
     }
+    private static User administradorFixtureMaster(){
+        User u=new User(Alias='p04mfix',LastName='P04 fixture Master',Email='p04.fixture@example.invalid',
+            Username='p04.master.'+String.valueOf(Crypto.getRandomLong())+'@example.invalid',ProfileId=UserInfo.getProfileId(),
+            TimeZoneSidKey='Europe/Madrid',LocaleSidKey='es_ES',LanguageLocaleKey='en_US',EmailEncodingKey='UTF-8');
+        System.runAs(new User(Id=UserInfo.getUserId())){
+            insert as system u;
+            PermissionSet ps=new PermissionSet(Name='P04_FixtureModelo',Label='P04 fixture de test');insert as system ps;
+            Id permission=[SELECT Id FROM CustomPermission WHERE DeveloperName='P04_Administrar' WITH SYSTEM_MODE].Id;
+            insert as system new SetupEntityAccess(ParentId=ps.Id,SetupEntityId=permission);
+            insert as system new PermissionSetAssignment(AssigneeId=u.Id,PermissionSetId=ps.Id);
+        }
+        return u;
+    }
     @IsTest static void recorridoValidoSinEvaluacion() {
         Case c=caso(producto('A')); insert as system c;
         c=[SELECT Status, IsClosed, P04_ResultadoGarantia__c, P04_EvaluadaEl__c, P04_MotivoGarantia__c FROM Case WHERE Id=:c.Id WITH SYSTEM_MODE];
@@ -60,7 +73,9 @@ private class P04ModeloTest {
         Asset a=producto('A'), b=producto('B');
         Case c=caso(a); c.ContactId=b.ContactId; rechazo(Database.insert(c, false, AccessLevel.SYSTEM_MODE),'contacto del caso');
         c=caso(a); c.AssetId=b.Id; rechazo(Database.insert(c, false, AccessLevel.SYSTEM_MODE),'producto debe');
-        Asset ajeno=new Asset(Name='Ajeno',AccountId=a.AccountId); insert as system ajeno;
+        Asset ajeno=new Asset(Name='Ajeno',AccountId=a.AccountId);
+        User fixtureAdmin=administradorFixtureMaster();System.runAs(fixtureAdmin){insert as system ajeno;}
+        System.assertEquals(null,[SELECT RecordTypeId FROM Asset WHERE Id=:ajeno.Id WITH SYSTEM_MODE].RecordTypeId);
         c=caso(a); c.AssetId=ajeno.Id; rechazo(Database.insert(c, false, AccessLevel.SYSTEM_MODE),'producto debe');
     }
     @IsTest static void intervaloInvalidoYLimiteIgual() {
@@ -157,14 +172,17 @@ private class P04ModeloTest {
         System.assertEquals(0,[SELECT COUNT() FROM Account WHERE Id=:a.AccountId WITH SYSTEM_MODE]);
     }
     @IsTest static void registrosFueraDeAmbitoConservados() {
+        User fixtureAdmin=administradorFixtureMaster();System.runAs(fixtureAdmin){
         Account cliente=new Account(Name='Ajeno creado solo en test'); insert as system cliente;
         Contact persona=new Contact(LastName='Ajeno',AccountId=cliente.Id); insert as system persona;
         persona.AccountId=producto('B').AccountId; update as system persona;
         Asset a=new Asset(Name='Ajeno',AccountId=cliente.Id,P04_InicioGarantia__c=Date.today(),P04_FinGarantia__c=Date.today().addDays(-1)); insert as system a;
+        System.assertEquals(null,[SELECT RecordTypeId FROM Asset WHERE Id=:a.Id WITH SYSTEM_MODE].RecordTypeId);
         a.Name='Ajeno editado'; update as system a;
         Case c=new Case(Subject='Ajeno',Status='New',Origin='Web',P04_FechaIncidencia__c=Date.today().addDays(10)); insert as system c;
         c.Subject='Ajeno editado'; update as system c;
         delete as system c; delete as system a; delete as system persona; delete as system cliente;
+        }
     }
     @IsTest static void lote200CasosValidos() {
         Asset a=producto('A'); List<Case> casos=new List<Case>();

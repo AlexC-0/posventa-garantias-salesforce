@@ -1,6 +1,6 @@
 # Proyecto 04 — Alcance y diseño propuesto
 
-Actualizado en la sesión 03, 18 de noviembre de 2026. Se conserva el alcance V1. La base Account/Contact/Asset/Case, campos propios y validaciones iniciales ya están implementados y desplegados en P04. El contrato concreto está en [DATA_MODEL](DATA_MODEL.md); resultados y límites en [STATUS](STATUS.md). La evaluación, ciclo completo, roles, informe y LWC siguen pendientes.
+Actualizado en la sesión 04, 18 de noviembre de 2026. Se conserva el alcance V1. La base Account/Contact/Asset/Case, validaciones y seguridad por función están implementadas y desplegadas en P04. Contrato en [DATA_MODEL](DATA_MODEL.md), permisos en [SECURITY](SECURITY.md) y resultados en [STATUS](STATUS.md). Evaluación, ciclo completo, cola/asignación, informe y LWC siguen pendientes.
 
 ## Propósito y V1
 
@@ -21,7 +21,7 @@ Solo datos ficticios y garantía simulada. Excluidos: portal público, Experienc
 | Servicio Apex | Evaluación única de garantía |
 | LWC | Consulta desde la ficha del caso |
 
-Objetos y relaciones estándar verificados. La sesión 03 incorpora 12 campos, nueve reglas de validación, tipos/proceso propios y protecciones Apex para cambios en padres y borrados. Los nombres API y la distinción entre vacío/sin evaluar y pendiente de datos están fijados en DATA_MODEL. No hay todavía servicio de evaluación, Flow ni LWC. Pendientes: seguridad por función, mecanismo de reevaluación y coordinación del ciclo.
+Objetos y relaciones estándar verificados. La sesión 03 incorporó 12 campos, nueve reglas de validación, tipos/proceso propios y protecciones Apex. La sesión 04 añade un campo de ámbito de cliente (13 propios en total), seguridad por función, compartición y autorización separada de integridad. Los nombres API y la distinción entre vacío/sin evaluar y pendiente de datos están en DATA_MODEL. No hay todavía servicio de evaluación, Flow ni LWC. Pendientes: evaluación/reevaluación y coordinación del ciclo.
 
 ## Estados y cierre
 
@@ -52,6 +52,8 @@ Decisiones fijadas en sesión 03: incoherencias se rechazan en servidor antes de
 
 ## Consulta y permisos propuestos
 
+La matriz de seguridad ordinaria ya está implementada y comprobada en sesión 04; el acceso a cola de la V1 siguiente todavía no existe. Se utilizó un único usuario persistente con permisos secuenciales y dos agentes aislados en Apex, preservando al administrador. Los resultados y límites concretos prevalecen sobre las propuestas siguientes.
+
 El LWC en la ficha del caso mostrará producto, garantía, evaluación registrada y una lista acotada de casos relacionados accesibles. Debe cubrir carga, vacío, error y acceso restringido. El límite y la ordenación de casos relacionados están pendientes.
 
 | Función | Acceso previsto |
@@ -77,4 +79,4 @@ Comprobar licencias y usuarios disponibles antes de comprometer el esquema de pr
 11. Informe de pendientes coherente con los datos ficticios conocidos.
 12. Despliegue reproducible con resultados reales de pruebas.
 
-Los controles locales y una futura CI pueden comprobar formato, análisis y pruebas unitarias del LWC. Jest no acredita permisos ni integración Salesforce. Apex, automatizaciones, acceso efectivo, informes y despliegue requieren evidencia en una organización. La sesión 03 ya tiene despliegue y pruebas reales de integridad, incluidos lotes de 200, más comprobaciones API administrativas. Sus resultados no acreditan evaluación de cobertura, flujo completo, seguridad por roles ni todos los criterios V1. La siguiente sesión será seguridad por función, con pruebas secuenciales compatibles con la plaza Salesforce libre.
+Los controles locales y una futura CI pueden comprobar formato, análisis y pruebas unitarias del LWC. Jest no acredita permisos ni integración Salesforce. La sesión 03 tiene evidencia de integridad y lotes de 200; la sesión 04 añade 20 pruebas de seguridad, regresión 20/20, interfaz ordinaria y revocación. Esto no acredita evaluación de cobertura, flujo completo ni todos los criterios V1. Próxima fase recomendada: servicio único de evaluación de garantía, sin iniciarlo automáticamente.

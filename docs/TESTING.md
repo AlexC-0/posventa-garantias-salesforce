@@ -1,3 +1,81 @@
+# Comprobaciones de seguridad y modelo
+
+## Sesión 04: preparación y despliegue
+
+Destino exclusivo P04, alias p04-posventa-dev, API 68.0. Comparar Organization.Id/OrganizationType y usuario administrativo con la referencia privada antes de escribir. Los scripts exigen ExpectedOrgId y no exportan autenticación. No usar el Playground anterior, Gmail ni destinos predeterminados.
+
+Antes de repetir, revisar diferencias remotas y conservar cualquier cambio posterior del usuario. Los archivos SharingRules contienen las cinco reglas propias y la referencia original estaba vacía: si existen reglas nuevas, reconciliarlas antes de desplegar. No usar destructivos ni sobrescribir reglas ajenas. Los manifiestos de CustomObject incorporan también los hijos propios ya existentes en formato DX.
+
+Orden ejecutado: compartición primero; preparación de permisos/grupos; despliegue completo con ambas clases de tests. Esperar a que termine cada despliegue y el recálculo antes de interpretar acceso. Salesforce exigió Opportunity Private como dependencia de Account Private.
+
+```powershell
+sf project deploy start --manifest manifest/sesion04-comparticion.xml --target-org p04-posventa-dev --test-level NoTestRun --wait 3 --json
+sf project deploy start --manifest manifest/sesion04-preparacion.xml --target-org p04-posventa-dev --test-level NoTestRun --wait 3 --json
+sf project deploy start --manifest manifest/sesion04.xml --target-org p04-posventa-dev --test-level RunSpecifiedTests --tests P04ModeloTest --tests P04SeguridadTest --wait 3 --json
+```
+
+Resultado real final: Succeeded, 56 componentes, 40 pruebas, cero errores. Preparación previa: 30 componentes de compartición y 49 de permisos/configuración. Los intentos fallidos por dependencias y fixtures se revirtieron; no son despliegues satisfactorios. No se repitieron suites tras documentación o codificación PowerShell.
+
+## Usuarios y escenarios reproducibles
+
+Los siguientes valores son referencias privadas del operador, nunca literales que deban subirse a Git:
+
+```powershell
+./scripts/New-SecurityUser.ps1 -ExpectedOrgId '<P04 verificada>'
+./scripts/New-SecuritySample.ps1 -ExpectedOrgId '<P04 verificada>'
+./scripts/Set-SecurityScenario.ps1 -ExpectedOrgId '<P04 verificada>' -ExpectedUserId '<usuario de prueba>' -Scenario Ninguno
+./scripts/Set-SecurityScenario.ps1 -ExpectedOrgId '<P04 verificada>' -ExpectedUserId '<usuario de prueba>' -Scenario Agente
+./scripts/Set-SecurityScenario.ps1 -ExpectedOrgId '<P04 verificada>' -ExpectedUserId '<usuario de prueba>' -Scenario Responsable
+./scripts/Set-SecurityScenario.ps1 -ExpectedOrgId '<P04 verificada>' -ExpectedUserId '<usuario de prueba>' -Scenario Ninguno
+./scripts/Remove-SecuritySample.ps1 -ExpectedOrgId '<P04 verificada>'
+```
+
+No ejecutar la lista de escenarios seguida sin sus comprobaciones intermedias. New-SecurityUser verifica licencia disponible y crea/reutiliza un único usuario de perfil mínimo y sin rol; no envía correos. New-SecuritySample requiere los clientes de sesión 03, los marca P04 y crea solo dos casos, abortando si ya hay temporales. IDs en .local/s04-user.json y s04-records.json.
+
+Para probar propiedad, asignar administrativamente el primer caso temporal al usuario antes del escenario Agente. No asignar la muestra original. En cada escenario consultar PermissionSetAssignment (incluido PermissionSetGroupId), GroupMember y UserRecordAccess para cliente, contacto, producto y casos propio/ajeno. Validar primero los IDs privados, no pegarlos a documentación pública. El script de escenarios aborta ante permisos o membresías ajenos a su alcance.
+
+Secuencia UI:
+
+1. Entrar como usuario ordinario mediante Login As autorizado y comprobar su identidad. Registrar el valor previo de Login Access Policies; si se habilita para la prueba, restaurarlo al final. No leer ni establecer contraseñas.
+2. Agente: abrir caso temporal propio, editar asunto y guardar; consultar producto sin edición de compra/garantía; abrir por URL un caso P04 de otro propietario, que debe denegarse sin asunto.
+3. Retirar concesiones del agente, aplicar responsable y renovar contexto. Corregir temporalmente garantía con fecha válida; verificar persistencia y restaurar el valor original. Reasignar el segundo caso temporal al integrante activo del equipo, con Send notification email desactivado.
+4. Retirar conjuntos y grupos; comprobar en servidor cero acceso, incluso manteniendo la propiedad. Recargar/acceder por URL al caso propio en el navegador ordinario: denegación efectiva.
+5. Salir del usuario, eliminar solo temporales con Remove-SecuritySample y restaurar la política administrativa. Comprobar ocho registros originales, garantía original y usuario mínimo.
+
+Se ejecutaron New-SecurityUser, New-SecuritySample, Set-SecurityScenario y Remove-SecuritySample. Las escrituras UI de agente, garantía y reasignación se confirmaron mediante lectura administrativa; esa consulta no se atribuye al usuario ordinario. Evidencias filtradas en .local. Sin OAuth ordinario independiente: no se afirma prueba REST restringida.
+
+## Pruebas Apex y resultados
+
+```powershell
+./scripts/Test-Seguridad.ps1 -ExpectedOrgId '<P04 verificada>'
+```
+
+El wrapper queda para repetición independiente y se revisó su sintaxis; las 40 pruebas de esta entrega se ejecutaron realmente dentro del despliegue RunSpecifiedTests, no mediante una segunda ejecución del wrapper.
+
+P04SeguridadTest: 20 pruebas con dos agentes aislados, responsable y usuario sin permisos. Acciones restringidas con USER_MODE dentro de System.runAs; fixtures administrativos en modo sistema y comparticiones explícitas de fixtures. Dos pruebas adicionales SYSTEM_MODE verifican el guardián y no sustituyen CRUD/FLS. Sin SeeAllData. La compartición por criterios desplegada se comprueba aparte con el usuario persistente.
+
+| Contexto | Acción | Esperado y obtenido |
+| --- | --- | --- |
+| Agente USER_MODE | Crear/editar propio, lote 200 | Permitido |
+| Agente USER_MODE | Caso ajeno/no compartido, padres y garantía | Rechazado |
+| Responsable USER_MODE | Altas P04, corrección y casos de equipo | Permitido |
+| Responsable USER_MODE | Reasignación dentro/fuera de equipo | Permitida/rechazada |
+| Ambos USER_MODE | Siete campos de evaluación y borrados | Rechazados |
+| Sin permisos y revocación USER_MODE | Lectura/escritura aun siendo propietario | Rechazadas |
+| Ambos USER_MODE | Incoherencias del modelo anterior | Rechazadas |
+| UI agente | Edición propia, producto solo lectura, URL ajena | Persistencia/solo lectura/denegación |
+| UI responsable | Garantía y reasignación sin correo | Persistencia confirmada |
+| UI tras revocación | URL del caso propio | Acceso denegado |
+
+P04ModeloTest: 20/20 de regresión. Dos fixtures Master ahora usan un administrador aislado sin la concesión P04 de tipos, manteniendo aserciones de ámbito y comprobando RecordTypeId null. No se alteraron asignaciones del administrador real. El resto del contrato de integridad permanece.
+
+Cobertura informada por el despliegue de sesión 04: P04Autorizacion 61/62 ubicaciones y cuatro triggers 10/10; total 71/72 de los componentes Apex informados. P04Integridad no cambió y no aparece en ese informe de cobertura; no atribuirle esa cifra ni trasladar la cobertura histórica a esta ejecución. Sin pruebas de concurrencia, colas, fusiones/undelete ni motor de evaluación.
+
+## Histórico — sesión 03
+
+El contenido siguiente describe la ejecución administrativa anterior y sus procedimientos, no el estado final ni las restricciones ordinarias de sesión 04.
+
+
 # Comprobación del modelo — sesión 03
 
 Usar únicamente la organización P04 identificada, alias p04-posventa-dev, API 68.0. Nunca establecer destinos predeterminados. No ejecutar en el Playground anterior ni consultar Gmail. No se necesita reinstalar herramientas.
