@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns><field>CASE_NUMBER</field></columns>
+    <columns><field>SUBJECT</field></columns>
+    <columns><field>ACCOUNT.NAME</field></columns>
+    <columns><field>CREATED_DATE</field></columns>
+    <columns><field>Case.P04_FechaIncidencia__c</field></columns>
+    <columns><field>Case.P04_ResultadoGarantia__c</field></columns>
+    <description>Casos abiertos P04 de clientes del proyecto, en cola o asignados. Sin límite temporal. Resultado registrado vacío = Sin evaluar. No recalcula garantías. Antiguos primero dentro de cada grupo.</description>
+    <filter>
+        <booleanFilter>1 AND 2 AND 3 AND 4</booleanFilter>
+        <criteriaItems><column>RECORDTYPE</column><operator>equals</operator><value>Case.P04_Posventa</value></criteriaItems>
+        <criteriaItems><column>Account.P04_Posventa__c</column><operator>equals</operator><value>1</value></criteriaItems>
+        <criteriaItems><column>STATUS</column><operator>equals</operator><value>P04_Nuevo,P04_EnCurso,P04_PendienteInformacion</value></criteriaItems>
+        <criteriaItems><column>CLOSED</column><operator>equals</operator><value>0</value></criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown><field>STATUS</field><sortOrder>Asc</sortOrder></groupingsDown>
+    <groupingsDown><field>OWNER</field><sortOrder>Asc</sortOrder></groupingsDown>
+    <name>P04 Casos pendientes</name>
+    <params><name>units</name><value>h</value></params>
+    <reportType>CaseList</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <sortColumn>CREATED_DATE</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter><dateColumn>CREATED_DATEONLY</dateColumn><interval>INTERVAL_CUSTOM</interval></timeFrameFilter>
+</Report>

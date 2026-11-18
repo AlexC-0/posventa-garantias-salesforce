@@ -1,4 +1,6 @@
-# Seguridad por función — sesiones 04–06
+# Seguridad por función — V1
+
+Sesión 08 añade la carpeta P04_Posventa compartida únicamente con P04_Responsables en nivel View. P04_Responsable recibe RunReports y la pestaña Reports; no recibe creación/edición de informes, administración de carpetas, View All ni Modify All. La carpeta no concede acceso a los registros: el informe aplica permisos, compartición y ámbito P04. Ejecución ordinaria y revocación por URL directa en [STATUS](STATUS.md); contrato en [INFORME](INFORME.md).
 
 Sesión 07 añade [CONSULTA](CONSULTA.md), LWC de solo lectura sin nuevos campos ni cambios en las reglas de garantía/ciclo. Lecturas USER_MODE, hasta cinco relacionados visibles y actualización explícita; resultados actuales en STATUS.
 
@@ -20,6 +22,7 @@ Actualización de sesión 06: [CICLO](CICLO.md) incorpora entrada a cola, toma p
 | Compra y garantía | Solo lectura | Edición con validaciones | Sin acceso |
 | Siete campos de evaluación | Solo lectura | Solo lectura | Sin acceso |
 | Reasignar casos | Solo toma inicial de cola para sí | Solo a integrantes activos habilitados y miembros del equipo | No |
+| Consultar y ejecutar informe P04 | Sin concesión | Sí, carpeta View y RunReports | Sin acceso |
 | Borrar los cuatro objetos de negocio | No | No | No |
 
 Los permisos CRUD/FLS y la compartición se combinan; las concesiones se acumulan. Compartir un registro no concede CRUD ni FLS. La propiedad tampoco evita esos controles. Los tipos de registro delimitan funcionalidad y criterios de compartición, pero no son una barrera de seguridad por sí mismos. El guardián añade restricciones de negocio en servidor.

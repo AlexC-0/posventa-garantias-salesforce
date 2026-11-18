@@ -1,6 +1,6 @@
 # Proyecto 04 — Alcance y diseño propuesto
 
-Actualizado en la sesión 07, 18 de noviembre de 2026. Se conserva el alcance V1. La base Account/Contact/Asset/Case, validaciones, seguridad por función y servicio único de evaluación explícita están implementados y desplegados en P04. Contrato en [DATA_MODEL](DATA_MODEL.md), permisos en [SECURITY](SECURITY.md), servicio en [GARANTIA](GARANTIA.md) y resultados en [STATUS](STATUS.md). La sesión 06 implementa ciclo y cola/asignación: [CICLO](CICLO.md). La consulta LWC se incorpora en sesión 07; el informe sigue pendiente.
+Actualizado en la sesión 08, 18 de noviembre de 2026. Se conserva el alcance V1. La base Account/Contact/Asset/Case, validaciones, seguridad por función y servicio único de evaluación explícita están implementados y desplegados en P04. Contrato en [DATA_MODEL](DATA_MODEL.md), permisos en [SECURITY](SECURITY.md), servicio en [GARANTIA](GARANTIA.md) y resultados en [STATUS](STATUS.md). La sesión 06 implementa ciclo y cola/asignación: [CICLO](CICLO.md). La consulta LWC se incorpora en sesión 07; la sesión 08 implementa el [informe](INFORME.md) y comprueba los doce criterios en [ACEPTACION-V1](ACEPTACION-V1.md).
 
 ## Propósito y V1
 
@@ -20,8 +20,9 @@ Solo datos ficticios y garantía simulada. Excluidos: portal público, Experienc
 | Flow | Asignación inicial y coordinación |
 | Servicio Apex | Evaluación única de garantía |
 | LWC | Consulta desde la ficha del caso |
+| Informe estándar | Pendientes por estado y propietario, sin cálculo de garantía |
 
-Objetos y relaciones estándar verificados. La sesión 03 incorporó 12 campos, nueve reglas de validación, tipos/proceso propios y protecciones Apex. La sesión 04 añade un campo de ámbito de cliente (13 propios en total), seguridad por función, compartición y autorización separada de integridad. La sesión 05 incorpora evaluación/reevaluación explícita y un adaptador invocable, sin campos nuevos ni Flow. El cálculo se centraliza en P04Garantia; ningún otro componente lo duplica. La sesión 06 incorpora coordinación, asignación y cierre. Sesión 07 incorpora la consulta LWC. Pendiente: informe.
+Objetos y relaciones estándar verificados. La sesión 03 incorporó 12 campos, nueve reglas de validación, tipos/proceso propios y protecciones Apex. La sesión 04 añade un campo de ámbito de cliente (13 propios en total), seguridad por función, compartición y autorización separada de integridad. La sesión 05 incorpora evaluación/reevaluación explícita y un adaptador invocable, sin campos nuevos ni Flow. El cálculo se centraliza en P04Garantia; ningún otro componente lo duplica. La sesión 06 incorpora coordinación, asignación y cierre. Sesión 07 incorpora la consulta LWC; sesión 08, el informe estándar de pendientes con carpeta propia y consulta por Responsable.
 
 ## Estados y cierre
 
@@ -79,4 +80,6 @@ Comprobar licencias y usuarios disponibles antes de comprometer el esquema de pr
 11. Informe de pendientes coherente con los datos ficticios conocidos.
 12. Despliegue reproducible con resultados reales de pruebas.
 
-Los controles locales y una futura CI pueden comprobar formato, análisis y pruebas unitarias del LWC. Jest no acredita permisos ni integración Salesforce. La sesión 05 supera 65 pruebas (20 modelo, 20 seguridad y 25 garantía) y una demostración administrativa revertida. No se atribuyen UI/REST ordinarias nuevas a esta ejecución. Esto no acredita flujo completo ni todos los criterios V1. La sesión 06 se verifica por separado en STATUS: 93 pruebas y recorrido ordinario completo hasta cierre. Esa evidencia no se atribuye a los resultados históricos de sesión 05 ni completa los criterios de informe/LWC. La sesión 07 supera 106 pruebas Apex y 23 Jest y demuestra la consulta con usuario ordinario. No completa el informe ni el cierre global V1; la siguiente fase requiere otro encargo.
+Los controles locales y una futura CI pueden comprobar formato, análisis y pruebas unitarias del LWC. Jest no acredita permisos ni integración Salesforce. Como antecedentes: sesión 05 superó 65 pruebas y una demostración administrativa; sesión 06, 93 pruebas y recorrido ordinario hasta cierre; sesión 07, 106 Apex y 23 Jest y consulta ordinaria. Cada evidencia conserva su alcance histórico.
+
+La sesión 08 completa el informe y la demostración integrada, vuelve a superar 106 Apex secuenciales y 23 Jest y registra los doce criterios en [ACEPTACION-V1](ACEPTACION-V1.md). V1 preparada para revisión final y publicación manual de Alex, dentro de los límites de [STATUS](STATUS.md). El procedimiento completo está documentado y convertido localmente; una instalación desde cero no está acreditada.

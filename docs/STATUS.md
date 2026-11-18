@@ -1,3 +1,103 @@
+# Estado — Sesión 08 completada, pendiente de revisión y publicación manual
+
+18 de noviembre de 2026. **V1 preparada para revisión final y publicación manual de Alex.** Informe de pendientes implementado y comprobado, recorrido integrado completado y doce criterios relacionados en [ACEPTACION-V1](ACEPTACION-V1.md). No se inicia otro encargo.
+
+## Git, alcance y versiones
+
+Ruta/raíz: C:\Users\kaosk\source\repos\posventa-garantias-salesforce. Rama main; origin https://github.com/AlexC-0/posventa-garantias-salesforce.git. Inicio limpio en HEAD/origin/main locales fae9fbe7be6e28f020e209b887d5c6abd2f6433d, sesión 07 publicada por Alex según el encargo. Sin nueva consulta de la punta remota. HEAD y remoto conservados; cambios locales sin staging. No se han ejecutado add, commit, push, tags ni releases.
+
+Identidad de organización y administrador comprobada antes de escrituras, destino explícito p04-posventa-dev y API 68.0. CLI 2.158.7, Node 24.13.0, npm 11.6.2, runner sfdx-lwc-jest 8.0.0 y herramientas Salesforce/Java existentes conservados. Sin instalaciones nuevas, Gmail, otras organizaciones/repositorios, cuentas persistentes nuevas, comunicaciones ni cambios de CV/LinkedIn/portfolio.
+
+## Informe y acceso
+
+Tipo estándar CaseList suficiente para los ocho conceptos solicitados. Formato Summary: estado/propietario como columnas de agrupación, y número, asunto, cliente, apertura, incidencia y resultado como detalles. Orden de apertura ascendente dentro de cada grupo; no se promete orden global entre grupos.
+
+Filtros conjuntos: tipo Case.P04_Posventa, cliente marcado P04, los tres estados abiertos e IsClosed=false. Alcance All cases sujeto al usuario ejecutor, incluidos cola y propietarios individuales. All Time, sin fechas inicial/final ni filtro por incidencia. El resultado vacío se muestra como `-` y significa Sin evaluar; el informe consume la instantánea, no calcula cobertura.
+
+Carpeta propia P04_Posventa con View únicamente para P04_Responsables. P04_Responsable añade RunReports y pestaña Reports; la aplicación incluye esa pestaña. No se añaden edición de informes, administración de carpetas, View All, Modify All, reglas de compartición, dashboards, suscripciones ni exportaciones automáticas. La carpeta no sustituye CRUD/FLS ni acceso a registros. Contrato y referencias en [INFORME](INFORME.md).
+
+Antes de desplegar se recuperaron aplicación y permiso: sin diferencias funcionales inesperadas respecto a la base (el servidor añadía valores false por defecto al permiso). Despliegue final incremental: **cuatro componentes, Succeeded, cero errores**, NoTestRun porque no cambia Apex. Recuperación final y describe de Analytics confirman filtros, agrupaciones, orden y carpeta View. No se modificaron Apex, Flows, LWC, modelo, pruebas ni dependencias.
+
+## Muestra e informe ejecutado como Responsable
+
+Preparación administrativa identificada: un producto temporal, cuatro casos de muestra (Nuevo en cola, En curso evaluado, Pendiente de información sin evaluar y Cerrado), y control ajeno con cliente sin marca P04/contacto/producto/caso propios. El caso del recorrido se creó después mediante UI ordinaria. Se registraron filas, grupos y recuentos esperados mediante consultas administrativas **antes** de las respectivas lecturas del informe. Esas consultas no se atribuyen al usuario ordinario.
+
+| Lectura UI ordinaria | Originales abiertos | Temporales abiertos | Nuevo | En curso | Pendiente de información | Total |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Inicial, muestra preparada | 2 | 3 | 3 | 1 | 1 | **5** |
+| Recorrido en Pendiente de información | 2 | 4 | 3 | 1 | 2 | **6** |
+| Tras cerrar el recorrido | 2 | 3 | 3 | 1 | 1 | **5** |
+
+En Nuevo: dos originales del administrador y un temporal en cola. En curso y Pendiente pertenecen al usuario ordinario Responsable. Se contrastaron números de caso, grupos, propietarios y totales. El cerrado de muestra queda fuera en las tres lecturas; el control ajeno ya existía en las dos últimas y también queda fuera. El caso cerrado durante el recorrido desaparece de la última lectura.
+
+La UI confirma All Time y apertura oldest-to-newest; Analytics confirma CUSTOM sin extremos. Las incidencias de 2020 siguen visibles, pero **no se preparó un registro con CreatedDate antiguo**: la ausencia de filtro temporal se acredita por definición/UI, sin presentar la incidencia como antigüedad de creación. No se garantiza consistencia entre consultas concurrentes.
+
+Tras retirar conjunto y membresías se volvió a abrir la URL directa del informe con la misma identidad ordinaria y contexto recargado. Ya no mostró definición ni filas: Salesforce redirigió a Analytics y devolvió «sObject type 'Report' is not supported». La aplicación P04 dejó de estar disponible. Es una denegación tras revocación conjunta, no una prueba aislada de retirar solo la carpeta ni una nueva autenticación REST ordinaria.
+
+## Recorrido integrado real
+
+1. Responsable ordinario creó un caso ficticio desde la UI con relaciones válidas. Persistencia contrastada: autor ordinario, Nuevo, propietario cola y Sin evaluar.
+2. Tomó el caso para sí mediante Change Owner, sin correo. Editó seguimiento y pasó a En curso: la asignación inicial no sobrescribió el propietario individual.
+3. Ejecutó Evaluar garantía y confirmó En cobertura. Antes de Actualizar, el LWC seguía Sin evaluar; después recuperó resultado y siete valores registrados.
+4. Administración corrigió solo el fin del producto temporal. Comparación de los cinco casos asociados confirmó estados e instantáneas intactos. Actualizar mostró fechas actuales diferentes y aviso de reevaluación.
+5. Intentó cerrar con resolución y explicación válidas: rechazo explícito «los datos han cambiado; reevalúe explícitamente antes de cerrar». El caso siguió abierto, con propietario e instantánea anteriores.
+6. Reevaluó mediante la acción existente: Fuera de cobertura. Actualizar recuperó las nuevas fechas utilizadas y el resultado. Pasó a Pendiente de información; el informe mostró seis abiertos y dos en ese grupo.
+7. Cerró desde Pendiente con Atención fuera de cobertura y explicación ficticia. Persistencia confirmó Cerrado, propietario/autor ordinarios y evaluación conservada. Después se corrigió otra vez solo el producto temporal: las cinco instantáneas permanecieron iguales. Actualizar mostró «Caso cerrado: evaluación histórica conservada», fin actual nuevo y fin utilizado anterior. El informe bajó de seis a cinco.
+
+El recorrido usa una sola identidad ordinaria Responsable. Las restricciones Agente se reutilizan de la UI histórica y pruebas aisladas identificadas en la matriz; no se inventa simultaneidad. Se descartaron como evidencia de éxito los timeouts del navegador: cada paso se confirmó por estado posterior. Chrome ocultaba la pestaña y la promoción Go Mobile tapaba controles; se activó la ventana Salesforce y se cerró ese aviso, sin cambiar el producto ni preferencias globales.
+
+## Pruebas y despliegue reproducible
+
+| Suite final de esta sesión | Resultado |
+| --- | --- |
+| P04ModeloTest | 20/20 |
+| P04SeguridadTest | 20/20 |
+| P04GarantiaTest | 25/25 |
+| P04CicloTest | 28/28 |
+| P04ConsultaCasoTest | 13/13 |
+| Total Apex, cinco suites secuenciales | **106/106** |
+| Jest LWC | **23/23** |
+
+Comandos reales: cinco `sf apex run test --class-names <suite> --synchronous --code-coverage --target-org p04-posventa-dev --json`, después `npm run test:lwc -- --json --outputFile=.local/s08-jest.json`. No hubo cambios de código después. No se repitieron instalación, auditoría npm ni cobertura frontend; los resultados históricos no se presentan como mediciones nuevas. No son resultados de CI remota.
+
+`manifest/v1.xml` reúne **73 miembros explícitos**, sin comodines/destructivos; conversión local a Metadata API satisfactoria. [DESPLIEGUE-V1](DESPLIEGUE-V1.md) documenta dependencias, CaseStatus, paquete conjunto, permisos/grupos/cola, Flows, página, carpeta, pruebas y restauración. El despliegue completo o una instalación desde cero **no se han ejecutado**. Solo se acredita el incremental de cuatro componentes sobre la base existente.
+
+Incidencias de preparación resueltas: Salesforce rechazó primero el filtro de RecordType por etiqueta y después repetir agrupaciones como columnas de detalle; ambos despliegues se revirtieron. La versión final usa Case.P04_Posventa y columnas de agrupación. La preparación inicial de un control con tipo Master falló y revirtió la transacción; el control viable usa tipo P04 y cliente sin marca, creado administrativamente, sin ampliar privilegios ni convertir clientes originales.
+
+## Restauración y revisión local
+
+Eliminados solo los IDs registrados: **seis casos, dos productos, un contacto y un cliente temporales**, en ese orden y sin purga. Se validaron nombres, relaciones y exclusividad del cliente temporal antes de borrar. Ningún original se incluyó en el borrado.
+
+Auditoría final satisfactoria: **ocho originales**, dos casos originales sin evaluar, garantía y serie originales conservadas; cero temporales de sesiones 04–08 pendientes en las comprobaciones previstas. Usuario reutilizable activo P04_Minimo, sin rol, conjuntos adicionales, grupos ni casos propios. Administrador y P04_DemoAdmin preservados; dos licencias Salesforce usadas de dos. Salida de Login As y política restaurada a **false**, comprobada tras recarga.
+
+Consulta final de configuración: ambos Flows activos; cola con exactamente los grupos Agentes y Responsables; RunReports habilitado en P04_Responsable, CreateCustomizeReports/ViewAllData/ModifyAllData deshabilitados. Resultado privado en `.local/s08-final-config.json`.
+
+Evidencias privadas ignoradas: `.local/s08-deploy-3.json`, `s08-report-describe.json`, `s08-final-metadata/`, `s08-tests-*.json`, `s08-jest.json`, `s08-expected-*.json`, `s08-ui-report-*.json`, `s08-ui-closed-historical.json`, `s08-case-*.json`, `s08-product-after-close.json`, `s08-cleanup.json`, `s08-final-audit.json`, `s08-policy-restored.json` y `s08-local-verification.json`. No se publican IDs, usuarios internos, URLs de sesión ni capturas privadas.
+
+Revisión local final satisfactoria: 144 archivos UTF-8, 83 XML, 13 scripts PowerShell, 83 enlaces locales y 195 referencias de miembros de manifiestos. Cinco exclusiones privadas comprobadas; barrido de identidades/secretos, espacios en archivos nuevos y `git diff --check` sin incidencias. Git final: main en fae9fbe, nueve archivos modificados y ocho nuevos, cero en staging. Los históricos siguientes conservan sus propias cifras.
+
+## Entrega y límites
+
+Matriz de doce criterios satisfactoria dentro del alcance: [ACEPTACION-V1](ACEPTACION-V1.md). Guion de unos cinco minutos y preparación/restauración separadas: [DEMO-V1](DEMO-V1.md). Competencias y decisiones referenciadas a implementación y pruebas, sin métricas de negocio inventadas.
+
+No quedan defectos funcionales conocidos del encargo. Límites: garantía simulada; un usuario reutilizable; sin producción, carga/concurrencia real, móvil, API ordinaria con OAuth propio, CI remota ni instalación limpia acreditada. No se transforma la comprobación de permisos en una auditoría integral de seguridad o accesibilidad.
+
+Summary: `feat: incorporar informe de pendientes y validar la V1`
+
+Description:
+
+- Añade el informe estándar de pendientes P04, sin límite temporal, agrupado por estado y propietario y con carpeta de consulta para responsables.
+- Integra Reports y RunReports con permisos mínimos y verifica filas, recuentos, exclusiones y retirada de acceso con usuario ordinario.
+- Completa el recorrido de creación a cierre, rechazo de evaluación desactualizada, actualización LWC e histórico conservado.
+- Supera 106 pruebas Apex secuenciales y 23 Jest; conserva ocho originales y restaura temporales, permisos y Login As.
+- Documenta aceptación, competencias, demostración y despliegue de V1; distingue el incremental ejecutado de una instalación limpia no realizada.
+
+Siguiente paso: Alex revisa el diff, hace staging, commit y push manualmente. Después se contrasta el commit publicado antes del cierre definitivo. No iniciar otra fase automáticamente.
+
+## Histórico — Sesión 07 publicada en fae9fbe
+
+Los resultados y pendientes siguientes pertenecen a aquella sesión. Informe pendiente y cierre V1 fuera de alcance eran límites de sesión 07, sustituidos por la entrega 08 anterior.
+
 # Estado — Sesión 07 completada, pendiente de commit y push de Alex
 
 18 de noviembre de 2026. LWC de consulta integrado y comprobado en Salesforce. Informe de pendientes, integraciones y cierre global V1 quedan fuera.

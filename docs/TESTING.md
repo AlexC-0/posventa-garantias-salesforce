@@ -1,3 +1,28 @@
+# Comprobaciones de V1 — sesión 08
+
+Base publicada fae9fbe; destino exclusivo p04-posventa-dev, API 68.0. La [matriz de aceptación](ACEPTACION-V1.md) relaciona los doce criterios con pruebas y demostraciones. [STATUS](STATUS.md) contiene los resultados actuales y la restauración.
+
+## Ejecución real sobre la versión final
+
+- Despliegue incremental `manifest/sesion08.xml`: cuatro componentes, Succeeded, cero errores. Solo informe, carpeta, aplicación y permiso; sin cambios Apex, Flow ni LWC.
+- Cinco suites **secuenciales**, mediante `sf apex run test --class-names <suite> --synchronous --code-coverage --target-org p04-posventa-dev --json`: P04ModeloTest 20/20, P04SeguridadTest 20/20, P04GarantiaTest 25/25, P04CicloTest 28/28 y P04ConsultaCasoTest 13/13; total **106/106**.
+- `npm run test:lwc -- --json --outputFile=.local/s08-jest.json`: **23/23**. No se repitieron instalaciones, auditorías de dependencias ni mediciones de cobertura frontend; las cifras de sesión 07 que siguen son históricas.
+- Conversión local `sf project convert source --manifest manifest/v1.xml --output-dir .local/s08-v1-package --json`: satisfactoria, 73 miembros explícitos. No equivale a una instalación limpia ni a un despliegue completo ejecutado.
+
+Para repetir: comprobar destino y ejecutar `scripts/Test-Consulta.ps1 -ExpectedOrgId '<identificador privado P04 verificado>'`, seguido de `npm run test:lwc`. Conservar la ejecución secuencial: los fixtures de grupos de cola comparten registros. No modificar ajustes globales para ejecutar en paralelo.
+
+## Salesforce real
+
+Informe ejecutado como Responsable ordinario frente a resultados administrativos esperados, registrados antes de cada lectura: cinco filas iniciales, seis tras incorporar el recorrido, cinco tras cerrarlo. Contraste de filas, estado/propietario y recuentos; cerrados y cliente ajeno excluidos. Filtro de fecha All Time y orden de creación ascendente comprobados. No se preparó un caso con CreatedDate antiguo: una incidencia de 2020 no sustituye esa prueba.
+
+Recorrido integrado ordinario: crear → cola → tomar → En curso → evaluar → Actualizar → corregir producto temporal administrativamente → rechazo de cierre desactualizado → reevaluar → Pendiente de información → cierre → histórico LWC → informe. La evaluación y el cierre usan las acciones de producto existentes. El informe y Actualizar solo leen. Revocación, limpieza y comprobación final se registran en STATUS.
+
+[DESPLIEGUE-V1](DESPLIEGUE-V1.md) es el procedimiento vigente, con dependencias, permisos, cola, Flows, página y carpeta. Los manifiestos históricos no deben aplicarse consecutivamente sobre los archivos actuales como si fueran paquetes históricos inmutables.
+
+## Histórico — Sesión 07 publicada en fae9fbe
+
+Los resultados y pendientes siguientes describen aquella sesión. El comando histórico con varias suites en un despliegue no sustituye la regresión secuencial vigente indicada arriba.
+
 # Comprobaciones de consulta — sesión 07
 
 Destino exclusivo p04-posventa-dev, API 68.0, base publicada eca51b8. Confirmar identidad con P04-Common y conservar cambios posteriores antes de desplegar. [CONSULTA](CONSULTA.md) define contrato, ubicación y demostración; [STATUS](STATUS.md) distingue pruebas ejecutadas y límites.
