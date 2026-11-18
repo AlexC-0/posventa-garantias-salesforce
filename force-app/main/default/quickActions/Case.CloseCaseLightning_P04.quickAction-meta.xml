@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<QuickAction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Cierre P04 mediante actualización estándar; las condiciones se comprueban en servidor.</description>
+    <fieldOverrides>
+        <field>Status</field>
+        <literalValue>P04_Cerrado</literalValue>
+    </fieldOverrides>
+    <label>Cerrar caso P04</label>
+    <optionsCreateFeedItem>false</optionsCreateFeedItem>
+    <quickActionLayout>
+        <layoutSectionStyle>TwoColumnsLeftToRight</layoutSectionStyle>
+        <quickActionLayoutColumns>
+            <quickActionLayoutItems>
+                <field>Status</field>
+                <uiBehavior>Readonly</uiBehavior>
+            </quickActionLayoutItems>
+            <quickActionLayoutItems>
+                <field>P04_TipoResolucion__c</field>
+                <uiBehavior>Edit</uiBehavior>
+            </quickActionLayoutItems>
+            <quickActionLayoutItems>
+                <field>P04_ExplicacionResolucion__c</field>
+                <uiBehavior>Edit</uiBehavior>
+            </quickActionLayoutItems>
+        </quickActionLayoutColumns>
+        <quickActionLayoutColumns />
+    </quickActionLayout>
+    <type>Update</type>
+</QuickAction>

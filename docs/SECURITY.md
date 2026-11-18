@@ -1,20 +1,23 @@
-# Seguridad por función — sesión 04
+# Seguridad por función — sesiones 04–06
 
 Actualización de sesión 05: [P04Garantia](GARANTIA.md) permite evaluación explícita de casos propios del agente y casos editables del responsable. Conserva CRUD/FLS, grupos y compartición. Los conjuntos solo añaden acceso a las clases del servicio/adaptador. La excepción de escritura se limita a siete valores calculados e IDs autorizados mediante contexto privado, sin interruptor público; el guardián sigue rechazando ediciones directas. Regresión de estas 20 pruebas de seguridad y las 20 de modelo: sin fallos, junto con 25 pruebas nuevas de garantía. La evidencia UI descrita abajo sigue siendo la de sesión 04, no una ejecución nueva.
 
 Implementada en P04, API 68.0. Despliegue completo: 56 componentes y 40 pruebas Apex satisfactorias (20 de modelo y 20 de seguridad). Cierre operativo y revisión local en [STATUS](STATUS.md).
+
+Actualización de sesión 06: [CICLO](CICLO.md) incorpora entrada a cola, toma propia y asignación del responsable con permiso y membresía efectiva. La cola incluye los dos grupos existentes; Case continúa Private y no se amplía la compartición individual con agentes. Las cifras anteriores son evidencia histórica. Los resultados de la sesión actual se registran en STATUS.
 
 ## Matriz
 
 | Capacidad | Agente | Responsable | Sin permisos P04 |
 | --- | --- | --- | --- |
 | Clientes, contactos y productos P04 compartidos | Lectura | Lectura, alta y edición | Sin acceso |
-| Crear caso P04 | Sí, propio | Sí, del equipo | No |
+| Crear caso P04 | Sí, inicialmente en cola | Sí, inicialmente en cola | No |
+| Consultar/tomar cola | Con permiso y membresía, toma para sí | Con permiso y membresía, asigna a miembro habilitado | No |
 | Editar caso propio | Sí | Sí | No |
 | Casos de otros agentes | Sin acceso por defecto | Gestión del equipo P04 | Sin acceso |
 | Compra y garantía | Solo lectura | Edición con validaciones | Sin acceso |
 | Siete campos de evaluación | Solo lectura | Solo lectura | Sin acceso |
-| Reasignar casos | No | Solo a integrantes activos habilitados | No |
+| Reasignar casos | Solo toma inicial de cola para sí | Solo a integrantes activos habilitados y miembros del equipo | No |
 | Borrar los cuatro objetos de negocio | No | No | No |
 
 Los permisos CRUD/FLS y la compartición se combinan; las concesiones se acumulan. Compartir un registro no concede CRUD ni FLS. La propiedad tampoco evita esos controles. Los tipos de registro delimitan funcionalidad y criterios de compartición, pero no son una barrera de seguridad por sí mismos. El guardián añade restricciones de negocio en servidor.
@@ -39,7 +42,7 @@ Los campos protegidos de Case son P04_ResultadoGarantia__c, P04_MotivoGarantia__
 | Case | ReadWriteTransfer | Private |
 | Opportunity | ReadWrite | Private, dependencia de Account |
 
-El acceso externo era Private y no se amplió. Se conservaron los 18 roles originales y los datos de formación. El usuario de pruebas no tiene rol. Los grupos P04_Agentes y P04_Responsables no incluyen superiores automáticamente y usan miembros directos. Cualquier rol, grupo anidado o cola futura exige revisar la herencia.
+El acceso externo era Private y no se amplió. Se conservaron los 18 roles originales y los datos de formación. El usuario de pruebas no tiene rol. Los grupos P04_Agentes y P04_Responsables no incluyen superiores automáticamente y usan miembros directos. La cola P04_Entrada incorpora estos dos grupos, también sin superiores. Cualquier rol o grupo anidado adicional exige revisar la herencia.
 
 Salesforce rechazó Account Private mientras Opportunity seguía ReadWrite. Se cambió únicamente sharingModel de Opportunity; no se concedió CRUD ordinario ni se modificaron sus datos. El cambio reduce la visibilidad general en esta organización dedicada, incluidos datos de formación, y conserva el acceso administrativo. La referencia está en .local/s04-baseline-*.json. No había reglas de compartición previas en los cuatro objetos.
 
@@ -57,17 +60,17 @@ Resultados de UserRecordAccess después del recálculo, mediante consulta admini
 
 El acceso implícito de Account no abrió otros casos al agente. Salesforce indica HasTransferAccess y muestra Change Owner para un caso propio; el guardián rechaza su reasignación. Ese indicador nativo no es autorización final de negocio.
 
-No se creó cola. No se atribuyen garantías de consulta, toma de propiedad ni edición de colas a estas pruebas.
+Estos resultados de UserRecordAccess pertenecen a sesión 04, cuando no existía cola. En sesión 06 se comprueban consulta, toma y revocación de cola mediante Apex, y el recorrido de agente en UI; detalle en STATUS y TESTING.
 
 ## Autorización y modos de ejecución
 
-P04Autorizacion se invoca desde los cuatro triggers antes de P04Integridad, incluyendo before delete. Restringe escrituras al proyecto, propiedad, destinatarios, evaluación y borrado. El agente solo crea/edita casos propios. El responsable reasigna únicamente a usuarios activos con asignación directa de P04_Agente o P04_Responsable; esa asignación define el equipo para el control. Los grupos conceden compartición. Grupos/colas no son destinatarios admitidos en esta fase.
+P04Autorizacion se invoca desde los cuatro triggers antes de P04Integridad, incluyendo before delete. Restringe escrituras al proyecto, propiedad, destinatarios, evaluación y borrado. Desde sesión 06 el alta ordinaria entra en cola y el agente miembro habilitado puede tomarla para sí; después solo edita sus casos. El responsable asigna/reasigna a usuarios activos con asignación directa de P04_Agente o P04_Responsable y membresía efectiva. Permiso y grupo cumplen funciones distintas. No se permite devolver casos a cola mediante una reasignación ordinaria libre.
 
-La clase usa without sharing y consultas WITH SYSTEM_MODE exclusivamente para comprobar la marca de cliente y la habilitación del destinatario. No expone endpoints ni devuelve datos a personas usuarias. El rechazo es genérico: «P04: operación no autorizada». P04Integridad mantiene su finalidad separada: detectar referencias incluso no visibles para evitar incoherencias. Ninguno de estos usos acredita permisos de consulta ordinaria.
+La clase usa without sharing y consultas WITH SYSTEM_MODE exclusivamente para comprobar condiciones de autorización, incluida la marca de cliente, propiedad y habilitación del actor/destinatario. P04Cola consulta membresías y permisos con la misma finalidad limitada. No expone endpoints ni devuelve datos a personas usuarias. El rechazo es genérico: «P04: operación no autorizada». P04Integridad mantiene su finalidad separada: detectar referencias incluso no visibles para evitar incoherencias. Ninguno de estos usos acredita permisos de consulta ordinaria.
 
 Las acciones de autorización de P04SeguridadTest usan consultas/DML USER_MODE dentro de System.runAs. Los fixtures administrativos y dos pruebas adicionales del guardián en SYSTEM_MODE están separados; estas últimas no sustituyen CRUD/FLS. Referencias: [modos de acceso versionados](https://developer.salesforce.com/docs/platform/apex-dev/references/apex-dev/versioned-behavior-changes.html), [operaciones en modo usuario](https://developer.salesforce.com/docs/platform/apex-dev/references/apex-dev/apex-classes-enforce-usermode.html) y [arquitectura de compartición](https://architect.salesforce.com/docs/architect/fundamentals/guide/platform-sharing-architecture.html).
 
-## Pruebas y procedimiento
+## Evidencia histórica de sesión 04 y procedimiento
 
 Un único usuario persistente ocupa la segunda licencia Salesforce, sin rol, correo de bienvenida ni contraseña manipulada. El administrador permanece activo. Los usuarios Apex aislados (dos agentes, responsable, sin permisos y administrador de fixtures) se revierten con sus datos; no representan plazas persistentes adicionales.
 
@@ -83,10 +86,10 @@ Después de retirar conjuntos y grupos, la URL del caso propio devolvió «You d
 
 ## Límites, limpieza y estado final
 
-No se obtuvo autenticación OAuth independiente del usuario ordinario. No hay prueba REST con token ordinario: la evidencia restringida es UI y Apex USER_MODE; CLI/API administrativos preparan y contrastan. No se probaron concurrencia, jerarquías nuevas, colas, fusiones/undelete ni concesiones administrativas futuras.
+No se obtuvo autenticación OAuth independiente del usuario ordinario. No hay prueba REST con token ordinario: la evidencia restringida es UI y Apex USER_MODE; CLI/API administrativos preparan y contrastan. En sesión 04 no se probaron colas; sesión 06 añade las comprobaciones descritas en CICLO y TESTING. Siguen sin probarse concurrencia, jerarquías nuevas, fusiones/undelete y concesiones administrativas futuras.
 
 Los resultados privados están en .local, fuera de Git. El usuario permanece activo en P04_Minimo, sin rol, conjuntos P04 ni grupos; puede reutilizarse secuencialmente sin crear otra plaza. Se conservaron los ocho registros originales, incluida la marca P04 de sus dos clientes. Remove-SecuritySample eliminó solo los dos casos temporales registrados, sin purga de papelera.
 
 Login Access Policies estaba desactivado y se habilitó temporalmente para Login As sin credenciales. Se cerró la sesión ordinaria y se restauró Administrators Can Log in as Any User a false, comprobado tras recarga. No se accedió a Gmail. Los fallos de selectores o intentos de guardado sin persistencia no se contaron como éxito.
 
-La evaluación pertenece a sesión 05 y queda descrita en GARANTIA. Transiciones/cierre completos, asignación automática, informes y LWC siguen pendientes.
+La evaluación pertenece a sesión 05 y queda descrita en GARANTIA. Sesión 06 completa cola, asignación, transiciones/cierre y acciones estándar, con 93 pruebas y demostración ordinaria. Su limpieza y restauración se registran por separado en STATUS. Informe y LWC quedan pendientes.

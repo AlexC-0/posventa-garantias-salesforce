@@ -4,41 +4,36 @@ Proyecto 04 de CHAMBA DIARIA. Aplicación interna con datos ficticios y garantí
 
 ## Estado actual
 
-**Sesión 05: servicio único de evaluación de garantía implementado y desplegado en P04.** P04Garantia evalúa casos abiertos respecto a su fecha de incidencia y guarda resultado, motivo, fechas utilizadas y momento. P04EvaluarGarantiaAccion prepara la entrada para un futuro Flow reutilizando exactamente el mismo servicio.
+**Sesión 06 completada y desplegada en P04:** creación ordinaria en Nuevo y cola, toma autorizada, gestión individual, evaluación explícita, seguimiento y cierre controlado en servidor. La asignación inicial mediante Flow solo se ejecuta al crear; editar no devuelve el caso a la cola.
 
-La cobertura incluye ambos límites. Si falta inicio o fin, el resultado es pendiente de datos y explica qué falta; la compra es opcional. Datos incoherentes son errores. La evaluación inicial y la reevaluación son explícitas: modificar producto o incidencia no recalcula la instantánea. Los casos cerrados se rechazan conservando su evaluación.
+Los agentes necesitan permiso y membresía para consultar/tomar la cola. Tras la toma conservan la separación entre casos individuales. El responsable puede asignar y reasignar dentro del equipo habilitado. Los casos cerrados no admiten reapertura ni edición funcional. Cerrar exige propietario individual habilitado, resolución, explicación y evaluación vigente respecto a las cuatro fechas utilizadas; Pendiente_datos solo admite Sin_actuacion explicado.
 
-Se mantienen las restricciones de sesión 04: agente sobre sus casos, responsable sobre casos editables del equipo, usuario sin permisos denegado. Los siete campos siguen sin edición directa ordinaria. La escritura privilegiada está limitada a los registros autorizados y valores calculados, sin bypass público.
+La acción **Evaluar garantía** llama desde un Screen Flow al servicio único P04Garantia, mediante su adaptador. No duplica cálculo ni concede edición directa de los siete campos calculados. **Cerrar caso P04** es una acción estándar de actualización validada por el mismo servidor. Siguen existiendo 13 campos propios.
 
-Comprobado en esta sesión: **7 componentes desplegados, 65/65 pruebas Apex** (25 de garantía, 20 de modelo y 20 de seguridad), lotes de 200 y demostración administrativa de evaluación/reevaluación/cierre con reversión de temporales. No se realizaron nuevas pruebas UI/REST con identidad ordinaria; esa autorización se comprobó en Apex bajo usuarios aislados.
+Comprobado: **93/93 pruebas Apex**, incluidos lotes de 200, y recorrido real con el usuario ordinario hasta cierre, con rechazo de cierre incompleto, reapertura y reevaluación del cerrado. Las lecturas administrativas posteriores confirmaron persistencia. Despliegue principal de 16 componentes con las 93 pruebas; después, acción estándar de cierre y layout (dos componentes, sin cambios Apex), comprobados en la interfaz. El manifiesto final reúne 17 componentes distintos.
 
-El lote es atómico: un rechazo impide guardar todas sus evaluaciones. Duplicados se procesan una vez conservando una respuesta por solicitud. Se mantienen los ocho registros originales de muestra, con sus dos casos sin evaluar; la demostración usa registros temporales revertidos. No hay campos nuevos: siguen siendo 13.
+Se conservan los ocho registros originales y sus dos casos sin evaluar. El único caso temporal de esta demostración se eliminó; usuario reutilizable activo en perfil mínimo, sin rol, conjuntos adicionales, grupos ni casos propios activos. Login Access Policies restaurada a false y verificada tras recarga. Ambas licencias Salesforce siguen ocupadas.
 
-Continúan pendientes Flow de asignación, cola, ciclo completo de estados/cierre, informes y LWC. No hay pruebas de concurrencia entre transacciones ni despliegue de producción.
+Pendientes para otros encargos: informe y LWC. Sin integraciones, producción, pruebas de concurrencia real ni nueva autenticación REST ordinaria. No se atribuye esta ejecución a CI.
 
 ## Proyecto y entrega
 
 Ruta: C:\Users\kaosk\source\repos\posventa-garantias-salesforce.
 
-Repositorio: [AlexC-0/posventa-garantias-salesforce](https://github.com/AlexC-0/posventa-garantias-salesforce), main. Inicio limpio en 4cfaf0bf3709d373fcaa75fc7a76b73dbd2cbbb3, publicado por Alex según el encargo y presente en HEAD/origin/main locales. Sin nueva comprobación de la punta remota. Los resultados de sesión 05 corresponden al árbol nuevo desplegado, no al commit anterior ni a CI.
+Repositorio: [AlexC-0/posventa-garantias-salesforce](https://github.com/AlexC-0/posventa-garantias-salesforce), rama main. Inicio limpio en HEAD/origin/main locales 70ecc63cd69c9bdced0337ec686352199e90c97b, sesión 05 publicada por Alex según el encargo. No se ha vuelto a consultar la punta remota. Los resultados actuales corresponden al árbol local desplegado de sesión 06.
 
-Los cambios quedan sin staging; Alex hace commit y push. API 68.0 y destino explícito p04-posventa-dev. Herramientas conservadas: CLI 2.158.7, extensiones Core/Apex/LWC 68.10.0 y JDK 21.0.13. No hubo instalaciones, nuevas cuentas persistentes ni cambios de política de acceso.
+Cambios sin staging: Alex hace staging, commit y push. API 68.0 y destino explícito p04-posventa-dev. CLI 2.158.7; extensiones Core/Apex/LWC 68.10.0 y JDK 21.0.13 conservados, sin reinstalaciones. No se crearon cuentas persistentes ni se accedió a Gmail.
 
 ## Documentación y demostración
 
-- [Servicio, invocación, atomicidad y seguridad](docs/GARANTIA.md).
-- [Resultados, límites y propuesta de commit](docs/STATUS.md).
+- [Ciclo, visibilidad y demostración paso a paso](docs/CICLO.md).
+- [Resultados, limpieza, límites y propuesta de commit](docs/STATUS.md).
 - [Despliegue y pruebas reproducibles](docs/TESTING.md).
+- [Servicio único de garantía](docs/GARANTIA.md).
 - [Modelo e instantáneas](docs/DATA_MODEL.md).
 - [Seguridad por función](docs/SECURITY.md).
 - [Alcance V1](docs/PROJECT_BRIEF.md).
 - [Entorno histórico](docs/ENVIRONMENT.md).
 - [Reglas de trabajo](AGENTS.md).
 
-```powershell
-./scripts/Demo-Garantia.ps1 -ExpectedOrgId '<identificador privado P04 verificado>'
-```
-
-La demo administrativa evalúa un caso temporal, comprueba que corregir su producto no recalcula, reevalúa mediante el invocable y rechaza otra evaluación tras cerrar. Revierte producto/caso temporales y verifica su ausencia. No modifica la muestra ni envía correo.
-
-El usuario de pruebas permanece activo en perfil mínimo, sin rol, permisos P04 ni grupos; ambas licencias Salesforce siguen ocupadas. La siguiente fase se revisará antes de empezar. Esta sesión termina con la entrega para revisión y publicación manual de Alex.
+La demostración usa el usuario existente con escenario Agente temporal: crear → tomar → En curso → Evaluar garantía → Pendiente de información → Cerrar caso P04. Al terminar, eliminar solo el temporal identificado y volver a Ninguno. El procedimiento completo incluye verificaciones negativas y restauración. La sesión termina con la entrega para revisión y publicación manual de Alex.

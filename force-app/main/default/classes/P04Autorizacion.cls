@@ -61,23 +61,28 @@ public without sharing class P04Autorizacion {
         Set<Id> cuentas=new Set<Id>(),destinos=new Set<Id>();
         for(Case row:rows){
             cuentas.add(row.AccountId);
-            if(gestiona&&!borrar&&(anteriores==null||row.OwnerId!=anteriores.get(row.Id).OwnerId))destinos.add(row.OwnerId);
+            if(!borrar&&(anteriores==null||row.OwnerId!=anteriores.get(row.Id).OwnerId||anteriores.get(row.Id).OwnerId==P04Cola.idCola())){
+                destinos.add(row.OwnerId);destinos.add(UserInfo.getUserId());
+            }
         }
         cuentas.remove(null);destinos.remove(null);
         Set<Id> clientes=clientesProyecto(cuentas),equipo=new Set<Id>();
-        if(!destinos.isEmpty())for(PermissionSetAssignment psa:[
-            SELECT AssigneeId FROM PermissionSetAssignment
-            WHERE AssigneeId IN :destinos AND Assignee.IsActive=true
-            AND PermissionSet.Name IN ('P04_Agente','P04_Responsable') WITH SYSTEM_MODE
-        ])equipo.add(psa.AssigneeId);
+        if(!destinos.isEmpty())equipo=P04Cola.habilitados(destinos);
         for(Case row:rows){
             Case old=anteriores==null?null:anteriores.get(row.Id);
             Boolean proyecto=row.RecordTypeId==P04Integridad.CASO||(old!=null&&old.RecordTypeId==P04Integridad.CASO);
             if(!proyecto&&!gestiona&&!usa)continue;
             Boolean permitido=!borrar&&(gestiona||usa)&&row.RecordTypeId==P04Integridad.CASO&&clientes.contains(row.AccountId)&&(old==null||old.RecordTypeId==P04Integridad.CASO);
-            if(!gestiona){
-                permitido=permitido&&row.OwnerId==UserInfo.getUserId()&&(old==null||old.OwnerId==UserInfo.getUserId());
-            }else if(old==null||row.OwnerId!=old.OwnerId){permitido=permitido&&equipo.contains(row.OwnerId);}
+            if(old==null){
+                permitido=permitido&&row.OwnerId==P04Cola.idCola()&&equipo.contains(UserInfo.getUserId());
+            }else if(!gestiona){
+                Boolean toma=old.OwnerId==P04Cola.idCola()&&row.OwnerId==UserInfo.getUserId()&&equipo.contains(UserInfo.getUserId());
+                permitido=permitido&&(toma||(old.OwnerId==UserInfo.getUserId()&&row.OwnerId==old.OwnerId));
+            }else if(row.OwnerId!=old.OwnerId){
+                permitido=permitido&&equipo.contains(UserInfo.getUserId())&&equipo.contains(row.OwnerId);
+            }else if(old.OwnerId==P04Cola.idCola()){
+                permitido=permitido&&equipo.contains(UserInfo.getUserId());
+            }
             Boolean escrituraServicio=!borrar&&P04Garantia.escrituraLegitima(row,old);
             for(String field:EVALUACION)if(row.get(field)!=(old==null?null:old.get(field))&&!escrituraServicio)permitido=false;
             if(!permitido)row.addError(DENEGADO);

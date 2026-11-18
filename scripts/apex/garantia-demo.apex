@@ -2,6 +2,9 @@
 System.assert(FeatureManagement.checkPermission('P04_Administrar'),'P04: falta permiso administrativo.');
 Account client=[SELECT Id FROM Account WHERE AccountNumber='P04-S03-DEMO-A' AND P04_Posventa__c=true WITH USER_MODE];
 Contact contact=[SELECT Id FROM Contact WHERE AccountId=:client.Id WITH USER_MODE LIMIT 1];
+// El ciclo de sesión 06 exige propietario ordinario habilitado para el cierre.
+Id ordinary=[SELECT Id FROM User WHERE Alias='p04test' AND Profile.Name='P04_Minimo' AND IsActive=true WITH USER_MODE].Id;
+System.assert(P04Cola.habilitados(new Set<Id>{ordinary}).contains(ordinary),'P04: prepare antes el escenario Agente del usuario reutilizable y restáurelo al terminar.');
 Savepoint point=Database.setSavepoint();
 Id temporaryCase,temporaryAsset;
 try{
@@ -9,7 +12,7 @@ try{
         PurchaseDate=Date.today().addDays(-30),P04_InicioGarantia__c=Date.today().addDays(-10),P04_FinGarantia__c=Date.today().addDays(10));
     insert as user product;temporaryAsset=product.Id;
     Case issue=new Case(Subject='P04 S05 TEMP caso',AccountId=client.Id,ContactId=contact.Id,AssetId=product.Id,RecordTypeId=P04Integridad.CASO,
-        Status='P04_Nuevo',Origin='Web',P04_FechaIncidencia__c=Date.today().addDays(-1));
+        OwnerId=ordinary,Status='P04_Nuevo',Origin='Web',P04_FechaIncidencia__c=Date.today().addDays(-1));
     Database.DMLOptions options=new Database.DMLOptions();options.EmailHeader.triggerUserEmail=false;options.EmailHeader.triggerAutoResponseEmail=false;options.EmailHeader.triggerOtherEmail=false;issue.setOptions(options);
     insert as user issue;temporaryCase=issue.Id;
     System.assert(P04Garantia.evaluar(new List<String>{issue.Id})[0].correcto);
@@ -23,7 +26,8 @@ try{
     Case second=[SELECT P04_ResultadoGarantia__c,P04_FinEvaluado__c,P04_EvaluadaEl__c FROM Case WHERE Id=:issue.Id WITH USER_MODE];
     System.assertEquals('Fuera_cobertura',second.P04_ResultadoGarantia__c);
     System.assertEquals(Date.today().addDays(-2),second.P04_FinEvaluado__c);
-    update as user new Case(Id=issue.Id,Status='P04_Cerrado');
+    update as user new Case(Id=issue.Id,Status='P04_EnCurso');
+    update as user new Case(Id=issue.Id,Status='P04_Cerrado',P04_TipoResolucion__c='Sin_actuacion',P04_ExplicacionResolucion__c='Demostración ficticia finalizada');
     System.assertEquals('CASO_CERRADO',P04Garantia.evaluar(new List<String>{issue.Id})[0].codigo);
     System.assertEquals(second,[SELECT P04_ResultadoGarantia__c,P04_FinEvaluado__c,P04_EvaluadaEl__c FROM Case WHERE Id=:issue.Id WITH USER_MODE]);
 }finally{Database.rollback(point);}

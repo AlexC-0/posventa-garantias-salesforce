@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Evaluar</name>
+        <label>Evaluar y guardar garantía</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>P04EvaluarGarantiaAccion</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Resultado</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Fallo</targetReference>
+        </faultConnector>
+        <inputParameters>
+            <name>casoId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>P04EvaluarGarantiaAccion</nameSegment>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <apiVersion>68.0</apiVersion>
+    <decisions>
+        <name>Resultado</name>
+        <label>Comprobar guardado</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Rechazo</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No guardada</defaultConnectorLabel>
+        <rules>
+            <name>Guardada</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Evaluar.correcto</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Evaluar.codigo</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>OK</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Exito</targetReference>
+            </connector>
+            <label>Guardada</label>
+        </rules>
+    </decisions>
+    <description>Petición explícita en contexto de usuario. El servicio autoriza y escribe solo sus siete campos. Sin DML desde Flow.</description>
+    <interviewLabel>P04 evaluación {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>P04 Evaluar garantía</label>
+    <processType>Flow</processType>
+    <runInMode>DefaultMode</runInMode>
+    <screens>
+        <name>Confirmar</name>
+        <label>Evaluar garantía</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>Evaluar</targetReference>
+        </connector>
+        <fields>
+            <name>Peticion</name>
+            <fieldText>&lt;p&gt;Se evaluará este caso con las fechas actuales del producto y de la incidencia. La evaluación anterior se sustituirá solo si se puede guardar.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <nextOrFinishButtonLabel>Evaluar y guardar</nextOrFinishButtonLabel>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Exito</name>
+        <label>Evaluación guardada</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>Confirmacion</name>
+            <fieldText>&lt;p&gt;{!Evaluar.mensaje}&lt;/p&gt;&lt;p&gt;Resultado: {!Evaluar.cobertura}&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Rechazo</name>
+        <label>Evaluación no guardada</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>Motivo</name>
+            <fieldText>&lt;p&gt;{!Evaluar.mensaje}&lt;/p&gt;&lt;p&gt;Código: {!Evaluar.codigo}&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Fallo</name>
+        <label>No se pudo completar la solicitud</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>ErrorSeguro</name>
+            <fieldText>&lt;p&gt;P04: no se pudo confirmar la evaluación. Cierre la acción, revise el caso y reintente.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Confirmar</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>recordId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

@@ -1,4 +1,4 @@
-# Evaluación de garantía — sesión 05
+# Evaluación de garantía — sesiones 05–06
 
 Implementación: P04Garantia, adaptador P04EvaluarGarantiaAccion y pruebas P04GarantiaTest. API 68.0. Resultado de ejecución y límites de la evidencia en [STATUS](STATUS.md).
 
@@ -24,7 +24,7 @@ En una única actualización se guardan los siete campos existentes: resultado, 
 
 Se admite primera evaluación y reevaluación explícita mientras el caso está abierto. Ambas usan los datos actuales del servidor. Modificar Asset o la fecha de incidencia del Case no cambia silenciosamente la instantánea: puede dejarla histórica respecto a los datos actuales. El resultado refleja lo utilizado en su momento, no un cálculo vivo. Solo otra petición explícita reemplaza esa instantánea.
 
-Los casos cerrados se rechazan, evaluados o no; se conserva su instantánea anterior. Esta sesión no implementa las restantes transiciones, condiciones de resolución, prohibición de reapertura ni cierre completo de V1.
+Los casos cerrados se rechazan, evaluados o no; se conserva su instantánea anterior. La sesión 06 aplica transiciones, condiciones de resolución y prohibición de reapertura mediante P04Ciclo: véase [CICLO](CICLO.md). Un caso nuevo ya no puede llegar a Cerrado sin evaluación.
 
 ## Entrada y correspondencia de resultados
 
@@ -46,7 +46,7 @@ List<P04Garantia.Resultado> respuestas =
         new List<P04EvaluarGarantiaAccion.Solicitud>{solicitud});
 ```
 
-El llamante aporta únicamente identificadores. No puede suministrar cobertura, fechas calculadas, usuario a suplantar ni flags de privilegios. El adaptador solo transforma la lista y llama al mismo servicio, sin cálculo o DML propio. No se ha creado Flow.
+El llamante aporta únicamente identificadores. No puede suministrar cobertura, fechas calculadas, usuario a suplantar ni flags de privilegios. El adaptador solo transforma la lista y llama al mismo servicio, sin cálculo o DML propio. La sesión 06 añade P04_EvaluarGarantia en contexto de usuario y la acción de ficha, sin duplicar cálculo ni escribir registros desde Flow.
 
 La respuesta de cada posición contiene correcto, codigo, mensaje y cobertura. Esta última solo se devuelve cuando el lote se guardó. El número y orden coinciden con las solicitudes, también en errores y duplicados. Lista null/vacía devuelve lista vacía. Más de 200 solicitudes devuelve LIMITE_LOTE para cada una sin consultar ni escribir.
 
@@ -67,7 +67,7 @@ La política es **todo o nada por llamada**, no éxito parcial. Con una entrada 
 | LOTE_RECHAZADO | Otro elemento impide guardar el lote |
 | GUARDADO_RECHAZADO | DML rechazado; ninguna evaluación de la llamada guardada |
 
-Las lecturas fallidas no exponen mensajes internos, IDs ni detalles de campos ocultos. La escritura usa Database.update con allOrNone=true; un DmlException se traduce a error seguro. Los límites irrecuperables de plataforma no se capturan artificialmente: abortan la transacción. En un futuro Flow se deberá considerar este contrato de atomicidad y correspondencia, no ignorar correcto/codigo.
+Las lecturas fallidas no exponen mensajes internos, IDs ni detalles de campos ocultos. La escritura usa Database.update con allOrNone=true; un DmlException se traduce a error seguro. Los límites irrecuperables de plataforma no se capturan artificialmente: abortan la transacción. El Screen Flow de sesión 06 interpreta correcto/codigo antes de mostrar confirmación.
 
 No hay consultas ni DML por registro. El servicio bloquea los casos y productos consultados durante la transacción y realiza una sola actualización de las instantáneas. La llamada no hace callouts. No se afirma una prueba de concurrencia entre transacciones ni garantías adicionales sobre cambios simultáneos de permisos/padres.
 
@@ -81,7 +81,7 @@ Solo después de autorizar y calcular el lote se construye un mapa privado con l
 
 P04Autorizacion consulta un predicado público de solo lectura, escrituraLegitima: exige contexto privado preparado por el servicio, ID exacto, caso anterior abierto, siete valores exactos y ausencia de diferencias en cualquier otro campo. No hay setter público, bypass global ni @TestVisible sobre ese contexto. Finalmente se limpia, tanto si guarda como si falla. El resto del guardián y P04Integridad siguen ejecutándose.
 
-Los conjuntos P04_Agente/P04_Responsable/P04_DemoAdmin solo añaden acceso a las dos clases de entrada; no se amplían CRUD/FLS ni grupos/compartición. La acción futura exige también seguridad de clase Apex. Referencias oficiales: [invocables y correspondencia de resultados](https://developer.salesforce.com/docs/platform/apex-dev/references/apex-dev/apex-classes-annotation-invocablemethod.html), [UserRecordAccess y sus límites](https://developer.salesforce.com/docs/platform/object-reference/references/standard-objects/object-userrecordaccess.html), [modos de acceso Apex](https://developer.salesforce.com/docs/platform/apex-dev/references/apex-dev/apex-classes-enforce-usermode.html).
+Los conjuntos P04_Agente/P04_Responsable/P04_DemoAdmin solo añaden acceso a las dos clases de entrada; no se amplían CRUD/FLS ni grupos/compartición. La acción de sesión 06 conserva la seguridad de clase Apex y añade RunFlow y acceso al Flow, sin ampliar FLS. Referencias oficiales: [invocables y correspondencia de resultados](https://developer.salesforce.com/docs/platform/apex-dev/references/apex-dev/apex-classes-annotation-invocablemethod.html), [UserRecordAccess y sus límites](https://developer.salesforce.com/docs/platform/object-reference/references/standard-objects/object-userrecordaccess.html), [modos de acceso Apex](https://developer.salesforce.com/docs/platform/apex-dev/references/apex-dev/apex-classes-enforce-usermode.html).
 
 ## Demostración y comprobaciones
 

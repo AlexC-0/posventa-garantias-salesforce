@@ -1,3 +1,67 @@
+# Comprobaciones del ciclo — sesión 06
+
+Base publicada 70ecc63; destino exclusivo p04-posventa-dev, API 68.0. Leer [CICLO](CICLO.md) y [STATUS](STATUS.md). Confirmar organización y administrador con P04-Common antes de escribir. Revisar diferencias remotas pertinentes y conservar cambios posteriores del usuario. No usar destinos predeterminados, destructivos ni recuperaciones masivas.
+
+## Repetición del despliegue y pruebas
+
+El manifiesto final contiene 17 componentes distintos y presupone las sesiones 03–05 ya desplegadas. Comando reproducible:
+
+```powershell
+sf project deploy start --manifest manifest/sesion06.xml --target-org p04-posventa-dev --test-level RunSpecifiedTests --tests P04ModeloTest --tests P04SeguridadTest --tests P04GarantiaTest --tests P04CicloTest --wait 5 --json
+```
+
+Para ejecutar solo la regresión sobre la versión desplegada:
+
+```powershell
+./scripts/Test-Ciclo.ps1 -ExpectedOrgId '<identificador privado P04 verificado>'
+```
+
+Resultados realmente ejecutados: despliegue principal de 16 componentes, Succeeded y **93/93 pruebas** (20 modelo + 20 seguridad + 25 garantía + 28 ciclo), cero errores. Después, acción de cierre y layout: dos componentes, Succeeded, sin modificar Apex. La acción final se verificó en UI. El layout común hace que el manifiesto final reúna 17 componentes; no se afirma haber ejecutado después un despliegue único de esos 17 con otra repetición de suites. Test-Ciclo queda reproducible y comprobado sintácticamente; las 93 pruebas se ejecutaron en el despliegue.
+
+## Aserciones y contextos
+
+| Área | Persistencia y rechazo comprobados |
+| --- | --- |
+| Entrada y edición | Alta ordinaria acaba en cola/Nuevo; toma y edición conservan propietario individual |
+| Acceso efectivo | Miembro habilitado consulta/toma; otro agente no ve el caso tras la toma |
+| Separación de condiciones | Permiso sin membresía y membresía sin permiso no habilitan la operación |
+| Revocación | Retirar membresía elimina consulta/toma; responsable revocado tampoco edita cola |
+| Asignación | Responsable asigna/reasigna a miembros habilitados; rechaza fuera de equipo e inactivos |
+| Estados | Nuevo, En curso, Pendiente y ambos cierres válidos; saltos, retrocesos y reapertura rechazados |
+| Guardado idéntico | No constituye una transición; se permite también en cerrado |
+| Cierre | Cola, propietario revocado/inactivo, resolución ausente, explicación null/vacía/espacios y evaluación ausente rechazados |
+| Vigencia | Cada fecha modificada y compra que pasa a null exigen reevaluar; después se permite cerrar |
+| Pendiente_datos | Solo Sin_actuacion; sin restricciones nuevas para otros resultados |
+| Cerrado | Edición funcional/reapertura/evaluación rechazadas; modificar producto conserva instantánea |
+| Volumen | Asignación de 200 y recorrido alta→cola→toma→evaluación→cierre de 200 |
+| Regresión | Las tres suites conservan 65 pruebas y sus objetivos de modelo, acceso y servicio |
+
+Sin SeeAllData ni usuarios persistentes nuevos. Fixtures administrativos y shares explícitos de tests se distinguen de las operaciones USER_MODE bajo runAs. Las reglas de criterios no se recalculan en esos fixtures: el responsable recibe un CaseShare de prueba tras transferir, sin ampliar reglas reales. Una prueba adicional comprueba pertenencia por el grupo P04 real, además de membresías directas de cola aisladas. No hay caché de permisos/membresías que oculte revocación.
+
+Las nuevas reglas obligan a adaptar fixtures antiguos: alta Nuevo, toma, En curso, evaluación y resolución antes de cerrar. El antiguo cerrado sin evaluar deja de ser persistible; se comprueba primero el rechazo y la ausencia de evaluación, y después el rechazo de evaluar un cerrado válido. No se introduce bypass de test ni se desactivan validaciones. El canal administrativo de preparación con propietario explícito permanece, separado de la creación ordinaria cuyo Flow sí se ejecuta en tests.
+
+Cobertura del despliegue: P04Cola 21/21, P04Ciclo 38/38, P04Caso 3/3, P04Autorizacion 67/68 ubicaciones; Flow de entrada 4/4 elementos. Sin extrapolar a toda la organización ni afirmar concurrencia real.
+
+## Demostración ordinaria ejecutada
+
+Un único usuario existente con escenario Agente y un Case temporal: creación estándar → cola → toma propia → En curso → evaluación desde Screen Flow → Pendiente de información → rechazo de cierre incompleto → cierre válido → rechazo de reapertura → CASO_CERRADO al reevaluar. Se verificaron propietario, estados, resolución y siete campos persistidos; creador/autor de escrituras corresponden al usuario ordinario. Las consultas de contraste fueron administrativas.
+
+Repetición detallada, incluida presentación del Flow en Feed/Create new..., en CICLO. Los nombres de ejemplo llevan prefijo P04 S06 TEMP. Identificar el temporal antes de eliminarlo; no tocar los dos casos originales. Para preparar y restaurar el usuario:
+
+```powershell
+./scripts/Set-SecurityScenario.ps1 -ExpectedOrgId '<P04 verificada>' -ExpectedUserId '<usuario de prueba existente>' -Scenario Agente
+# Ejecutar la demostración y sus comprobaciones; salir de la sesión ordinaria.
+./scripts/Set-SecurityScenario.ps1 -ExpectedOrgId '<P04 verificada>' -ExpectedUserId '<usuario de prueba existente>' -Scenario Ninguno
+```
+
+Restaurar también cualquier ajuste temporal de Login As y comprobarlo tras recarga. Resultado final de esta sesión: ocho originales, cero temporales activos, usuario mínimo sin concesiones ni casos propios, administrador conservado, dos licencias ocupadas. Ambos Flows activos y cola con solo los dos grupos previstos. No se envió correo.
+
+Demo-Garantia sigue siendo una herramienta administrativa, adaptada al cierre válido: ahora requiere el usuario existente temporalmente habilitado y miembro para que sea propietario elegible. Revierte sus dos registros. No se volvió a ejecutar en sesión 06 ni sustituye el recorrido ordinario recién demostrado. Los comandos y resultados siguientes se conservan únicamente como históricos; antes de repetirlos hay que aplicar el contrato actual.
+
+## Histórico — Sesión 05
+
+Las cifras, comandos y limitaciones siguientes corresponden a la sesión anterior, no al estado actual.
+
 # Comprobaciones de evaluación — sesión 05
 
 Base publicada 4cfaf0b, exclusivamente organización P04. Leer GARANTIA para contrato, acceso y errores. Confirmar identidad mediante scripts/P04-Common.ps1 y revisar cambios remotos pertinentes antes de escribir; no usar alias predeterminado ni otra organización.

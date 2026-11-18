@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>P04Cola</members>
+        <members>P04Ciclo</members>
+        <members>P04Autorizacion</members>
+        <members>P04ModeloTest</members>
+        <members>P04SeguridadTest</members>
+        <members>P04GarantiaTest</members>
+        <members>P04CicloTest</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>P04Caso</members>
+        <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>P04_Entrada</members>
+        <name>Queue</name>
+    </types>
+    <types>
+        <members>P04_EntradaCaso</members>
+        <members>P04_EvaluarGarantia</members>
+        <name>Flow</name>
+    </types>
+    <types>
+        <members>Case.P04_EvaluarGarantia</members>
+        <members>Case.CloseCaseLightning_P04</members>
+        <name>QuickAction</name>
+    </types>
+    <types>
+        <members>Case-P04 Caso</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>P04_Agente</members>
+        <members>P04_Responsable</members>
+        <members>P04_DemoAdmin</members>
+        <name>PermissionSet</name>
+    </types>
+    <version>68.0</version>
+</Package>

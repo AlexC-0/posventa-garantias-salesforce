@@ -29,6 +29,7 @@ private class P04SeguridadTest {
                 new PermissionSetAssignment(AssigneeId=users[2].Id,PermissionSetId=ps.get('P04_Responsable'))
             };
         }
+        System.runAs(admin){List<GroupMember> ms=new List<GroupMember>();for(Integer i=0;i<3;i++)ms.add(new GroupMember(GroupId=P04Cola.idCola(),UserOrGroupId=users[i].Id));insert as system ms;}
         System.runAs(fixtureAdmin){
             List<Account> accounts=new List<Account>{
                 new Account(Name='P04 SEG A',P04_Posventa__c=true),new Account(Name='P04 SEG B',P04_Posventa__c=true),
@@ -85,6 +86,7 @@ private class P04SeguridadTest {
         User u=usuario('p04sa');Asset a=producto('A');
         System.runAs(u){
             Case c=nuevo(a,'P04 SEG nuevo',u.Id);insert as user c;
+            update as user new Case(Id=c.Id,OwnerId=u.Id);
             update as user new Case(Id=c.Id,Subject='P04 SEG editado');
             Case saved=[SELECT Subject,P04_ResultadoGarantia__c FROM Case WHERE Id=:c.Id WITH USER_MODE];
             System.assertEquals('P04 SEG editado',saved.Subject);System.assertEquals(null,saved.P04_ResultadoGarantia__c);
@@ -236,6 +238,7 @@ private class P04SeguridadTest {
         User u=usuario('p04sa');Asset a=producto('A');System.runAs(u){
             List<Case> rows=new List<Case>();for(Integer i=0;i<200;i++)rows.add(nuevo(a,'P04 SEG lote',u.Id));
             Test.startTest();insert as user rows;
+            List<Case> tomas=new List<Case>();for(Case c:rows)tomas.add(new Case(Id=c.Id,OwnerId=u.Id));update as user tomas;
             List<Case> edits=new List<Case>();for(Case c:rows)edits.add(new Case(Id=c.Id,Subject='P04 SEG lote editado'));update as user edits;Test.stopTest();
             System.assertEquals(200,[SELECT COUNT() FROM Case WHERE Subject='P04 SEG lote editado' WITH USER_MODE]);
         }

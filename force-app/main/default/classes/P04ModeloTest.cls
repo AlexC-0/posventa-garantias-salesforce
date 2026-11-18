@@ -2,7 +2,11 @@
 @IsTest
 private class P04ModeloTest {
     @TestSetup static void preparar() {
-        List<Account> clientes = new List<Account>{new Account(Name='P04 TEST A'), new Account(Name='P04 TEST B')};
+        System.runAs(new User(Id=UserInfo.getUserId())){
+            insert as system new PermissionSetAssignment(AssigneeId=UserInfo.getUserId(),PermissionSetId=[SELECT Id FROM PermissionSet WHERE Name='P04_Agente' WITH SYSTEM_MODE].Id);
+            insert as system new GroupMember(GroupId=P04Cola.idCola(),UserOrGroupId=UserInfo.getUserId());
+        }
+        List<Account> clientes = new List<Account>{new Account(Name='P04 TEST A',P04_Posventa__c=true), new Account(Name='P04 TEST B',P04_Posventa__c=true)};
         insert as system clientes;
         insert as system new List<Contact>{new Contact(LastName='P04 TEST A', AccountId=clientes[0].Id), new Contact(LastName='P04 TEST B', AccountId=clientes[1].Id)};
         List<Contact> personas = [SELECT Id, AccountId, LastName FROM Contact WITH SYSTEM_MODE ORDER BY LastName];
@@ -114,6 +118,8 @@ private class P04ModeloTest {
     @IsTest static void estadosYTipoInmutables() {
         Case c=caso(producto('A')); c.Status='New'; rechazo(Database.insert(c, false, AccessLevel.SYSTEM_MODE),'cuatro estados');
         c.Status='P04_Nuevo'; insert as system c;
+        System.assert(P04Garantia.evaluar(new List<String>{c.Id})[0].correcto);
+        c.P04_TipoResolucion__c='Sin_actuacion';c.P04_ExplicacionResolucion__c='Fixture del ciclo válido';
         for(String estado:new List<String>{'P04_EnCurso','P04_PendienteInformacion','P04_Cerrado'}) {c.Status=estado; update as system c;}
         System.assertEquals(true,[SELECT IsClosed FROM Case WHERE Id=:c.Id WITH SYSTEM_MODE].IsClosed);
         Case anterior=[SELECT Id, RecordTypeId FROM Case WHERE Id=:c.Id WITH SYSTEM_MODE];

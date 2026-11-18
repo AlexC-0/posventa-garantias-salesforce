@@ -31,7 +31,7 @@ Tipos de registro delimitan funcionalidad, no constituyen seguridad por función
 | Case | P04_CompraEvaluada__c, P04_InicioEvaluado__c, P04_FinEvaluado__c, P04_IncidenciaEvaluada__c | Date | Instantánea explícita de los datos usados; ausencias copiadas como null |
 | Case | P04_EvaluadaEl__c | DateTime | Momento de evaluación, vacío inicialmente |
 | Case | P04_TipoResolucion__c | Picklist restringida | Reparacion, Sustitucion, Fuera_cobertura, Sin_actuacion; sin defecto |
-| Case | P04_ExplicacionResolucion__c | LongTextArea(2000) | Explicación; obligatoriedad de cierre corresponde al ciclo posterior |
+| Case | P04_ExplicacionResolucion__c | LongTextArea(2000) | Explicación con contenido obligatoria al cerrar |
 
 Etiquetas y ayudas propias en castellano. Los siete campos de evaluación son de solo lectura para agente/responsable mediante FLS y guardián. P04Garantia permite exclusivamente su escritura calculada tras autorizar la operación. El administrador conserva sus permisos administrativos. Los ocho registros originales de muestra siguen sin evaluar; la demostración del servicio usa registros temporales revertidos.
 
@@ -51,13 +51,13 @@ Se añaden P04_Nuevo (Nuevo), P04_EnCurso (En curso), P04_PendienteInformacion (
 
 Layouts de producto/caso y aplicación Lightning P04 Posventa. Case incluye SuppliedEmail por requisito de plataforma, vacío en la muestra; OwnerId tiene control estándar y autorización de servidor. Se conservan los layouts ajenos. Desde sesión 04, P04_Minimo también asigna los layouts propios y añade cliente/contacto; permisos ordinarios separados de P04_DemoAdmin, reservado al administrador. Desde sesión 05 los conjuntos incorporan acceso a las clases de evaluación sin ampliar FLS de edición.
 
-## Evaluación implementada y ciclo pendiente
+## Evaluación y ciclo
 
 1. Rechazar primero relaciones y fechas incoherentes. Los errores no son un resultado de garantía.
 2. Con datos válidos pero sin fechas necesarias, resultado Pendiente_datos; no confundir con vacío/sin evaluar.
 3. Con datos completos, evaluar la fecha de incidencia con límites inclusivos de garantía.
 4. Registrar resultado, motivo, compra/inicio/fin/incidencia utilizados y momento. Editar Asset no recalcula casos.
 5. Reevaluación explícita solo de abiertos; cerrados conservan evaluación.
-6. Datos inválidos impiden guardar/cerrar por las validaciones iniciales. Pendiente_datos solo permitirá cierre Sin_actuacion explicado cuando se implemente el ciclo. Esa condición, transiciones y cierre obligatorio todavía no están implementados.
+6. P04Ciclo exige propietario individual activo, habilitado y miembro; resolución/explicación; evaluación registrada y fechas vigentes. Pendiente_datos solo permite Sin_actuacion explicado. Matriz, inmutabilidad y Flow de cola en [CICLO](CICLO.md).
 
-Los puntos 1–5 están implementados por el servicio único de sesión 05; el punto 6 describe el ciclo futuro. La compra es opcional: sin ella puede existir cobertura si inicio y fin están presentes. Una edición posterior de producto o incidencia no recalcula la instantánea, que queda histórica hasta otra petición explícita. Detalle de atomicidad, seguridad y códigos en [GARANTIA](GARANTIA.md). No se añadieron campos en sesión 05 ni se implementaron transiciones, asignación, informes o LWC.
+Los puntos 1–5 corresponden al servicio único de sesión 05; el punto 6 se incorpora en sesión 06. La compra es opcional: sin ella puede existir cobertura si inicio y fin están presentes. Una edición posterior de producto o incidencia no recalcula la instantánea, que queda histórica hasta otra petición explícita. Detalle de atomicidad, seguridad y códigos en [GARANTIA](GARANTIA.md). No se añaden campos en sesiones 05–06. La sesión 06 incorpora transiciones y asignación; informes y LWC siguen pendientes.

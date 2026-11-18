@@ -16,6 +16,7 @@ private class P04GarantiaTest {
             Map<String,Id> sets=new Map<String,Id>();for(PermissionSet p:[SELECT Id,Name FROM PermissionSet WHERE Name IN ('P04_Agente','P04_Responsable') WITH SYSTEM_MODE])sets.put(p.Name,p.Id);
             for(Integer i=0;i<3;i++)insert as system new PermissionSetAssignment(AssigneeId=users[i].Id,PermissionSetId=sets.get(i==2?'P04_Responsable':'P04_Agente'));
         }
+        System.runAs(new User(Id=UserInfo.getUserId())){List<GroupMember> ms=new List<GroupMember>();for(Integer i=0;i<3;i++)ms.add(new GroupMember(GroupId=P04Cola.idCola(),UserOrGroupId=users[i].Id));insert as system ms;}
         System.runAs(fixture){
             Account a=new Account(Name='P05 cliente',P04_Posventa__c=true);insert as system a;
             Contact c=new Contact(LastName='P05 contacto',AccountId=a.Id);insert as system c;
@@ -48,6 +49,10 @@ private class P04GarantiaTest {
     private static void no(P04Garantia.Resultado r,String code){System.assertEquals(false,r.correcto);System.assertEquals(code,r.codigo);System.assertEquals(null,r.cobertura);}
     private static void fecha(Date day,String coverage){Case c=caso('P05 0');update as system new Case(Id=c.Id,P04_FechaIncidencia__c=day);ok(evaluar(c.Id,'p05ag'));Case s=snapshot(c.Id);System.assertEquals(coverage,s.P04_ResultadoGarantia__c);System.assertEquals(day,s.P04_IncidenciaEvaluada__c);System.assertNotEquals(null,s.P04_EvaluadaEl__c);}
 
+    private static void cerrar(Id id){
+        if([SELECT Status FROM Case WHERE Id=:id WITH SYSTEM_MODE].Status=='P04_Nuevo')update as system new Case(Id=id,Status='P04_EnCurso');
+        update as system new Case(Id=id,Status='P04_Cerrado',P04_TipoResolucion__c='Sin_actuacion',P04_ExplicacionResolucion__c='Cierre ficticio comprobado');
+    }
     @IsTest static void dentroYFebreroBisiesto(){fecha(Date.newInstance(2024,2,29),'En_cobertura');}
     @IsTest static void limiteInicial(){fecha(Date.newInstance(2024,2,1),'En_cobertura');}
     @IsTest static void limiteFinal(){fecha(Date.newInstance(2024,3,1),'En_cobertura');}
@@ -62,8 +67,12 @@ private class P04GarantiaTest {
     @IsTest static void instantaneaCompleta(){Case c=caso('P05 0');Asset a=asset();ok(evaluar(c.Id,'p05ag'));Case s=snapshot(c.Id);System.assertEquals(a.PurchaseDate,s.P04_CompraEvaluada__c);System.assertEquals(a.P04_InicioGarantia__c,s.P04_InicioEvaluado__c);System.assertEquals(a.P04_FinGarantia__c,s.P04_FinEvaluado__c);System.assertEquals(c.OwnerId,s.OwnerId);System.assertEquals('P05 0',s.Subject);}
     @IsTest static void productoNoRecalculaYReevaluacion(){Case c=caso('P05 0');ok(evaluar(c.Id,'p05ag'));Case before=snapshot(c.Id);update as system new Asset(Id=c.AssetId,P04_FinGarantia__c=Date.newInstance(2024,2,20));System.assertEquals(before,snapshot(c.Id));ok(evaluar(c.Id,'p05ag'));Case after=snapshot(c.Id);System.assertEquals('Fuera_cobertura',after.P04_ResultadoGarantia__c);System.assertEquals(Date.newInstance(2024,2,20),after.P04_FinEvaluado__c);System.assert(after.P04_EvaluadaEl__c>=before.P04_EvaluadaEl__c);}
     @IsTest static void incidenciaNoRecalcula(){Case c=caso('P05 0');ok(evaluar(c.Id,'p05ag'));Case before=snapshot(c.Id);System.runAs(user('p05ag')){update as user new Case(Id=c.Id,P04_FechaIncidencia__c=Date.newInstance(2024,3,2));}System.assertEquals(before,snapshot(c.Id));ok(evaluar(c.Id,'p05ag'));System.assertEquals(Date.newInstance(2024,3,2),snapshot(c.Id).P04_IncidenciaEvaluada__c);}
-    @IsTest static void cerradoConserva(){Case c=caso('P05 0');ok(evaluar(c.Id,'p05ag'));Case before=snapshot(c.Id);update as system new Case(Id=c.Id,Status='P04_Cerrado');no(evaluar(c.Id,'p05ag'),'CASO_CERRADO');System.assertEquals(before,snapshot(c.Id));}
-    @IsTest static void cerradoSinEvaluar(){Case c=caso('P05 0');update as system new Case(Id=c.Id,Status='P04_Cerrado');no(evaluar(c.Id,'p05ag'),'CASO_CERRADO');System.assertEquals(null,snapshot(c.Id).P04_EvaluadaEl__c);}
+    @IsTest static void cerradoConserva(){Case c=caso('P05 0');ok(evaluar(c.Id,'p05ag'));Case before=snapshot(c.Id);cerrar(c.Id);no(evaluar(c.Id,'p05ag'),'CASO_CERRADO');System.assertEquals(before,snapshot(c.Id));}
+    @IsTest static void cerradoSinEvaluar(){Case c=caso('P05 0');
+        update as system new Case(Id=c.Id,Status='P04_EnCurso');
+        System.assertEquals(false,Database.update(new Case(Id=c.Id,Status='P04_Cerrado',P04_TipoResolucion__c='Sin_actuacion',P04_ExplicacionResolucion__c='Sin evaluación'),false,AccessLevel.SYSTEM_MODE).isSuccess());
+        System.assertEquals(null,snapshot(c.Id).P04_EvaluadaEl__c);
+        ok(evaluar(c.Id,'p05ag'));cerrar(c.Id);Case before=snapshot(c.Id);no(evaluar(c.Id,'p05ag'),'CASO_CERRADO');System.assertEquals(before,snapshot(c.Id));}
     @IsTest static void responsableEquipo(){Case c=caso('P05 1');ok(evaluar(c.Id,'p05resp'));System.assertEquals('En_cobertura',snapshot(c.Id).P04_ResultadoGarantia__c);}
     @IsTest static void responsableSoloLectura(){Case c=caso('P05 lectura');no(evaluar(c.Id,'p05resp'),'NO_AUTORIZADO');System.assertEquals(null,snapshot(c.Id).P04_EvaluadaEl__c);}
     @IsTest static void ajenoYSinPermisosYMaster(){no(evaluar(caso('P05 1').Id,'p05ag'),'NO_AUTORIZADO');no(evaluar(caso('P05 3').Id,'p05sin'),'NO_AUTORIZADO');no(evaluar(caso('P05 Master').Id,'p05resp'),'NO_AUTORIZADO');}
@@ -76,7 +85,7 @@ private class P04GarantiaTest {
             System.assertEquals(false,Database.update(new Case(Id=c.Id,P04_EvaluadaEl__c=System.now().addDays(-1)),false,AccessLevel.SYSTEM_MODE).isSuccess());
         }System.assertEquals(before,snapshot(c.Id));
     }}
-    @IsTest static void loteMixtoAtomico(){Case valid=caso('P05 0'),closed=caso('P05 1');ok(evaluar(valid.Id,'p05ag'));Case before=snapshot(valid.Id);update as system new Case(Id=closed.Id,Status='P04_Cerrado');update as system new Asset(Id=valid.AssetId,P04_FinGarantia__c=Date.newInstance(2024,2,20));
+    @IsTest static void loteMixtoAtomico(){Case valid=caso('P05 0'),closed=caso('P05 1');ok(evaluar(valid.Id,'p05ag'));Case before=snapshot(valid.Id);ok(evaluar(closed.Id,'p05otro'));cerrar(closed.Id);update as system new Asset(Id=valid.AssetId,P04_FinGarantia__c=Date.newInstance(2024,2,20));
         System.runAs(user('p05resp')){List<P04Garantia.Resultado> r=P04Garantia.evaluar(new List<String>{valid.Id,closed.Id});no(r[0],'LOTE_RECHAZADO');no(r[1],'CASO_CERRADO');}System.assertEquals(before,snapshot(valid.Id));}
     @IsTest static void entradasYDuplicadosInvocable(){Case c=caso('P05 0');System.runAs(user('p05ag')){
         System.assertEquals(0,P04Garantia.evaluar(null).size());System.assertEquals(0,P04Garantia.evaluar(new List<String>()).size());

@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>68.0</apiVersion>
+    <assignments>
+        <name>Asignar_cola</name>
+        <label>Asignar cola inicial</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.OwnerId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Buscar_cola.Id</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <decisions>
+        <name>Es_P04</name>
+        <label>Tipo P04 y alta propia</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Fuera del recorrido</defaultConnectorLabel>
+        <rules>
+            <name>Alta_ordinaria</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>AltaPropiaP04</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Buscar_cola</targetReference>
+            </connector>
+            <label>Alta ordinaria propia</label>
+        </rules>
+    </decisions>
+    <description>Entrada ordinaria P04, solo creación. Administración conserva su canal explícito de preparación; ninguna excepción al ciclo.</description>
+    <formulas>
+        <name>AltaPropiaP04</name>
+        <dataType>Boolean</dataType>
+        <expression>AND(CASESAFEID({!$Record.RecordTypeId}) = CASESAFEID({!Buscar_tipo.Id}), OR(ISBLANK({!$Record.OwnerId}), CASESAFEID({!$Record.OwnerId}) = CASESAFEID({!$User.Id})))</expression>
+    </formulas>
+    <interviewLabel>P04 entrada {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>P04 Entrada de caso</label>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Buscar_cola</name>
+        <label>Cola por DeveloperName</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Asignar_cola</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>DeveloperName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>P04_Entrada</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Type</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Queue</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Group</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Buscar_tipo</name>
+        <label>Tipo de caso P04</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Es_P04</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>DeveloperName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>P04_Posventa</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>SobjectType</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Case</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>RecordType</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Buscar_tipo</targetReference>
+        </connector>
+        <filterFormula>NOT({!$Permission.P04_Administrar})</filterFormula>
+        <object>Case</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

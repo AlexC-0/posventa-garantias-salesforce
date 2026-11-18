@@ -1,3 +1,92 @@
+# Estado — Sesión 06 completada, pendiente de commit y push de Alex
+
+18 de noviembre de 2026. Recorrido de creación, cola, gestión individual, evaluación explícita, seguimiento y cierre implementado y demostrado. Informe, LWC e integraciones quedan fuera; no se inicia otra fase.
+
+## Punto de partida y Git
+
+Ruta/raíz: C:\Users\kaosk\source\repos\posventa-garantias-salesforce. Rama main; origin https://github.com/AlexC-0/posventa-garantias-salesforce.git. Inicio limpio en HEAD/origin/main locales 70ecc63cd69c9bdced0337ec686352199e90c97b, publicado por Alex según el encargo. No se ha vuelto a consultar la punta remota. Se conserva HEAD; todos los cambios quedan locales sin staging. Codex no hizo staging, commit, push, tags ni releases.
+
+Los resultados siguientes corresponden al árbol desplegado de sesión 06, no a ese commit base ni a CI. Organización dedicada y administrador contrastados antes de escribir; destino explícito p04-posventa-dev y API 68.0. CLI 2.158.7; extensiones Core/Apex/LWC 68.10.0 y JDK 21.0.13 conservados, sin instalaciones. Sin Gmail, otras organizaciones, comunicaciones ni nuevos usuarios persistentes.
+
+## Implementación y decisiones
+
+- Cola P04_Entrada con los grupos P04_Agentes y P04_Responsables, sin superiores ni correo. P04Cola verifica membresía efectiva, usuario activo y asignación directa del conjunto de permisos; no confunde estas condiciones.
+- Flow P04_EntradaCaso anterior al guardado y solo de creación: resuelve tipo/cola por DeveloperName y normaliza IDs con CASESAFEID. P04Autorizacion admite entrada, toma propia y reasignación acotadas. Case sigue Private; tomar no comparte casos individuales con otros agentes.
+- P04Ciclo, invocado por P04Caso, impone matriz, propietario habilitado, resolución/explicación, evaluación y vigencia exacta de compra/inicio/fin/incidencia, incluidos null. Pendiente_datos solo permite Sin_actuacion. Cerrado inmutable en los campos definidos en CICLO, incluso frente a administración.
+- Screen Flow P04_EvaluarGarantia y acción de ficha reutilizan P04EvaluarGarantiaAccion en contexto de usuario. Solo correcto=true/codigo=OK confirma éxito. Los siete campos siguen sin edición ordinaria y P04Garantia no cambia.
+- Acción estándar Cerrar caso P04 con estado cerrado predefinido y resolución/explicación; evita cambiar la configuración global de soporte. Las reglas críticas siguen en servidor.
+
+Se conserva el canal administrativo de preparación/importación con propietario explícito mediante el permiso P04_Administrar existente. No ejecuta el Flow inicial, pero tampoco elude estados, cierre o inmutabilidad. No es una concesión nueva al usuario ordinario. No se añaden campos, perfiles, reglas de compartición ni permisos ViewAll/ModifyAll. Contrato y campos protegidos en [CICLO](CICLO.md).
+
+## Despliegue y pruebas reales
+
+Despliegue principal: **Succeeded, 16 componentes, 93 pruebas y cero errores**. El cliente perdió la respuesta de seguimiento con MetadataTransferError/fetch failed; la consulta posterior al despliegue confirmó su finalización correcta y el resultado íntegro de las cuatro suites. No se trató el fallo de comunicación como éxito sin comprobar el servidor.
+
+Después se desplegaron **dos componentes de interfaz**, acción estándar de cierre y layout, con Succeeded y cero errores. No se modificó Apex después de sus 93 pruebas. La acción definitiva se probó con el usuario ordinario. El layout participa en ambos despliegues: el manifiesto final contiene **17 componentes distintos**, no 18. El procedimiento de repetición en [TESTING](TESTING.md) usa ese manifiesto y las cuatro suites; no se presenta como un comando final de 17 componentes ya ejecutado.
+
+| Suite | Resultado |
+| --- | --- |
+| P04ModeloTest | 20/20 |
+| P04SeguridadTest | 20/20 |
+| P04GarantiaTest | 25/25 |
+| P04CicloTest | 28/28 |
+| Total | **93/93** |
+
+Pruebas nuevas: creación con Flow y propietario persistido; toma, separación posterior, permiso sin membresía y membresía sin permiso; revocación; asignación/reasignación del responsable y destinatarios fuera de equipo/inactivos; matriz y guardados sin transición; ambos cierres válidos; rechazo por cola, evaluación ausente, resolución o explicación vacías; fechas desactualizadas y ausencia de fecha; reevaluación explícita; Pendiente_datos; inmutabilidad; lotes de 200 para asignación y recorrido completo. Las acciones restringidas usan usuarios aislados y USER_MODE; las pruebas explícitas SYSTEM_MODE comprueban que el guardián tampoco se elude por esa vía.
+
+Se conservan las tres suites anteriores y sus objetivos. Los fixtures ahora toman el caso y recorren estados válidos antes del cierre; se prepara membresía en los usuarios aislados. El antiguo fixture cerrado sin evaluación ya no es persistible: se comprueba el rechazo del cierre sin evaluar, la ausencia de instantánea y, tras un cierre válido, el rechazo de evaluación del cerrado. No se desactivan controles para preparar datos.
+
+Cobertura informada del despliegue principal: P04Cola 21/21 ubicaciones, P04Ciclo 38/38, P04Caso 3/3 y P04Autorizacion 67/68. P04_EntradaCaso cubre sus cuatro elementos. Estas cifras no son cobertura global de la organización.
+
+Incidencias resueltas: orden de elementos en PermissionSet y navegación de Screen Flow; comparación de IDs de 15/18 caracteres mediante CASESAFEID; layout de acción estándar con dos columnas. La edición normal ocultaba Cerrado por una opción global: se resolvió con la acción específica P04, sin cambiar esa opción. Los intentos fallidos y guardados sin persistencia no cuentan como demostraciones satisfactorias.
+
+## Recorrido comprobado en la interfaz
+
+Identidad ordinaria reutilizable verificada, escenario Agente temporal. Un único Case ficticio de sesión 06, relacionado con cliente/contacto/producto originales; no se crearon otros registros de negocio persistentes.
+
+1. Alta estándar: Nuevo y propietario cola, creados por el usuario ordinario.
+2. Cambiar propietario a sí mismo, con notificación por correo desactivada; posterior edición a En curso conserva propietario individual.
+3. Evaluar garantía desde Feed, desplegando Create new...: confirmación real y En_cobertura. Los siete valores quedan guardados por el usuario ordinario.
+4. Seguimiento mediante Pendiente de información, persistido.
+5. Cerrar caso P04 sin resolución/explicación: rechazo del servidor. Completar Reparacion y explicación: Cerrado persistido y los siete valores de evaluación conservados.
+6. Editar a En curso: rechazo de reapertura. Evaluar de nuevo mediante Flow: CASO_CERRADO, sin pantalla de éxito. La lectura posterior confirmó estado, propietario, resolución e instantánea intactos.
+
+Las consultas posteriores fueron administrativas y corroboran las escrituras UI; no son una prueba REST ordinaria. Reasignación entre dos agentes y revocación de cola se acreditan mediante Apex aislado, no mediante una nueva sesión UI de responsable. Guía breve reproducible en CICLO.
+
+## Limpieza, estado final y límites
+
+Auditoría satisfactoria: **ocho originales conservados** (dos clientes, contactos, productos y casos); sus dos casos siguen sin evaluar y la garantía/serie originales permanecen iguales. Se eliminó únicamente el Case temporal identificado de sesión 06, sin purga. Cero temporales activos de sesiones 04–06.
+
+Usuario de pruebas activo en P04_Minimo, sin rol, conjuntos adicionales, grupos ni casos propios activos. Administrador preservado y único titular de P04_DemoAdmin. Dos licencias Salesforce, ambas ocupadas; ninguna cuenta nueva. La cola mantiene únicamente los dos grupos públicos previstos, sin usuarios directos ni superiores. Ambos Flows están activos.
+
+Se salió de Login As, se restauró Administrators Can Log in as Any User a **false** y se verificó tras recargar la página. No se manipularon contraseñas. Los ocho registros de muestra no se utilizaron como casos de trabajo; solo como referencias del temporal.
+
+No se prueban concurrencia real entre transacciones, roles/grupos anidados, shares administrativos ajenos, producción ni nuevas llamadas REST con token ordinario. El bloqueo del producto al cerrar no se presenta como una prueba de carrera real. Informe y LWC pendientes de otro encargo.
+
+Evidencia privada excluida de Git: .local/s06-after-transfer-error.json (despliegue principal y tests), s06-close-action-deploy-2.json (acción/layout), s06-ui-*.json y s06-api-*.json (interfaz/persistencia), s06-final-audit.json, s06-policy-restored.json y s06-local-verification.json. Los archivos públicos no incluyen IDs privados, autenticaciones ni URLs de acceso.
+
+## Revisión local y entrega
+
+Revisión final satisfactoria: 120 archivos públicos UTF-8, 74 XML válidos, 12 scripts PowerShell sin errores de sintaxis, 38 enlaces locales existentes y 110 referencias de manifiestos resueltas sin comodines. Cinco exclusiones comprobadas (.local, .sf, .sfdx, .env y node_modules); búsqueda de identidades privadas y patrones de secretos sin hallazgos. git diff --check correcto. Estado final: main/70ecc63 conservados, 18 archivos modificados, 14 nuevos y cero en staging. Los avisos LF/CRLF proceden de la configuración Git existente, que se conserva. Las pruebas Apex no se repiten por cambios documentales o formato.
+
+Archivos del cambio: P04Cola/P04Ciclo/P04CicloTest y metadatos; adaptación de P04Autorizacion, P04Caso y fixtures de las tres suites; cola, dos Flows, dos acciones, layout y tres permission sets; manifest/sesion06.xml, Test-Ciclo, adaptación de la demo administrativa anterior; README, AGENTS y documentación de ciclo, modelo, seguridad, garantía, pruebas, alcance y estado.
+
+Alex revisa el diff y realiza staging, commit y push manualmente. Después se podrá comprobar el commit publicado. No se inicia el siguiente encargo.
+
+Summary: `feat: completar el ciclo de atención posventa`
+
+Description:
+
+- Añade cola y asignación inicial con Flow, toma autorizada y reasignación por permiso y membresía.
+- Aplica transiciones, cierre con evaluación vigente e inmutabilidad del cerrado en servidor.
+- Incorpora evaluación explícita desde la ficha y acción estándar de cierre, conservando permisos e instantáneas.
+- Supera 93 pruebas Apex y demuestra el recorrido con usuario ordinario; restaura concesiones y ajuste temporal, elimina el caso de demo y conserva los ocho originales.
+- Actualiza manifiesto, pruebas reproducibles y documentación. Informe y LWC quedan para otro encargo.
+
+## Histórico — Sesión 05 publicada en 70ecc63
+
+La entrega siguiente se conserva como evidencia histórica de sesión 05. Sus pendientes, cifras y estados de publicación no describen el estado actual de sesión 06.
+
 # Estado — Sesión 05 completada, pendiente de commit y push de Alex
 
 18 de noviembre de 2026. Servicio único de evaluación de garantía desplegado y comprobado en P04. La sesión termina aquí: Flow, cola, ciclo completo, informes y LWC no se han iniciado.

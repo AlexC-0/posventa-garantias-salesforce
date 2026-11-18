@@ -1,15 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <applicationVisibilities>
         <application>P04_Posventa</application>
         <visible>true</visible>
     </applicationVisibilities>
+    <classAccesses>
+        <apexClass>P04Garantia</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>P04EvaluarGarantiaAccion</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
     <customPermissions>
         <enabled>true</enabled>
         <name>P04_Gestionar</name>
     </customPermissions>
-    <classAccesses><apexClass>P04Garantia</apexClass><enabled>true</enabled></classAccesses>
-    <classAccesses><apexClass>P04EvaluarGarantiaAccion</apexClass><enabled>true</enabled></classAccesses>
     <description>Acceso ordinario P04 sin borrado ni escritura directa de evaluación. Requiere compartición y pertenencia al equipo.</description>
     <fieldPermissions>
         <editable>true</editable>
@@ -151,6 +157,10 @@
         <field>Case.P04_EvaluadaEl__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <flowAccesses>
+        <enabled>true</enabled>
+        <flow>P04_EvaluarGarantia</flow>
+    </flowAccesses>
     <label>P04 Responsable</label>
     <objectPermissions>
         <allowCreate>true</allowCreate>
@@ -219,5 +229,9 @@
     <userPermissions>
         <enabled>true</enabled>
         <name>TransferAnyCase</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>RunFlow</name>
     </userPermissions>
 </PermissionSet>
