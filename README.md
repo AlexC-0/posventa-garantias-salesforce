@@ -19,7 +19,7 @@ La configuración estándar aporta objetos, validaciones, acciones, seguridad e 
 2. Ejecutar las cinco suites Apex **secuencialmente** con `scripts/Test-Consulta.ps1` y Jest con `npm run test:lwc`. [TESTING](docs/TESTING.md) distingue comprobaciones actuales e históricas.
 3. Abrir **P04 Posventa → Cases** para el recorrido y **Reports → All Folders → P04 Posventa** para el informe. Seguir el [guion de cinco minutos](docs/DEMO-V1.md); preparación y restauración son pasos separados.
 
-Sesión 08: despliegue incremental de cuatro componentes, **106/106 Apex y 23/23 Jest** satisfactorios. El informe y el recorrido integrado se contrastan en Salesforce con el usuario ordinario. La [matriz de doce criterios](docs/ACEPTACION-V1.md) relaciona implementación, evidencia y límites. [STATUS](docs/STATUS.md) registra resultados, restauración y estado de entrega.
+Validación integrada de V1 (18/11/2026): despliegue incremental de cuatro componentes, **106/106 Apex y 23/23 Jest** satisfactorios. El informe y el recorrido integrado se contrastan en Salesforce con el usuario ordinario. La [matriz de doce criterios](docs/ACEPTACION-V1.md) relaciona implementación, evidencia y límites. [STATUS](docs/STATUS.md) registra resultados, restauración y estado de entrega.
 
 ## Documentación funcional
 
@@ -29,8 +29,8 @@ Sesión 08: despliegue incremental de cuatro componentes, **106/106 Apex y 23/23
 
 ## Entorno y entrega
 
-Ruta: `C:\Users\kaosk\source\repos\posventa-garantias-salesforce`. Repositorio [AlexC-0/posventa-garantias-salesforce](https://github.com/AlexC-0/posventa-garantias-salesforce), rama main. Base de esta sesión: `fae9fbe7be6e28f020e209b887d5c6abd2f6433d`, publicada por Alex según el encargo y coincidente con HEAD/origin/main locales; sin nueva lectura de la punta remota. Los resultados actuales corresponden al árbol local desplegado, no a ese commit ni a CI.
+Repositorio [AlexC-0/posventa-garantias-salesforce](https://github.com/AlexC-0/posventa-garantias-salesforce), rama main. Las pruebas registradas corresponden a la versión desplegada en la organización dedicada; no son resultados de CI.
 
 API 68.0, destino explícito `p04-posventa-dev`, CLI 2.158.7, Node 24.13.0, npm 11.6.2 y runner oficial sfdx-lwc-jest 8.0.0. Herramientas y dependencias conservadas, sin nuevas instalaciones.
 
-Garantía simulada, sin interpretación contractual ni uso productivo. No se acreditan carga, concurrencia real, móvil, integraciones, comunicaciones, métricas de negocio ni instalación limpia. Alex revisa los cambios locales y realiza personalmente staging, commit y push. El cierre definitivo se revisa después de esa publicación.
+Garantía simulada, sin interpretación contractual ni uso productivo. No se acreditan carga, concurrencia real, móvil, integraciones, comunicaciones, métricas de negocio ni instalación limpia.

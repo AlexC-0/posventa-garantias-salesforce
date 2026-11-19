@@ -1,14 +1,14 @@
 # Seguridad por función — V1
 
-Sesión 08 añade la carpeta P04_Posventa compartida únicamente con P04_Responsables en nivel View. P04_Responsable recibe RunReports y la pestaña Reports; no recibe creación/edición de informes, administración de carpetas, View All ni Modify All. La carpeta no concede acceso a los registros: el informe aplica permisos, compartición y ámbito P04. Ejecución ordinaria y revocación por URL directa en [STATUS](STATUS.md); contrato en [INFORME](INFORME.md).
+El informe dispone de la carpeta P04_Posventa compartida únicamente con P04_Responsables en nivel View. P04_Responsable recibe RunReports y la pestaña Reports; no recibe creación/edición de informes, administración de carpetas, View All ni Modify All. La carpeta no concede acceso a los registros: el informe aplica permisos, compartición y ámbito P04. Ejecución ordinaria y revocación por URL directa en [STATUS](STATUS.md); contrato en [INFORME](INFORME.md).
 
-Sesión 07 añade [CONSULTA](CONSULTA.md), LWC de solo lectura sin nuevos campos ni cambios en las reglas de garantía/ciclo. Lecturas USER_MODE, hasta cinco relacionados visibles y actualización explícita; resultados actuales en STATUS.
+La [consulta LWC](CONSULTA.md) presenta datos de solo lectura sin nuevos campos ni cambios en las reglas de garantía/ciclo. Lecturas USER_MODE, hasta cinco relacionados visibles y actualización explícita; resultados actuales en STATUS.
 
-Actualización de sesión 05: [P04Garantia](GARANTIA.md) permite evaluación explícita de casos propios del agente y casos editables del responsable. Conserva CRUD/FLS, grupos y compartición. Los conjuntos solo añaden acceso a las clases del servicio/adaptador. La excepción de escritura se limita a siete valores calculados e IDs autorizados mediante contexto privado, sin interruptor público; el guardián sigue rechazando ediciones directas. Regresión de estas 20 pruebas de seguridad y las 20 de modelo: sin fallos, junto con 25 pruebas nuevas de garantía. La evidencia UI descrita abajo sigue siendo la de sesión 04, no una ejecución nueva.
+Evaluación de garantía: [P04Garantia](GARANTIA.md) permite evaluación explícita de casos propios del agente y casos editables del responsable. Conserva CRUD/FLS, grupos y compartición. Los conjuntos solo añaden acceso a las clases del servicio/adaptador. La excepción de escritura se limita a siete valores calculados e IDs autorizados mediante contexto privado, sin interruptor público; el guardián sigue rechazando ediciones directas. Regresión de estas 20 pruebas de seguridad y las 20 de modelo: sin fallos, junto con 25 pruebas nuevas de garantía. La evidencia UI descrita abajo corresponde a la comprobación inicial de seguridad, no una ejecución nueva.
 
 Implementada en P04, API 68.0. Despliegue completo: 56 componentes y 40 pruebas Apex satisfactorias (20 de modelo y 20 de seguridad). Cierre operativo y revisión local en [STATUS](STATUS.md).
 
-Actualización de sesión 06: [CICLO](CICLO.md) incorpora entrada a cola, toma propia y asignación del responsable con permiso y membresía efectiva. La cola incluye los dos grupos existentes; Case continúa Private y no se amplía la compartición individual con agentes. Las cifras anteriores son evidencia histórica. Los resultados de la sesión actual se registran en STATUS.
+Ciclo: [CICLO](CICLO.md) incorpora entrada a cola, toma propia y asignación del responsable con permiso y membresía efectiva. La cola incluye los dos grupos existentes; Case continúa Private y no se amplía la compartición individual con agentes. Las cifras anteriores son evidencia histórica. Los resultados de la V1 se registran en STATUS.
 
 ## Matriz
 
@@ -35,7 +35,7 @@ Se comprobaron los permisos realmente desplegados: cero ViewAllData/ModifyAllDat
 
 P04_DemoAdmin continúa reservado al administrador. Añade P04_Administrar para el guardián y acceso al nuevo campo de ámbito. P04_Agente concede P04_Usar y P04_Responsable concede P04_Gestionar. No asignar estos permisos personalizados por separado a personas ordinarias. El responsable necesita TransferAnyCase para la acción estándar; el guardián restringe ámbito y destinatarios.
 
-Los campos protegidos de Case son P04_ResultadoGarantia__c, P04_MotivoGarantia__c, P04_CompraEvaluada__c, P04_InicioEvaluado__c, P04_FinEvaluado__c, P04_IncidenciaEvaluada__c y P04_EvaluadaEl__c. Desde sesión 05 los calcula exclusivamente el servicio explícito, manteniendo la prohibición de edición directa ordinaria.
+Los campos protegidos de Case son P04_ResultadoGarantia__c, P04_MotivoGarantia__c, P04_CompraEvaluada__c, P04_InicioEvaluado__c, P04_FinEvaluado__c, P04_IncidenciaEvaluada__c y P04_EvaluadaEl__c. Con el servicio de garantía, los calcula exclusivamente el servicio explícito, manteniendo la prohibición de edición directa ordinaria.
 
 ## Compartición y efecto sobre la organización
 
@@ -65,17 +65,17 @@ Resultados de UserRecordAccess después del recálculo, mediante consulta admini
 
 El acceso implícito de Account no abrió otros casos al agente. Salesforce indica HasTransferAccess y muestra Change Owner para un caso propio; el guardián rechaza su reasignación. Ese indicador nativo no es autorización final de negocio.
 
-Estos resultados de UserRecordAccess pertenecen a sesión 04, cuando no existía cola. En sesión 06 se comprueban consulta, toma y revocación de cola mediante Apex, y el recorrido de agente en UI; detalle en STATUS y TESTING.
+Estos resultados de UserRecordAccess pertenecen a la comprobación inicial de seguridad, cuando no existía cola. En la verificación del ciclo se comprueban consulta, toma y revocación de cola mediante Apex, y el recorrido de agente en UI; detalle en STATUS y TESTING.
 
 ## Autorización y modos de ejecución
 
-P04Autorizacion se invoca desde los cuatro triggers antes de P04Integridad, incluyendo before delete. Restringe escrituras al proyecto, propiedad, destinatarios, evaluación y borrado. Desde sesión 06 el alta ordinaria entra en cola y el agente miembro habilitado puede tomarla para sí; después solo edita sus casos. El responsable asigna/reasigna a usuarios activos con asignación directa de P04_Agente o P04_Responsable y membresía efectiva. Permiso y grupo cumplen funciones distintas. No se permite devolver casos a cola mediante una reasignación ordinaria libre.
+P04Autorizacion se invoca desde los cuatro triggers antes de P04Integridad, incluyendo before delete. Restringe escrituras al proyecto, propiedad, destinatarios, evaluación y borrado. El alta ordinaria entra en cola y el agente miembro habilitado puede tomarla para sí; después solo edita sus casos. El responsable asigna/reasigna a usuarios activos con asignación directa de P04_Agente o P04_Responsable y membresía efectiva. Permiso y grupo cumplen funciones distintas. No se permite devolver casos a cola mediante una reasignación ordinaria libre.
 
 La clase usa without sharing y consultas WITH SYSTEM_MODE exclusivamente para comprobar condiciones de autorización, incluida la marca de cliente, propiedad y habilitación del actor/destinatario. P04Cola consulta membresías y permisos con la misma finalidad limitada. No expone endpoints ni devuelve datos a personas usuarias. El rechazo es genérico: «P04: operación no autorizada». P04Integridad mantiene su finalidad separada: detectar referencias incluso no visibles para evitar incoherencias. Ninguno de estos usos acredita permisos de consulta ordinaria.
 
 Las acciones de autorización de P04SeguridadTest usan consultas/DML USER_MODE dentro de System.runAs. Los fixtures administrativos y dos pruebas adicionales del guardián en SYSTEM_MODE están separados; estas últimas no sustituyen CRUD/FLS. Referencias: [modos de acceso versionados](https://developer.salesforce.com/docs/platform/apex-dev/references/apex-dev/versioned-behavior-changes.html), [operaciones en modo usuario](https://developer.salesforce.com/docs/platform/apex-dev/references/apex-dev/apex-classes-enforce-usermode.html) y [arquitectura de compartición](https://architect.salesforce.com/docs/architect/fundamentals/guide/platform-sharing-architecture.html).
 
-## Evidencia histórica de sesión 04 y procedimiento
+## Evidencia histórica de seguridad y procedimiento
 
 Un único usuario persistente ocupa la segunda licencia Salesforce, sin rol, correo de bienvenida ni contraseña manipulada. El administrador permanece activo. Los usuarios Apex aislados (dos agentes, responsable, sin permisos y administrador de fixtures) se revierten con sus datos; no representan plazas persistentes adicionales.
 
@@ -91,10 +91,10 @@ Después de retirar conjuntos y grupos, la URL del caso propio devolvió «You d
 
 ## Límites, limpieza y estado final
 
-No se obtuvo autenticación OAuth independiente del usuario ordinario. No hay prueba REST con token ordinario: la evidencia restringida es UI y Apex USER_MODE; CLI/API administrativos preparan y contrastan. En sesión 04 no se probaron colas; sesión 06 añade las comprobaciones descritas en CICLO y TESTING. Siguen sin probarse concurrencia, jerarquías nuevas, fusiones/undelete y concesiones administrativas futuras.
+No se obtuvo autenticación OAuth independiente del usuario ordinario. No hay prueba REST con token ordinario: la evidencia restringida es UI y Apex USER_MODE; CLI/API administrativos preparan y contrastan. En la verificación de seguridad no se probaron colas; el ciclo añade las comprobaciones descritas en CICLO y TESTING. Siguen sin probarse concurrencia, jerarquías nuevas, fusiones/undelete y concesiones administrativas futuras.
 
 Los resultados privados están en .local, fuera de Git. El usuario permanece activo en P04_Minimo, sin rol, conjuntos P04 ni grupos; puede reutilizarse secuencialmente sin crear otra plaza. Se conservaron los ocho registros originales, incluida la marca P04 de sus dos clientes. Remove-SecuritySample eliminó solo los dos casos temporales registrados, sin purga de papelera.
 
 Login Access Policies estaba desactivado y se habilitó temporalmente para Login As sin credenciales. Se cerró la sesión ordinaria y se restauró Administrators Can Log in as Any User a false, comprobado tras recarga. No se accedió a Gmail. Los fallos de selectores o intentos de guardado sin persistencia no se contaron como éxito.
 
-La evaluación pertenece a sesión 05 y queda descrita en GARANTIA. Sesión 06 completa cola, asignación, transiciones/cierre y acciones estándar, con 93 pruebas y demostración ordinaria. Su limpieza y restauración se registran por separado en STATUS. El informe queda pendiente; la consulta LWC corresponde a sesión 07.
+La evaluación se describe en [GARANTIA](GARANTIA.md); cola, asignación y cierre en [CICLO](CICLO.md). La consulta LWC y el informe están implementados y documentados en [CONSULTA](CONSULTA.md) e [INFORME](INFORME.md). STATUS conserva por separado los resultados y la restauración de cada verificación.

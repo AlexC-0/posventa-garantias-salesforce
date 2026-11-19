@@ -2,7 +2,7 @@
 System.assert(FeatureManagement.checkPermission('P04_Administrar'),'P04: falta permiso administrativo.');
 Account client=[SELECT Id FROM Account WHERE AccountNumber='P04-S03-DEMO-A' AND P04_Posventa__c=true WITH USER_MODE];
 Contact contact=[SELECT Id FROM Contact WHERE AccountId=:client.Id WITH USER_MODE LIMIT 1];
-// El ciclo de sesión 06 exige propietario ordinario habilitado para el cierre.
+// El ciclo de atención exige propietario ordinario habilitado para el cierre.
 Id ordinary=[SELECT Id FROM User WHERE Alias='p04test' AND Profile.Name='P04_Minimo' AND IsActive=true WITH USER_MODE].Id;
 System.assert(P04Cola.habilitados(new Set<Id>{ordinary}).contains(ordinary),'P04: prepare antes el escenario Agente del usuario reutilizable y restáurelo al terminar.');
 Savepoint point=Database.setSavepoint();

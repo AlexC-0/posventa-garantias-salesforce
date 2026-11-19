@@ -1,10 +1,10 @@
-# Modelo de datos — sesiones 03–05
+# Modelo de datos
 
-Sesión 07 añade [CONSULTA](CONSULTA.md), LWC de solo lectura sin nuevos campos ni cambios en las reglas de garantía/ciclo. Lecturas USER_MODE, hasta cinco relacionados visibles y actualización explícita; resultados actuales en STATUS.
+La [consulta LWC](CONSULTA.md) presenta datos de solo lectura sin nuevos campos ni cambios en las reglas de garantía/ciclo. Lecturas USER_MODE, hasta cinco relacionados visibles y actualización explícita; resultados actuales en STATUS.
 
-Contrato fijado antes de implementar. API 68.0. Datos ficticios; garantía simulada.
+Contrato del modelo. API 68.0. Datos ficticios; garantía simulada.
 
-La sesión 04 añade exclusivamente Account.P04_Posventa__c (Checkbox, false por defecto) como identificador de clientes del proyecto. El responsable crea clientes marcados mediante P04Autorizacion; no puede convertir cuentas ajenas ni desmarcar clientes. Solo administración incorpora los dos clientes de demostración existentes. Contact hereda el acceso de Account; productos y casos conservan sus tipos. Hay 13 campos propios en total. Autorización y compartición se detallan en [SECURITY](SECURITY.md); las restricciones de integridad siguientes permanecen vigentes. Las conversiones de registros ajenos mencionadas en el contrato original requieren ahora administración.
+La implementación de seguridad añade exclusivamente Account.P04_Posventa__c (Checkbox, false por defecto) como identificador de clientes del proyecto. El responsable crea clientes marcados mediante P04Autorizacion; no puede convertir cuentas ajenas ni desmarcar clientes. Solo administración incorpora los dos clientes de demostración existentes. Contact hereda el acceso de Account; productos y casos conservan sus tipos. Hay 13 campos propios en total. Autorización y compartición se detallan en [SECURITY](SECURITY.md); las restricciones de integridad siguientes permanecen vigentes. Las conversiones de registros ajenos mencionadas en el contrato original requieren ahora administración.
 
 ## Ámbito y relaciones
 
@@ -12,7 +12,7 @@ Account representa un cliente empresarial y Contact una persona de ese cliente. 
 
 Account 1 → N Contact; Account 1 → N Asset; Account 1 → N Case. Asset.ContactId es opcional; Case.ContactId y AssetId son obligatorios para P04. No se exige que el contacto del caso sea el contacto opcional del producto, solo que ambos pertenezcan al cliente correcto.
 
-Tipos de registro delimitan funcionalidad, no constituyen seguridad por función. Los triggers impiden sacar un registro ya P04 de su tipo para eludir restricciones. Convertir un registro ajeno a P04 implica validarlo al guardar; la sesión no convierte datos de origen.
+Tipos de registro delimitan funcionalidad, no constituyen seguridad por función. Los triggers impiden sacar un registro ya P04 de su tipo para eludir restricciones. Convertir un registro ajeno a P04 implica validarlo al guardar; no se convirtieron datos de origen.
 
 ## Campos reutilizados y propios
 
@@ -37,13 +37,13 @@ Tipos de registro delimitan funcionalidad, no constituyen seguridad por función
 
 Etiquetas y ayudas propias en castellano. Los siete campos de evaluación son de solo lectura para agente/responsable mediante FLS y guardián. P04Garantia permite exclusivamente su escritura calculada tras autorizar la operación. El administrador conserva sus permisos administrativos. Los ocho registros originales de muestra siguen sin evaluar; la demostración del servicio usa registros temporales revertidos.
 
-## Reglas implementadas en esta sesión
+## Reglas de integridad
 
 Validaciones en servidor al guardar Asset/Case, también por API: campos obligatorios; coherencia de cliente/contacto/producto; intervalo de garantía; incidencia no futura ni anterior a compra; estados limitados a los cuatro valores P04. Cada comparación de fechas opcionales comprueba explícitamente null antes de comparar.
 
 Se usa TODAY() para fechas futuras y Date.today() en las pruebas: día del usuario ejecutor, sin convertir a DateTime ni usar el reloj del equipo. Las fechas no tienen zona horaria; el límite diario sí depende de la zona del usuario. Un mismo instante puede dar días distintos a usuarios de zonas distintas. [Referencia de TODAY](https://help.salesforce.com/s/articleView?id=platform.customize_functions_today.htm&language=en_US&type=5).
 
-P04Integridad protege padres sin calcular cobertura: rechaza cambio de cliente de Contact referenciado, cambio de cliente de Asset con casos y compra posterior a una incidencia existente. Quitar la compra sigue permitido. Corregir garantía no cambia la evaluación. Protege el borrado de padres referenciados; el borrado administrativo ordenado de datos propios es posible, pero la seguridad de sesión 04 prohíbe borrado ordinario a agente/responsable.
+P04Integridad protege padres sin calcular cobertura: rechaza cambio de cliente de Contact referenciado, cambio de cliente de Asset con casos y compra posterior a una incidencia existente. Quitar la compra sigue permitido. Corregir garantía no cambia la evaluación. Protege el borrado de padres referenciados; el borrado administrativo ordenado de datos propios es posible, pero la seguridad por función prohíbe borrado ordinario a agente/responsable.
 
 Los controles son masivos y se ejecutan sin depender de visibilidad ni permisos de campo (without sharing y consultas WITH SYSTEM_MODE explícitas, limitado a comprobaciones de integridad). No constituyen una API para leer datos. Se prueban escrituras secuenciales y lotes hasta 200; concurrencia entre transacciones, importaciones que omitan triggers y efectos especiales de fusiones/undelete no se declaran garantizados. No se deshabilitan automatismos de origen.
 
@@ -51,7 +51,7 @@ Los controles son masivos y se ejecutan sin depender de visibilidad ni permisos 
 
 Se añaden P04_Nuevo (Nuevo), P04_EnCurso (En curso), P04_PendienteInformacion (Pendiente de información) y P04_Cerrado (Cerrado, closed=true) a CaseStatus conservando todos los valores previos. Proceso de soporte P04_Posventa, por defecto P04_Nuevo, y tipo de registro propio. No se alteran procesos ajenos. La API se valida expresamente porque un tipo de registro no restringe por sí solo todos los valores escritos por API.
 
-Layouts de producto/caso y aplicación Lightning P04 Posventa. Case incluye SuppliedEmail por requisito de plataforma, vacío en la muestra; OwnerId tiene control estándar y autorización de servidor. Se conservan los layouts ajenos. Desde sesión 04, P04_Minimo también asigna los layouts propios y añade cliente/contacto; permisos ordinarios separados de P04_DemoAdmin, reservado al administrador. Desde sesión 05 los conjuntos incorporan acceso a las clases de evaluación sin ampliar FLS de edición.
+Layouts de producto/caso y aplicación Lightning P04 Posventa. Case incluye SuppliedEmail por requisito de plataforma, vacío en la muestra; OwnerId tiene control estándar y autorización de servidor. Se conservan los layouts ajenos. P04_Minimo también asigna los layouts propios y añade cliente/contacto; permisos ordinarios separados de P04_DemoAdmin, reservado al administrador. Con el servicio de garantía, los conjuntos incorporan acceso a las clases de evaluación sin ampliar FLS de edición.
 
 ## Evaluación y ciclo
 
@@ -62,4 +62,4 @@ Layouts de producto/caso y aplicación Lightning P04 Posventa. Case incluye Supp
 5. Reevaluación explícita solo de abiertos; cerrados conservan evaluación.
 6. P04Ciclo exige propietario individual activo, habilitado y miembro; resolución/explicación; evaluación registrada y fechas vigentes. Pendiente_datos solo permite Sin_actuacion explicado. Matriz, inmutabilidad y Flow de cola en [CICLO](CICLO.md).
 
-Los puntos 1–5 corresponden al servicio único de sesión 05; el punto 6 se incorpora en sesión 06. La compra es opcional: sin ella puede existir cobertura si inicio y fin están presentes. Una edición posterior de producto o incidencia no recalcula la instantánea, que queda histórica hasta otra petición explícita. Detalle de atomicidad, seguridad y códigos en [GARANTIA](GARANTIA.md). No se añaden campos en sesiones 05–06. La sesión 06 incorpora transiciones y asignación; el LWC se incorpora en sesión 07 y el [informe](INFORME.md), en sesión 08, sin campos nuevos.
+Los puntos 1–5 corresponden al servicio único de garantía; el punto 6, al control de ciclo. La compra es opcional: sin ella puede existir cobertura si inicio y fin están presentes. Una edición posterior de producto o incidencia no recalcula la instantánea, que queda histórica hasta otra petición explícita. Detalle de atomicidad, seguridad y códigos en [GARANTIA](GARANTIA.md). Garantía, ciclo, consulta LWC e [informe](INFORME.md) utilizan los campos existentes, sin añadir otros.

@@ -1,4 +1,4 @@
-﻿# Utilidades mínimas para comprobaciones de la sesión 03. Nunca exportan autenticación.
+﻿# Utilidades mínimas para comprobaciones del modelo. Nunca exportan autenticación.
 $ErrorActionPreference = 'Stop'
 function Invoke-P04Sf {
     param([string[]]$Arguments, [switch]$AllowFailure)

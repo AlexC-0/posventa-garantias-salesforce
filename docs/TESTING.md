@@ -1,12 +1,12 @@
-# Comprobaciones de V1 — sesión 08
+# Comprobaciones de V1
 
-Base publicada fae9fbe; destino exclusivo p04-posventa-dev, API 68.0. La [matriz de aceptación](ACEPTACION-V1.md) relaciona los doce criterios con pruebas y demostraciones. [STATUS](STATUS.md) contiene los resultados actuales y la restauración.
+Base de la verificación integrada: fae9fbe más el incremento del informe; destino exclusivo p04-posventa-dev, API 68.0. La [matriz de aceptación](ACEPTACION-V1.md) relaciona los doce criterios con pruebas y demostraciones. [STATUS](STATUS.md) contiene los resultados actuales y la restauración.
 
 ## Ejecución real sobre la versión final
 
 - Despliegue incremental `manifest/sesion08.xml`: cuatro componentes, Succeeded, cero errores. Solo informe, carpeta, aplicación y permiso; sin cambios Apex, Flow ni LWC.
 - Cinco suites **secuenciales**, mediante `sf apex run test --class-names <suite> --synchronous --code-coverage --target-org p04-posventa-dev --json`: P04ModeloTest 20/20, P04SeguridadTest 20/20, P04GarantiaTest 25/25, P04CicloTest 28/28 y P04ConsultaCasoTest 13/13; total **106/106**.
-- `npm run test:lwc -- --json --outputFile=.local/s08-jest.json`: **23/23**. No se repitieron instalaciones, auditorías de dependencias ni mediciones de cobertura frontend; las cifras de sesión 07 que siguen son históricas.
+- `npm run test:lwc -- --json --outputFile=.local/s08-jest.json`: **23/23**. No se repitieron instalaciones, auditorías de dependencias ni mediciones de cobertura frontend; las cifras de la consulta LWC que siguen son históricas.
 - Conversión local `sf project convert source --manifest manifest/v1.xml --output-dir .local/s08-v1-package --json`: satisfactoria, 73 miembros explícitos. No equivale a una instalación limpia ni a un despliegue completo ejecutado.
 
 Para repetir: comprobar destino y ejecutar `scripts/Test-Consulta.ps1 -ExpectedOrgId '<identificador privado P04 verificado>'`, seguido de `npm run test:lwc`. Conservar la ejecución secuencial: los fixtures de grupos de cola comparten registros. No modificar ajustes globales para ejecutar en paralelo.
@@ -19,15 +19,13 @@ Recorrido integrado ordinario: crear → cola → tomar → En curso → evaluar
 
 [DESPLIEGUE-V1](DESPLIEGUE-V1.md) es el procedimiento vigente, con dependencias, permisos, cola, Flows, página y carpeta. Los manifiestos históricos no deben aplicarse consecutivamente sobre los archivos actuales como si fueran paquetes históricos inmutables.
 
-## Histórico — Sesión 07 publicada en fae9fbe
+## Histórico — Consulta LWC publicada en fae9fbe
 
-Los resultados y pendientes siguientes describen aquella sesión. El comando histórico con varias suites en un despliegue no sustituye la regresión secuencial vigente indicada arriba.
-
-# Comprobaciones de consulta — sesión 07
+Los resultados y pendientes siguientes describen aquella verificación. El comando histórico con varias suites en un despliegue no sustituye la regresión secuencial vigente indicada arriba.
 
 Destino exclusivo p04-posventa-dev, API 68.0, base publicada eca51b8. Confirmar identidad con P04-Common y conservar cambios posteriores antes de desplegar. [CONSULTA](CONSULTA.md) define contrato, ubicación y demostración; [STATUS](STATUS.md) distingue pruebas ejecutadas y límites.
 
-## Frontend reproducible
+### Frontend reproducible
 
 Node 24.x, npm 11.x y runner oficial 8.0.0 fijado. No había paquete frontend anterior. Desde la raíz P04:
 
@@ -40,9 +38,9 @@ npm audit
 
 Ejecutados realmente npm ci, pruebas con cobertura, npm ls --all y auditoría: 23/23 tests, 98,18 % líneas, 93,75 % ramas, cero vulnerabilidades y sin errores de engines/peers. Jest usa los stubs estándar para Lightning; navegación y respuesta Apex se simulan. No sustituye permisos, página real ni pruebas de integración. La configuración CJS resuelve el motor oficial para Jest 29 sin modificar dependencias instaladas. Los casos cubren carga, datos/fechas, ausencia, histórico, diferencias/nulls, vacío visible, refresco, navegación, error/reintento, limpieza y respuestas tardías.
 
-## Despliegue y Apex
+### Despliegue y Apex
 
-Manifiesto incremental de ocho componentes; requiere sesiones 03–06 presentes. Comando para repetir el despliegue con todas las suites:
+Manifiesto incremental de ocho componentes; requiere modelo, seguridad, garantía y ciclo presentes. Comando para repetir el despliegue con todas las suites:
 
 ```powershell
 sf project deploy start --manifest manifest/sesion07.xml --target-org p04-posventa-dev --test-level RunSpecifiedTests --tests P04ModeloTest --tests P04SeguridadTest --tests P04GarantiaTest --tests P04CicloTest --tests P04ConsultaCasoTest --wait 5 --json
@@ -71,25 +69,23 @@ El wrapper reproduce las cinco llamadas apex run test --synchronous --class-name
 
 Usuarios y permiso sin serie creados solo dentro de tests y revertidos. Shares administrativos de fixtures separados de consultas USER_MODE. Las fechas CreatedDate artificiales quedan limitadas a pruebas de orden: no se utilizan para preparar el fixture de evaluación. No se desactivan reglas, no hay SeeAllData ni bypass de test en producción.
 
-## Demostración real y limpieza
+### Demostración real y limpieza
 
 Ejecutados con el usuario persistente en escenario Agente: Sin evaluar, datos actuales, relacionado permitido y navegación, evaluación explícita existente, Actualizar y resultado persistido, corrección administrativa del Asset temporal, aviso de reevaluación con instantánea conservada y serie ausente. Panel a anchos 1536/960; en el estrecho clientWidth=scrollWidth=456. Las lecturas administrativas contrastan persistencia/autoría, no se atribuyen al usuario ordinario.
 
-No se repitió el cierre UI ni la función responsable en esta sesión: cerrado histórico/errores/reintentos se prueban visualmente con Jest, permisos y acceso en Apex, y el ciclo conserva sus 28 pruebas. Procedimiento completo y paso opcional de cerrado en CONSULTA.
+No se repitió el cierre UI ni la función responsable en esta verificación: cerrado histórico/errores/reintentos se prueban visualmente con Jest, permisos y acceso en Apex, y el ciclo conserva sus 28 pruebas. Procedimiento completo y paso opcional de cerrado en CONSULTA.
 
 Al terminar: salir de Login As, escenario Ninguno, eliminar solo los tres Cases identificados y después el Asset temporal; restaurar política previa false y recargar para comprobarla. Preservar ocho originales y sus dos casos sin evaluar. Evidencias privadas fuera de Git; no publicar IDs, usuarios internos, URLs de acceso o capturas sin revisar.
 
-## Histórico — Sesión 06
+## Histórico
 
-Los resultados siguientes pertenecen al encargo anterior; no se han vuelto a ejecutar todas sus demostraciones UI.
-
-# Comprobaciones del ciclo — sesión 06
+Los resultados siguientes pertenecen al incremento anterior; no se han vuelto a ejecutar todas sus demostraciones UI.
 
 Base publicada 70ecc63; destino exclusivo p04-posventa-dev, API 68.0. Leer [CICLO](CICLO.md) y [STATUS](STATUS.md). Confirmar organización y administrador con P04-Common antes de escribir. Revisar diferencias remotas pertinentes y conservar cambios posteriores del usuario. No usar destinos predeterminados, destructivos ni recuperaciones masivas.
 
-## Repetición del despliegue y pruebas
+### Repetición del despliegue y pruebas
 
-El manifiesto final contiene 17 componentes distintos y presupone las sesiones 03–05 ya desplegadas. Comando reproducible:
+El manifiesto final contiene 17 componentes distintos y presupone modelo, seguridad y garantía ya desplegados. Comando reproducible:
 
 ```powershell
 sf project deploy start --manifest manifest/sesion06.xml --target-org p04-posventa-dev --test-level RunSpecifiedTests --tests P04ModeloTest --tests P04SeguridadTest --tests P04GarantiaTest --tests P04CicloTest --wait 5 --json
@@ -103,7 +99,7 @@ Para ejecutar solo la regresión sobre la versión desplegada:
 
 Resultados realmente ejecutados: despliegue principal de 16 componentes, Succeeded y **93/93 pruebas** (20 modelo + 20 seguridad + 25 garantía + 28 ciclo), cero errores. Después, acción de cierre y layout: dos componentes, Succeeded, sin modificar Apex. La acción final se verificó en UI. El layout común hace que el manifiesto final reúna 17 componentes; no se afirma haber ejecutado después un despliegue único de esos 17 con otra repetición de suites. Test-Ciclo queda reproducible y comprobado sintácticamente; las 93 pruebas se ejecutaron en el despliegue.
 
-## Aserciones y contextos
+### Aserciones y contextos
 
 | Área | Persistencia y rechazo comprobados |
 | --- | --- |
@@ -127,7 +123,7 @@ Las nuevas reglas obligan a adaptar fixtures antiguos: alta Nuevo, toma, En curs
 
 Cobertura del despliegue: P04Cola 21/21, P04Ciclo 38/38, P04Caso 3/3, P04Autorizacion 67/68 ubicaciones; Flow de entrada 4/4 elementos. Sin extrapolar a toda la organización ni afirmar concurrencia real.
 
-## Demostración ordinaria ejecutada
+### Demostración ordinaria ejecutada
 
 Un único usuario existente con escenario Agente y un Case temporal: creación estándar → cola → toma propia → En curso → evaluación desde Screen Flow → Pendiente de información → rechazo de cierre incompleto → cierre válido → rechazo de reapertura → CASO_CERRADO al reevaluar. Se verificaron propietario, estados, resolución y siete campos persistidos; creador/autor de escrituras corresponden al usuario ordinario. Las consultas de contraste fueron administrativas.
 
@@ -136,22 +132,21 @@ Repetición detallada, incluida presentación del Flow en Feed/Create new..., en
 ```powershell
 ./scripts/Set-SecurityScenario.ps1 -ExpectedOrgId '<P04 verificada>' -ExpectedUserId '<usuario de prueba existente>' -Scenario Agente
 # Ejecutar la demostración y sus comprobaciones; salir de la sesión ordinaria.
+
 ./scripts/Set-SecurityScenario.ps1 -ExpectedOrgId '<P04 verificada>' -ExpectedUserId '<usuario de prueba existente>' -Scenario Ninguno
 ```
 
-Restaurar también cualquier ajuste temporal de Login As y comprobarlo tras recarga. Resultado final de esta sesión: ocho originales, cero temporales activos, usuario mínimo sin concesiones ni casos propios, administrador conservado, dos licencias ocupadas. Ambos Flows activos y cola con solo los dos grupos previstos. No se envió correo.
+Restaurar también cualquier ajuste temporal de Login As y comprobarlo tras recarga. Resultado final de esta verificación: ocho originales, cero temporales activos, usuario mínimo sin concesiones ni casos propios, administrador conservado, dos licencias ocupadas. Ambos Flows activos y cola con solo los dos grupos previstos. No se envió correo.
 
-Demo-Garantia sigue siendo una herramienta administrativa, adaptada al cierre válido: ahora requiere el usuario existente temporalmente habilitado y miembro para que sea propietario elegible. Revierte sus dos registros. No se volvió a ejecutar en sesión 06 ni sustituye el recorrido ordinario recién demostrado. Los comandos y resultados siguientes se conservan únicamente como históricos; antes de repetirlos hay que aplicar el contrato actual.
+Demo-Garantia sigue siendo una herramienta administrativa, adaptada al cierre válido: ahora requiere el usuario existente temporalmente habilitado y miembro para que sea propietario elegible. Revierte sus dos registros. No se volvió a ejecutar al verificar el ciclo ni sustituye el recorrido ordinario recién demostrado. Los comandos y resultados siguientes se conservan únicamente como históricos; antes de repetirlos hay que aplicar el contrato actual.
 
-## Histórico — Sesión 05
+## Histórico — Evaluación de garantía
 
-Las cifras, comandos y limitaciones siguientes corresponden a la sesión anterior, no al estado actual.
-
-# Comprobaciones de evaluación — sesión 05
+Las cifras, comandos y limitaciones siguientes corresponden a la versión anterior, no al estado actual.
 
 Base publicada 4cfaf0b, exclusivamente organización P04. Leer GARANTIA para contrato, acceso y errores. Confirmar identidad mediante scripts/P04-Common.ps1 y revisar cambios remotos pertinentes antes de escribir; no usar alias predeterminado ni otra organización.
 
-## Despliegue y regresión ejecutados
+### Despliegue y regresión ejecutados
 
 ```powershell
 sf project deploy start --manifest manifest/sesion05.xml --target-org p04-posventa-dev --test-level RunSpecifiedTests --tests P04ModeloTest --tests P04SeguridadTest --tests P04GarantiaTest --wait 3 --json
@@ -181,7 +176,7 @@ P04GarantiaTest: 25/25. P04ModeloTest: 20/20. P04SeguridadTest: 20/20. Los fixtu
 
 Cobertura informada de las clases desplegadas: P04Garantia 90/93, P04EvaluarGarantiaAccion 4/4 y P04Autorizacion 62/63; total 156/160 ubicaciones. No trasladar esa cifra a toda la organización o a P04Integridad, que no cambió. No se ha provocado un fallo real de concurrencia, de límite de plataforma ni un rechazo DML posterior a una prevalidación correcta; no atribuir esa evidencia al lote mixto, que se rechaza antes del DML.
 
-## Demostración ejecutada y repetición opcional
+### Demostración ejecutada y repetición opcional
 
 ```powershell
 ./scripts/Demo-Garantia.ps1 -ExpectedOrgId '<identificador privado P04 verificado>'
@@ -192,14 +187,11 @@ Demo-Garantia sí se ejecutó: evaluación inicial persistida, conservación al 
 
 Test-Garantia queda como wrapper reproducible y se comprueba su sintaxis; no se ejecutó una segunda suite innecesaria: las 65 pruebas se ejecutaron en el despliegue. La demo y los tests no modifican los ocho registros originales. Auditoría final en STATUS.
 
-## Histórico — sesiones 03 y 04
+## Histórico — Modelo y seguridad
 
-El contenido siguiente conserva sus resultados y procedimientos; no describe una repetición de aquellas pruebas UI/API en sesión 05.
+El contenido siguiente conserva sus resultados y procedimientos; no describe una repetición de aquellas pruebas UI/API en la verificación de garantía.
 
-
-# Comprobaciones de seguridad y modelo
-
-## Sesión 04: preparación y despliegue
+### Seguridad: preparación y despliegue
 
 Destino exclusivo P04, alias p04-posventa-dev, API 68.0. Comparar Organization.Id/OrganizationType y usuario administrativo con la referencia privada antes de escribir. Los scripts exigen ExpectedOrgId y no exportan autenticación. No usar el Playground anterior, Gmail ni destinos predeterminados.
 
@@ -215,7 +207,7 @@ sf project deploy start --manifest manifest/sesion04.xml --target-org p04-posven
 
 Resultado real final: Succeeded, 56 componentes, 40 pruebas, cero errores. Preparación previa: 30 componentes de compartición y 49 de permisos/configuración. Los intentos fallidos por dependencias y fixtures se revirtieron; no son despliegues satisfactorios. No se repitieron suites tras documentación o codificación PowerShell.
 
-## Usuarios y escenarios reproducibles
+### Usuarios y escenarios reproducibles
 
 Los siguientes valores son referencias privadas del operador, nunca literales que deban subirse a Git:
 
@@ -229,7 +221,7 @@ Los siguientes valores son referencias privadas del operador, nunca literales qu
 ./scripts/Remove-SecuritySample.ps1 -ExpectedOrgId '<P04 verificada>'
 ```
 
-No ejecutar la lista de escenarios seguida sin sus comprobaciones intermedias. New-SecurityUser verifica licencia disponible y crea/reutiliza un único usuario de perfil mínimo y sin rol; no envía correos. New-SecuritySample requiere los clientes de sesión 03, los marca P04 y crea solo dos casos, abortando si ya hay temporales. IDs en .local/s04-user.json y s04-records.json.
+No ejecutar la lista de escenarios seguida sin sus comprobaciones intermedias. New-SecurityUser verifica licencia disponible y crea/reutiliza un único usuario de perfil mínimo y sin rol; no envía correos. New-SecuritySample requiere los clientes del modelo, los marca P04 y crea solo dos casos, abortando si ya hay temporales. IDs en .local/s04-user.json y s04-records.json.
 
 Para probar propiedad, asignar administrativamente el primer caso temporal al usuario antes del escenario Agente. No asignar la muestra original. En cada escenario consultar PermissionSetAssignment (incluido PermissionSetGroupId), GroupMember y UserRecordAccess para cliente, contacto, producto y casos propio/ajeno. Validar primero los IDs privados, no pegarlos a documentación pública. El script de escenarios aborta ante permisos o membresías ajenos a su alcance.
 
@@ -243,7 +235,7 @@ Secuencia UI:
 
 Se ejecutaron New-SecurityUser, New-SecuritySample, Set-SecurityScenario y Remove-SecuritySample. Las escrituras UI de agente, garantía y reasignación se confirmaron mediante lectura administrativa; esa consulta no se atribuye al usuario ordinario. Evidencias filtradas en .local. Sin OAuth ordinario independiente: no se afirma prueba REST restringida.
 
-## Pruebas Apex y resultados
+### Pruebas Apex y resultados
 
 ```powershell
 ./scripts/Test-Seguridad.ps1 -ExpectedOrgId '<P04 verificada>'
@@ -268,18 +260,15 @@ P04SeguridadTest: 20 pruebas con dos agentes aislados, responsable y usuario sin
 
 P04ModeloTest: 20/20 de regresión. Dos fixtures Master ahora usan un administrador aislado sin la concesión P04 de tipos, manteniendo aserciones de ámbito y comprobando RecordTypeId null. No se alteraron asignaciones del administrador real. El resto del contrato de integridad permanece.
 
-Cobertura informada por el despliegue de sesión 04: P04Autorizacion 61/62 ubicaciones y cuatro triggers 10/10; total 71/72 de los componentes Apex informados. P04Integridad no cambió y no aparece en ese informe de cobertura; no atribuirle esa cifra ni trasladar la cobertura histórica a esta ejecución. Sin pruebas de concurrencia, colas, fusiones/undelete ni motor de evaluación.
+Cobertura informada por el despliegue de seguridad: P04Autorizacion 61/62 ubicaciones y cuatro triggers 10/10; total 71/72 de los componentes Apex informados. P04Integridad no cambió y no aparece en ese informe de cobertura; no atribuirle esa cifra ni trasladar la cobertura histórica a esta ejecución. Sin pruebas de concurrencia, colas, fusiones/undelete ni motor de evaluación.
 
-## Histórico — sesión 03
+## Histórico — Implementación del modelo
 
-El contenido siguiente describe la ejecución administrativa anterior y sus procedimientos, no el estado final ni las restricciones ordinarias de sesión 04.
-
-
-# Comprobación del modelo — sesión 03
+El contenido siguiente describe la ejecución administrativa anterior y sus procedimientos, no el estado final ni las restricciones ordinarias de seguridad.
 
 Usar únicamente la organización P04 identificada, alias p04-posventa-dev, API 68.0. Nunca establecer destinos predeterminados. No ejecutar en el Playground anterior ni consultar Gmail. No se necesita reinstalar herramientas.
 
-## Despliegue acotado
+### Despliegue acotado
 
 manifest/sesion03.xml enumera 36 componentes, sin comodines ni destructivos: 12 campos, nueve validaciones, dos tipos de registro, un proceso de soporte, CaseStatus, dos layouts, una aplicación, un permiso administrativo, asignaciones de layout Admin, dos clases y cuatro triggers.
 
@@ -295,7 +284,7 @@ Comprobar el identificador contra el destino conocido antes de escribir, sin cop
 
 El proceso de soporte referencia las etiquetas de CaseStatus; validaciones y registros usan los nombres API P04_*. El layout estándar exige SuppliedEmail presente y OwnerId editable, no marcado Required. SuppliedEmail permanece vacío en la muestra: no se envían comunicaciones.
 
-## Pruebas Apex
+### Pruebas Apex
 
 ```powershell
 ./scripts/Test-Modelo.ps1 -ExpectedOrgId '<identificador P04 verificado>'
@@ -327,9 +316,9 @@ La identidad es obligatoria y se comprueba antes de ejecutar. Las 20 pruebas no 
 
 La fecha de referencia en Apex es Date.today(), del usuario ejecutor, como TODAY() en validación. Los tests no prueban concurrencia ni fusiones/undelete. No hay motor de evaluación ni máquina de estados completa; el test de estados comprueba disponibilidad e IsClosed, no autoriza afirmar transiciones restringidas.
 
-## Demostración y API real
+### Demostración y API real
 
-Después de un despliegue satisfactorio, asignar P04_DemoAdmin solo al administrador actual, previa comprobación de identidad y perfil. El permiso no concede ModifyAllData ni permisos CRUD amplios; habilita los campos propios, tipos y app. No crear usuarios para esta sesión.
+Después de un despliegue satisfactorio, asignar P04_DemoAdmin solo al administrador actual, previa comprobación de identidad y perfil. El permiso no concede ModifyAllData ni permisos CRUD amplios; habilita los campos propios, tipos y app. No crear usuarios para esta verificación.
 
 ```powershell
 sf org assign permset --name P04_DemoAdmin --target-org p04-posventa-dev --json
@@ -337,16 +326,16 @@ sf org assign permset --name P04_DemoAdmin --target-org p04-posventa-dev --json
 ./scripts/Test-Api.ps1 -ExpectedOrgId '<identificador P04 verificado>'
 ```
 
-La muestra deja ocho registros: dos clientes, dos contactos sin datos de comunicación, dos productos y dos casos. AccountNumber P04-S03-DEMO-A/B permite encontrarlos. Un producto tiene garantía completa y el otro incompleta; ambos casos siguen sin evaluar. Si la muestra ya existe, el script se detiene sin duplicarla ni modificarla. Sus identificadores solo se guardan en .local/s03-demo.json, ignorado. No borrar la muestra al finalizar: queda para revisión de Alex.
+La muestra deja ocho registros: dos clientes, dos contactos sin datos de comunicación, dos productos y dos casos. AccountNumber P04-S03-DEMO-A/B permite encontrarlos. Un producto tiene garantía completa y el otro incompleta; ambos casos siguen sin evaluar. Si la muestra ya existe, el script se detiene sin duplicarla ni modificarla. Sus identificadores solo se guardan en .local/s03-demo.json, ignorado. Conservar la muestra original para demostraciones y comprobaciones posteriores.
 
 Test-Api crea un caso temporal y verifica creación, edición, rechazo de fecha futura, rechazo de contacto de otro cliente y consulta de valores conservados. Finalmente elimina únicamente los identificadores devueltos por sus propias creaciones; no elimina la muestra ni registros ajenos. La fecha futura usa UTC+2 días, que supera el día local actual de cualquier zona; la prueba del límite exacto del día se realiza en Apex. Una eliminación ordinaria puede dejar un registro temporal en papelera; no ejecutar purgas globales.
 
-## Interfaz estándar
+### Interfaz estándar
 
 Abrir la aplicación P04 Posventa. Consultar el cliente/contacto, el producto y el caso de muestra. En producto: comprobar cliente, contacto, compra y fechas de garantía. En caso: comprobar relaciones, incidencia, estado y evaluación vacía; editar asunto y guardar. Confirmar por API la persistencia. Verificar que el layout propio corresponde solo al tipo P04 y que las asignaciones master originales se conservan.
 
-Registrar resultados reales en STATUS, incluidos despliegue, pruebas Apex/API, consulta/edición UI y datos residuales. Una prueba administrativa no acredita acceso de agente, responsable o usuario sin permisos. La siguiente fase será esa seguridad por función con la única plaza Salesforce libre.
-## Resultado ejecutado
+Registrar resultados reales en STATUS, incluidos despliegue, pruebas Apex/API, consulta/edición UI y datos residuales. Una prueba administrativa no acredita acceso de agente, responsable o usuario sin permisos. La comprobación de seguridad por función se realizó después, reutilizando la segunda plaza Salesforce.
+### Resultado ejecutado
 
 20/20 pruebas Apex y cinco comprobaciones API satisfactorias. Cobertura del guardián y triggers: 74/74 ubicaciones según el despliegue. Consulta y edición reales de producto y caso en la interfaz estándar confirmadas por lectura API; layouts Master conservados. Se abrieron los controles por evento DOM ante problemas de coordenadas. Tras comprobar el campo editado, el guardado se realizó enfocando Save y pulsando Enter; los intentos previos sin persistencia no se contaron como éxito. No se omitió validación de Salesforce.
 
@@ -354,4 +343,4 @@ Las 20 pruebas se ejecutaron con el despliegue completo mediante RunSpecifiedTes
 
 La prueba de cambio de tipo no trata null como cambio: Master puede fallar por una restricción nativa antes de llegar al trigger. Se comprueba ese rechazo y el tipo persistido, y el guardián se verifica además directamente mediante sus errores. No se confunden las dos evidencias.
 
-La muestra conserva ocho registros ficticios. Los fixtures Apex se revirtieron; el caso temporal API se eliminó. Cifras y límites finales en STATUS. La siguiente fase de seguridad por función aún no se ha ejecutado.
+La muestra conserva ocho registros ficticios. Los fixtures Apex se revirtieron; el caso temporal API se eliminó. Cifras y límites finales en STATUS. Estos resultados del modelo son anteriores a las pruebas de seguridad por función.

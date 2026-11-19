@@ -1,21 +1,21 @@
 # Despliegue y comprobación de V1
 
-Destino: exclusivamente la Developer Edition dedicada y verificada de P04, API 68.0. Este procedimiento describe la composición final; **no acredita una instalación desde cero**. En sesión 08 se despliegan incrementalmente cuatro componentes sobre sesiones 03–07. No crear otra organización ni reiniciar datos para repetirlo.
+Destino: exclusivamente la Developer Edition dedicada y verificada de P04, API 68.0. Este procedimiento describe la composición final; **no acredita una instalación desde cero**. En la validación integrada de V1 se desplegaron incrementalmente cuatro componentes sobre modelo, seguridad, garantía, ciclo y consulta. No crear otra organización ni reiniciar datos para repetirlo.
 
 ## Preparación y dependencias
 
-1. Confirmar raíz Git, rama, remotos, estado y cambios posteriores. Leer AGENTS y STATUS. Alex controla staging, commit y push.
+1. Confirmar raíz Git, rama, remotos, estado y cambios posteriores. Leer AGENTS y STATUS. No ejecutar staging, commit ni push; dejar los cambios preparados para revisión.
 2. Verificar identidad de organización y administrador; alias `p04-posventa-dev` explícito en cada comando. `scripts/P04-Common.ps1` expone `Assert-P04Target -ExpectedOrgId '<ID privado verificado>'`. No usar `org display` ni publicar autenticaciones.
 3. Usar herramientas existentes: Node 24.x, npm 11.x, Salesforce CLI y API 68.0. `npm ci` solo cuando haga falta reconstruir dependencias locales desde el lockfile; no instalar herramientas globales por rutina.
 4. Antes de enviar metadatos compartidos, contrastar CaseStatus, perfiles/layouts, aplicación y reglas OWD/compartición con el destino. Preservar valores y concesiones ajenas. Los archivos Admin contienen asignaciones P04; no son una sustitución integral del perfil. Account Private depende de Opportunity Private, incluidos conjuntamente. Esta política afecta a la organización dedicada y no debe aplicarse automáticamente en otro entorno.
 
-`manifest/v1.xml` reúne explícitamente los miembros de las sesiones, sin comodines ni destructivos. No ejecutar sucesivamente los manifiestos históricos sobre los archivos finales: los triggers y permisos actuales dependen de componentes añadidos después.
+`manifest/v1.xml` reúne explícitamente los miembros de los incrementos funcionales, sin comodines ni destructivos. No ejecutar sucesivamente los manifiestos históricos sobre los archivos finales: los triggers y permisos actuales dependen de componentes añadidos después.
 
 Dependencias del paquete final: CaseStatus → proceso/tipos y campos/validaciones; permisos personalizados y grupos → autorización y cola; modelo + cola → ciclo y Flow de entrada; servicio → adaptador y Flow de evaluación → acción/layout; Apex de consulta → LWC → FlexiPage → asignaciones de aplicación; grupo Responsable → carpeta View → informe. Los conjuntos referencian las clases/Flow/tipos existentes. Metadata API resuelve las referencias del paquete conjunto.
 
 ## Comandos
 
-Para la entrega incremental de sesión 08, con la base 07 presente:
+Para el incremento del informe, con modelo, seguridad, garantía, ciclo y consulta ya presentes:
 
 ```powershell
 sf project deploy start --manifest manifest/sesion08.xml --target-org p04-posventa-dev --test-level NoTestRun --wait 3 --json
@@ -38,7 +38,7 @@ npm run test:lwc
 git diff --check
 ```
 
-Test-Consulta ejecuta Modelo, Seguridad, Garantía, Ciclo y Consulta **secuencialmente**, con cobertura. El intento paralelo de sesión 07 bloqueó fixtures compartidos de cola; no cambiar controles ni ajustes globales. Los resultados finales reales se registran en STATUS; un comando documentado no implica que se haya vuelto a ejecutar.
+Test-Consulta ejecuta Modelo, Seguridad, Garantía, Ciclo y Consulta **secuencialmente**, con cobertura. La ejecución paralela de las suites durante la comprobación de la consulta LWC bloqueó fixtures compartidos de cola; no cambiar controles ni ajustes globales. Los resultados finales reales se registran en STATUS; un comando documentado no implica que se haya vuelto a ejecutar.
 
 ## Configuración y validación funcional
 

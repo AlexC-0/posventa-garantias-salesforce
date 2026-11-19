@@ -25,4 +25,4 @@ La función Responsable permite conectar todo el recorrido con una sola identida
 
 Retirar conjuntos y membresías y comprobar denegación por URL directa de carpeta/informe en la sesión renovada. Salir de Login As. Eliminar exclusivamente temporales registrados: casos, después productos y, para el control ajeno, contacto y cliente. No purgar ni editar los ocho originales. Restaurar política administrativa y verificarla tras recarga, junto con usuario mínimo, administrador y licencias.
 
-No enviar informes, suscribir, exportar, publicar capturas privadas ni modificar CV/LinkedIn/portfolio. Para repetir, usar [DESPLIEGUE-V1](DESPLIEGUE-V1.md), [INFORME](INFORME.md) y [TESTING](TESTING.md).
+No enviar informes, suscribir, exportar ni publicar capturas privadas. Para repetir, usar [DESPLIEGUE-V1](DESPLIEGUE-V1.md), [INFORME](INFORME.md) y [TESTING](TESTING.md).

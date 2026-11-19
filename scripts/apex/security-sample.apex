@@ -1,7 +1,7 @@
 // Preparación administrativa de dos casos temporales. Sin notificaciones.
 System.assert(FeatureManagement.checkPermission('P04_Administrar'),'P04: falta autorización administrativa.');
 List<Account> clients=[SELECT Id,AccountNumber,P04_Posventa__c FROM Account WHERE AccountNumber IN ('P04-S03-DEMO-A','P04-S03-DEMO-B') WITH USER_MODE];
-System.assertEquals(2,clients.size(),'P04: debe existir la muestra de sesión 03.');
+System.assertEquals(2,clients.size(),'P04: debe existir la muestra original de posventa.');
 for(Account a:clients)a.P04_Posventa__c=true;
 update as user clients;
 System.assertEquals(0,[SELECT COUNT() FROM Case WHERE Subject LIKE 'P04 S04 TEMP %' WITH USER_MODE],'P04: ya existe una muestra temporal; no duplicarla.');

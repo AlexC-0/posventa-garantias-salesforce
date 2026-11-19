@@ -1,6 +1,6 @@
-# Proyecto 04 — Alcance y diseño propuesto
+# Proyecto 04 — Alcance y diseño de V1
 
-Actualizado en la sesión 08, 18 de noviembre de 2026. Se conserva el alcance V1. La base Account/Contact/Asset/Case, validaciones, seguridad por función y servicio único de evaluación explícita están implementados y desplegados en P04. Contrato en [DATA_MODEL](DATA_MODEL.md), permisos en [SECURITY](SECURITY.md), servicio en [GARANTIA](GARANTIA.md) y resultados en [STATUS](STATUS.md). La sesión 06 implementa ciclo y cola/asignación: [CICLO](CICLO.md). La consulta LWC se incorpora en sesión 07; la sesión 08 implementa el [informe](INFORME.md) y comprueba los doce criterios en [ACEPTACION-V1](ACEPTACION-V1.md).
+Actualizado en la validación integrada de V1, 18 de noviembre de 2026. Se conserva el alcance V1. La base Account/Contact/Asset/Case, validaciones, seguridad por función y servicio único de evaluación explícita están implementados y desplegados en P04. Contrato en [DATA_MODEL](DATA_MODEL.md), permisos en [SECURITY](SECURITY.md), servicio en [GARANTIA](GARANTIA.md) y resultados en [STATUS](STATUS.md). El [ciclo](CICLO.md) coordina cola, asignación y cierre. La [consulta LWC](CONSULTA.md) y el [informe](INFORME.md) completan el alcance; [ACEPTACION-V1](ACEPTACION-V1.md) relaciona los doce criterios con sus evidencias.
 
 ## Propósito y V1
 
@@ -8,9 +8,9 @@ Atención posventa interna para agentes y una persona responsable: clientes empr
 
 Solo datos ficticios y garantía simulada. Excluidos: portal público, Experience Cloud, comunicaciones reales, OmniChannel avanzado, IA, integraciones externas, otros proyectos, datos reales, compra de licencias y producción.
 
-## Modelo y reparto técnico propuestos
+## Modelo y responsabilidades técnicas
 
-| Elemento | Uso previsto |
+| Elemento | Uso |
 | --- | --- |
 | Account | Cliente empresarial |
 | Contact | Contacto del cliente |
@@ -22,7 +22,7 @@ Solo datos ficticios y garantía simulada. Excluidos: portal público, Experienc
 | LWC | Consulta desde la ficha del caso |
 | Informe estándar | Pendientes por estado y propietario, sin cálculo de garantía |
 
-Objetos y relaciones estándar verificados. La sesión 03 incorporó 12 campos, nueve reglas de validación, tipos/proceso propios y protecciones Apex. La sesión 04 añade un campo de ámbito de cliente (13 propios en total), seguridad por función, compartición y autorización separada de integridad. La sesión 05 incorpora evaluación/reevaluación explícita y un adaptador invocable, sin campos nuevos ni Flow. El cálculo se centraliza en P04Garantia; ningún otro componente lo duplica. La sesión 06 incorpora coordinación, asignación y cierre. Sesión 07 incorpora la consulta LWC; sesión 08, el informe estándar de pendientes con carpeta propia y consulta por Responsable.
+Objetos y relaciones estándar verificados. La implementación del modelo incorporó 12 campos, nueve reglas de validación, tipos/proceso propios y protecciones Apex. La implementación de seguridad añade un campo de ámbito de cliente (13 propios en total), seguridad por función, compartición y autorización separada de integridad. El servicio de garantía incorpora evaluación/reevaluación explícita y un adaptador invocable, sin añadir campos al modelo. El cálculo se centraliza en P04Garantia; ningún otro componente lo duplica. La implementación del ciclo incorpora coordinación, asignación y cierre. La consulta LWC muestra datos autorizados; el informe estándar de pendientes dispone de carpeta propia y consulta por Responsable.
 
 ## Estados y cierre
 
@@ -49,15 +49,15 @@ El cierre requiere responsable individual, tipo de resolución y explicación. T
 - Los casos abiertos podrán reevaluarse explícitamente. Los cerrados conservarán la evaluación.
 - Con evaluación pendiente de datos, solo admitir cierre sin actuación, explicado.
 
-Decisiones fijadas en sesión 03 y concretadas en sesión 05: incoherencias se rechazan antes de evaluar; garantía incompleta produce pendiente de datos, pero compra ausente por sí sola no lo produce. Cobertura inclusiva. Incidencia futura respecto al día del usuario ejecutor, sin conversiones DateTime. El servicio distingue errores de datos y motivos de cobertura; la instantánea no es una fórmula ni se actualiza automáticamente. El cierre con evaluación pendiente se limita a Sin_actuacion explicado desde sesión 06.
+Reglas de garantía: incoherencias se rechazan antes de evaluar; garantía incompleta produce pendiente de datos, pero compra ausente por sí sola no lo produce. Cobertura inclusiva. Incidencia futura respecto al día del usuario ejecutor, sin conversiones DateTime. El servicio distingue errores de datos y motivos de cobertura; la instantánea no es una fórmula ni se actualiza automáticamente. El cierre con evaluación pendiente se limita a Sin_actuacion explicado.
 
-## Consulta y permisos propuestos
+## Consulta y permisos
 
-La matriz de seguridad ordinaria ya está implementada y comprobada en sesión 04; la sesión 06 incorpora el acceso a cola con comprobación efectiva de membresía. Se utilizó un único usuario persistente con permisos secuenciales y dos agentes aislados en Apex, preservando al administrador. Los resultados y límites concretos prevalecen sobre las propuestas siguientes.
+La matriz de seguridad ordinaria está implementada y comprobada. El acceso a cola exige comprobación efectiva de membresía. Se utilizó un único usuario persistente con permisos secuenciales y dos agentes aislados en Apex, preservando al administrador. Los resultados y límites concretos se detallan en STATUS.
 
 El LWC implementado muestra producto/fechas actuales, evaluación registrada y hasta cinco casos P04 accesibles del mismo Asset, excluyendo actual, ordenados por CreatedDate DESC e Id DESC. Incluye carga, vacío, error/reintento, acceso restringido, Actualizar explícito y control de respuestas tardías. Contrato en [CONSULTA](CONSULTA.md).
 
-| Función | Acceso previsto |
+| Función | Acceso |
 | --- | --- |
 | Agente | Consulta necesaria de clientes/productos, creación de casos, acceso a cola compartida y gestión de sus casos asignados |
 | Responsable | Gestión de casos del equipo, reasignación y corrección de garantía |
@@ -80,6 +80,6 @@ Comprobar licencias y usuarios disponibles antes de comprometer el esquema de pr
 11. Informe de pendientes coherente con los datos ficticios conocidos.
 12. Despliegue reproducible con resultados reales de pruebas.
 
-Los controles locales y una futura CI pueden comprobar formato, análisis y pruebas unitarias del LWC. Jest no acredita permisos ni integración Salesforce. Como antecedentes: sesión 05 superó 65 pruebas y una demostración administrativa; sesión 06, 93 pruebas y recorrido ordinario hasta cierre; sesión 07, 106 Apex y 23 Jest y consulta ordinaria. Cada evidencia conserva su alcance histórico.
+Los controles locales y una futura CI pueden comprobar formato, análisis y pruebas unitarias del LWC. Jest no acredita permisos ni integración Salesforce. Como antecedentes: el servicio de garantía superó 65 pruebas y una demostración administrativa; el ciclo, 93 pruebas y recorrido ordinario hasta cierre; la consulta LWC, 106 Apex y 23 Jest y consulta ordinaria. Cada evidencia conserva su alcance histórico.
 
-La sesión 08 completa el informe y la demostración integrada, vuelve a superar 106 Apex secuenciales y 23 Jest y registra los doce criterios en [ACEPTACION-V1](ACEPTACION-V1.md). V1 preparada para revisión final y publicación manual de Alex, dentro de los límites de [STATUS](STATUS.md). El procedimiento completo está documentado y convertido localmente; una instalación desde cero no está acreditada.
+La validación integrada de V1 completa el informe y la demostración integrada, vuelve a superar 106 Apex secuenciales y 23 Jest y registra los doce criterios en [ACEPTACION-V1](ACEPTACION-V1.md). V1 implementada y preparada para revisión final, dentro de los límites de [STATUS](STATUS.md). El procedimiento completo está documentado y convertido localmente; una instalación desde cero no está acreditada.

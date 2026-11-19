@@ -2,8 +2,8 @@
 System.assertEquals(0, [SELECT COUNT() FROM Account WHERE AccountNumber IN ('P04-S03-DEMO-A','P04-S03-DEMO-B')],
     'P04: la muestra ya existe; consultar los registros conservados, no duplicarla.');
 List<Account> clientes=new List<Account>{
-    new Account(Name='P04 DEMO - Taller Norte (ficticio)',AccountNumber='P04-S03-DEMO-A',Description='Muestra ficticia de sesión 03. Sin comunicaciones reales.'),
-    new Account(Name='P04 DEMO - Taller Sur (ficticio)',AccountNumber='P04-S03-DEMO-B',Description='Muestra ficticia de sesión 03. Sin comunicaciones reales.')
+    new Account(Name='P04 DEMO - Taller Norte (ficticio)',AccountNumber='P04-S03-DEMO-A',Description='Muestra ficticia de posventa. Sin comunicaciones reales.'),
+    new Account(Name='P04 DEMO - Taller Sur (ficticio)',AccountNumber='P04-S03-DEMO-B',Description='Muestra ficticia de posventa. Sin comunicaciones reales.')
 };
 insert clientes;
 List<Contact> contactos=new List<Contact>{

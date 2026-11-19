@@ -1,6 +1,6 @@
-# Consulta de posventa en la ficha del caso — sesión 07
+# Consulta de posventa en la ficha del caso
 
-`p04ConsultaCaso` presenta datos de lectura dentro de **P04 Posventa → caso P04**, en la página propia `P04_Caso`. La asignación se versiona en CustomApplication, para el tipo `Case.P04_Posventa`, perfil ordinario `P04_Minimo` y perfil administrativo, escritorio/Large. No sustituye la página general de Case ni páginas de otras aplicaciones. La ficha conserva cabecera de acciones, detalles y publicador estándar; evaluación, propietario y cierre siguen usando las acciones de sesión 06.
+`p04ConsultaCaso` presenta datos de lectura dentro de **P04 Posventa → caso P04**, en la página propia `P04_Caso`. La asignación se versiona en CustomApplication, para el tipo `Case.P04_Posventa`, perfil ordinario `P04_Minimo` y perfil administrativo, escritorio/Large. No sustituye la página general de Case ni páginas de otras aplicaciones. La ficha conserva cabecera de acciones, detalles y publicador estándar; evaluación, propietario y cierre siguen usando las acciones del ciclo.
 
 ## Qué muestra
 

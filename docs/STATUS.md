@@ -1,12 +1,10 @@
-# Estado — Sesión 08 completada, pendiente de revisión y publicación manual
+# Estado de V1 y evidencias de verificación
 
-18 de noviembre de 2026. **V1 preparada para revisión final y publicación manual de Alex.** Informe de pendientes implementado y comprobado, recorrido integrado completado y doce criterios relacionados en [ACEPTACION-V1](ACEPTACION-V1.md). No se inicia otro encargo.
+18 de noviembre de 2026. **V1 implementada y preparada para revisión final.** Informe de pendientes implementado y comprobado, recorrido integrado completado y doce criterios relacionados en [ACEPTACION-V1](ACEPTACION-V1.md).
 
-## Git, alcance y versiones
+## Entorno de la verificación
 
-Ruta/raíz: C:\Users\kaosk\source\repos\posventa-garantias-salesforce. Rama main; origin https://github.com/AlexC-0/posventa-garantias-salesforce.git. Inicio limpio en HEAD/origin/main locales fae9fbe7be6e28f020e209b887d5c6abd2f6433d, sesión 07 publicada por Alex según el encargo. Sin nueva consulta de la punta remota. HEAD y remoto conservados; cambios locales sin staging. No se han ejecutado add, commit, push, tags ni releases.
-
-Identidad de organización y administrador comprobada antes de escrituras, destino explícito p04-posventa-dev y API 68.0. CLI 2.158.7, Node 24.13.0, npm 11.6.2, runner sfdx-lwc-jest 8.0.0 y herramientas Salesforce/Java existentes conservados. Sin instalaciones nuevas, Gmail, otras organizaciones/repositorios, cuentas persistentes nuevas, comunicaciones ni cambios de CV/LinkedIn/portfolio.
+Identidad de organización y administrador comprobada antes de escrituras, destino explícito p04-posventa-dev y API 68.0. CLI 2.158.7, Node 24.13.0, npm 11.6.2, runner sfdx-lwc-jest 8.0.0 y herramientas Salesforce/Java existentes conservados. Sin instalaciones nuevas ni cuentas persistentes adicionales; sin comunicaciones ni cambios en otras organizaciones.
 
 ## Informe y acceso
 
@@ -48,7 +46,7 @@ El recorrido usa una sola identidad ordinaria Responsable. Las restricciones Age
 
 ## Pruebas y despliegue reproducible
 
-| Suite final de esta sesión | Resultado |
+| Suite final de esta verificación | Resultado |
 | --- | --- |
 | P04ModeloTest | 20/20 |
 | P04SeguridadTest | 20/20 |
@@ -58,7 +56,7 @@ El recorrido usa una sola identidad ordinaria Responsable. Las restricciones Age
 | Total Apex, cinco suites secuenciales | **106/106** |
 | Jest LWC | **23/23** |
 
-Comandos reales: cinco `sf apex run test --class-names <suite> --synchronous --code-coverage --target-org p04-posventa-dev --json`, después `npm run test:lwc -- --json --outputFile=.local/s08-jest.json`. No hubo cambios de código después. No se repitieron instalación, auditoría npm ni cobertura frontend; los resultados históricos no se presentan como mediciones nuevas. No son resultados de CI remota.
+Comandos reales: cinco `sf apex run test --class-names <suite> --synchronous --code-coverage --target-org p04-posventa-dev --json`, después `npm run test:lwc -- --json --outputFile=.local/s08-jest.json`. No hubo cambios de código entre esa ejecución y el cierre de la verificación funcional del 18/11/2026. No se repitieron instalación, auditoría npm ni cobertura frontend; los resultados históricos no se presentan como mediciones nuevas. No son resultados de CI remota.
 
 `manifest/v1.xml` reúne **73 miembros explícitos**, sin comodines/destructivos; conversión local a Metadata API satisfactoria. [DESPLIEGUE-V1](DESPLIEGUE-V1.md) documenta dependencias, CaseStatus, paquete conjunto, permisos/grupos/cola, Flows, página, carpeta, pruebas y restauración. El despliegue completo o una instalación desde cero **no se han ejecutado**. Solo se acredita el incremental de cuatro componentes sobre la base existente.
 
@@ -68,47 +66,29 @@ Incidencias de preparación resueltas: Salesforce rechazó primero el filtro de 
 
 Eliminados solo los IDs registrados: **seis casos, dos productos, un contacto y un cliente temporales**, en ese orden y sin purga. Se validaron nombres, relaciones y exclusividad del cliente temporal antes de borrar. Ningún original se incluyó en el borrado.
 
-Auditoría final satisfactoria: **ocho originales**, dos casos originales sin evaluar, garantía y serie originales conservadas; cero temporales de sesiones 04–08 pendientes en las comprobaciones previstas. Usuario reutilizable activo P04_Minimo, sin rol, conjuntos adicionales, grupos ni casos propios. Administrador y P04_DemoAdmin preservados; dos licencias Salesforce usadas de dos. Salida de Login As y política restaurada a **false**, comprobada tras recarga.
+Auditoría final satisfactoria: **ocho originales**, dos casos originales sin evaluar, garantía y serie originales conservadas; cero temporales desde las pruebas de seguridad hasta la validación integrada pendientes en las comprobaciones previstas. Usuario reutilizable activo P04_Minimo, sin rol, conjuntos adicionales, grupos ni casos propios. Administrador y P04_DemoAdmin preservados; dos licencias Salesforce usadas de dos. Salida de Login As y política restaurada a **false**, comprobada tras recarga.
 
 Consulta final de configuración: ambos Flows activos; cola con exactamente los grupos Agentes y Responsables; RunReports habilitado en P04_Responsable, CreateCustomizeReports/ViewAllData/ModifyAllData deshabilitados. Resultado privado en `.local/s08-final-config.json`.
 
 Evidencias privadas ignoradas: `.local/s08-deploy-3.json`, `s08-report-describe.json`, `s08-final-metadata/`, `s08-tests-*.json`, `s08-jest.json`, `s08-expected-*.json`, `s08-ui-report-*.json`, `s08-ui-closed-historical.json`, `s08-case-*.json`, `s08-product-after-close.json`, `s08-cleanup.json`, `s08-final-audit.json`, `s08-policy-restored.json` y `s08-local-verification.json`. No se publican IDs, usuarios internos, URLs de sesión ni capturas privadas.
 
-Revisión local final satisfactoria: 144 archivos UTF-8, 83 XML, 13 scripts PowerShell, 83 enlaces locales y 195 referencias de miembros de manifiestos. Cinco exclusiones privadas comprobadas; barrido de identidades/secretos, espacios en archivos nuevos y `git diff --check` sin incidencias. Git final: main en fae9fbe, nueve archivos modificados y ocho nuevos, cero en staging. Los históricos siguientes conservan sus propias cifras.
+Revisión local final satisfactoria: 144 archivos UTF-8, 83 XML, 13 scripts PowerShell, 83 enlaces locales y 195 referencias de miembros de manifiestos. Cinco exclusiones privadas comprobadas; barrido de identidades/secretos, espacios en archivos nuevos y `git diff --check` sin incidencias. Los históricos siguientes conservan sus propias cifras.
 
 ## Entrega y límites
 
 Matriz de doce criterios satisfactoria dentro del alcance: [ACEPTACION-V1](ACEPTACION-V1.md). Guion de unos cinco minutos y preparación/restauración separadas: [DEMO-V1](DEMO-V1.md). Competencias y decisiones referenciadas a implementación y pruebas, sin métricas de negocio inventadas.
 
-No quedan defectos funcionales conocidos del encargo. Límites: garantía simulada; un usuario reutilizable; sin producción, carga/concurrencia real, móvil, API ordinaria con OAuth propio, CI remota ni instalación limpia acreditada. No se transforma la comprobación de permisos en una auditoría integral de seguridad o accesibilidad.
+No quedan defectos funcionales conocidos dentro del alcance comprobado. Límites: garantía simulada; un usuario reutilizable; sin producción, carga/concurrencia real, móvil, API ordinaria con OAuth propio, CI remota ni instalación limpia acreditada. No se transforma la comprobación de permisos en una auditoría integral de seguridad o accesibilidad.
 
-Summary: `feat: incorporar informe de pendientes y validar la V1`
+## Histórico — Consulta LWC publicada en fae9fbe
 
-Description:
-
-- Añade el informe estándar de pendientes P04, sin límite temporal, agrupado por estado y propietario y con carpeta de consulta para responsables.
-- Integra Reports y RunReports con permisos mínimos y verifica filas, recuentos, exclusiones y retirada de acceso con usuario ordinario.
-- Completa el recorrido de creación a cierre, rechazo de evaluación desactualizada, actualización LWC e histórico conservado.
-- Supera 106 pruebas Apex secuenciales y 23 Jest; conserva ocho originales y restaura temporales, permisos y Login As.
-- Documenta aceptación, competencias, demostración y despliegue de V1; distingue el incremental ejecutado de una instalación limpia no realizada.
-
-Siguiente paso: Alex revisa el diff, hace staging, commit y push manualmente. Después se contrasta el commit publicado antes del cierre definitivo. No iniciar otra fase automáticamente.
-
-## Histórico — Sesión 07 publicada en fae9fbe
-
-Los resultados y pendientes siguientes pertenecen a aquella sesión. Informe pendiente y cierre V1 fuera de alcance eran límites de sesión 07, sustituidos por la entrega 08 anterior.
-
-# Estado — Sesión 07 completada, pendiente de commit y push de Alex
+Los resultados siguientes corresponden a la incorporación de la consulta. El informe y la validación integrada se incorporaron después.
 
 18 de noviembre de 2026. LWC de consulta integrado y comprobado en Salesforce. Informe de pendientes, integraciones y cierre global V1 quedan fuera.
 
-## Git, alcance y entorno
-
-Ruta/raíz: C:\Users\kaosk\source\repos\posventa-garantias-salesforce. Rama main; origin https://github.com/AlexC-0/posventa-garantias-salesforce.git. Inicio limpio en HEAD/origin/main locales eca51b8e12a8af438859f80e214eca3a5497f602, sesión 06 publicada por Alex según el encargo. Sin nueva lectura de la punta remota. HEAD se conserva y los cambios quedan sin staging. No se hicieron commits, push, tags, releases ni publicaciones.
-
 Organización P04 y administrador contrastados antes de escribir; API 68.0 y alias explícito p04-posventa-dev. Sin Gmail, otras organizaciones, comunicaciones o cuentas persistentes nuevas. CLI 2.158.7, extensiones Salesforce 68.10.0 y JDK 21.0.13 conservados. Node 24.13.0 y npm 11.6.2 existentes. No había herramientas frontend en el repositorio: se añade un paquete raíz privado con el runner oficial sfdx-lwc-jest 8.0.0 y package-lock.json, exclusivamente desarrollo local.
 
-## Implementación
+### Implementación
 
 `p04ConsultaCaso` usa componentes estándar Lightning, etiquetas castellanas y disposición adaptable. Muestra producto/serie/fechas actuales, incidencia, siete valores de evaluación y hasta cinco relacionados visibles. Distingue Sin evaluar y Pendiente_datos; compara cuatro fechas incluyendo ausencias para avisar de reevaluación en abiertos, sin calcular cobertura. Cerrados se presentan como históricos. Date conserva el día con UTC; DateTime muestra zona.
 
@@ -118,7 +98,7 @@ Actualización imperativa sin caché de cliente, mediante Actualizar. La evaluac
 
 Página propia P04_Caso y asignaciones versionadas en P04_Posventa: Case.P04_Posventa, P04_Minimo y Admin, Large. Cabecera, detalles y publicador en pestaña estándar Gestión del caso. Los tres permission sets solo añaden acceso a la clase de consulta. La recuperación previa de la aplicación confirmó que no había asignaciones de página propias; sus cuatro flags de navegación existentes se preservan explícitamente. No se modifican otras aplicaciones, páginas, perfiles o ajustes globales de soporte. Detalle en [CONSULTA](CONSULTA.md).
 
-## Despliegue y pruebas reales
+### Despliegue y pruebas reales
 
 Despliegue satisfactorio de **8 componentes**, con **13/13 pruebas nuevas**, cero errores. Después se ajustó únicamente la FlexiPage (un componente ya incluido), Succeeded y cero errores, para alojar el publicador en una pestaña estándar. El manifiesto final conserva ocho componentes distintos. La página final fue comprobada en la interfaz; no hubo cambios Apex después de la regresión satisfactoria.
 
@@ -140,7 +120,7 @@ Jest: carga accesible, secciones y campos, fechas y zona, sin evaluar/Pendiente_
 
 Instalación reproducible npm ci y npm ls --all sin problemas de engines/peers. npm audit final: **cero vulnerabilidades**, incluidas dependencias de desarrollo. Persisten avisos de obsolescencia de dependencias transitivas del runner oficial. No se usan force, legacy-peer-deps ni cambios globales.
 
-## Interfaz ordinaria comprobada
+### Interfaz ordinaria comprobada
 
 Un único usuario reutilizable, perfil mínimo y escenario Agente temporal. Preparación administrativa: un Asset ficticio y tres Cases identificados (principal y relacionado propios; tercero reservado al administrador), referenciando cliente/contacto originales. Sin correos. Las escrituras de preparación no se atribuyen al usuario ordinario.
 
@@ -149,9 +129,9 @@ Un único usuario reutilizable, perfil mínimo y escenario Agente temporal. Prep
 3. Se corrigió solo el fin del producto temporal y se vació su serie. Actualizar mostró fin actual distinto, No consta en serie, instantánea anterior En cobertura y aviso de reevaluación. Lectura posterior confirmó que los siete campos y la autoría del caso no cambiaron.
 4. Revisión visual en escritorio a ancho de ventana 1536 y 960; panel estrecho de 456 px sin desbordamiento horizontal propio (scrollWidth=clientWidth). Se restauró el tamaño anterior. El aviso promocional estándar Go Mobile puede superponerse; no forma parte del LWC ni se cambió una preferencia global para ocultarlo.
 
-Los rechazos de acceso/relación/FLS, límites/empates y revocación se acreditan en Apex y estados visuales en Jest; no se afirma nueva UI de responsable/revocación ni REST ordinaria independiente. El histórico cerrado se prueba en Jest y se conserva la regresión del ciclo; esta sesión no repitió el cierre UI de sesión 06. Las consultas administrativas de contraste no son pruebas ejecutadas como usuario ordinario.
+Los rechazos de acceso/relación/FLS, límites/empates y revocación se acreditan en Apex y estados visuales en Jest; no se afirma nueva UI de responsable/revocación ni REST ordinaria independiente. El histórico cerrado se prueba en Jest y se conserva la regresión del ciclo; esta verificación no repitió el cierre UI del ciclo. Las consultas administrativas de contraste no son pruebas ejecutadas como usuario ordinario.
 
-## Incidencias resueltas y límites
+### Incidencias resueltas y límites
 
 El primer despliegue se revirtió por el nombre del componente estándar de detalles; se corrigió a force:detailPanel. Un fixture nuevo combinaba modificación artificial de CreatedDate con escritura sellada de garantía y recibía GUARDADO_RECHAZADO; las fechas artificiales se acotaron a las pruebas de orden, manteniendo la aserción de evaluación y sin tocar el servicio publicado. Los posteriores 13 tests y la regresión completa pasaron.
 
@@ -159,43 +139,25 @@ El runner inicialmente consultado por defecto era 7.9.0; la auditoría señalaba
 
 Tras activar la página, Lightning conservaba la presentación anterior hasta una recarga completa. El publicador mostró carga diferida inconsistente y se integró en Gestión del caso mediante componentes estándar; la evaluación real confirma su disponibilidad final. Los timeouts/selectores y capturas anteriores no se contabilizan como pruebas exitosas.
 
-No se acreditan concurrencia real, dispositivo móvil, API ordinaria con OAuth propio, producción ni CI remota. El panel requiere Actualizar después de otras acciones; no se promete sincronización automática. Informe, integraciones y cierre global V1 pendientes de otro encargo.
+No se acreditan concurrencia real, dispositivo móvil, API ordinaria con OAuth propio, producción ni CI remota. El panel requiere Actualizar después de otras acciones; no se promete sincronización automática. Informe, integraciones y cierre global V1 pendientes de un incremento posterior.
 
-## Restauración, revisión local y entrega
+### Restauración, revisión local y entrega
 
 Se salió de Login As, se retiraron conjuntos y membresías temporales y se eliminaron exclusivamente los tres casos registrados y después su Asset temporal, sin purga. Auditoría final: ocho originales preservados, dos casos originales sin evaluar, garantía/serie originales conservadas; usuario activo P04_Minimo sin rol, conjuntos adicionales, grupos ni casos propios; administrador preservado y dos licencias Salesforce ocupadas. Login Access Policies vuelve a false, verificado tras recarga.
 
-Revisión local final: 136 archivos UTF-8 válidos, 79 XML analizados, 13 scripts PowerShell sin errores sintácticos, 49 enlaces locales y 118 referencias de miembros de manifiestos resueltas. Cinco exclusiones privadas comprobadas, barrido de identidades/secretos y git diff --check satisfactorios. Git final: main en eca51b8, 13 archivos modificados y 16 nuevos, cero archivos en staging. No se versionan identidades, autenticaciones ni evidencias privadas. Resultados en .local/s07-local-verification.json, s07-deploy-4.json, s07-page-deploy.json, s07-tests-*.json, s07-jest.json, s07-npm-audit.json, s07-ui-*.json, s07-api-*.json, s07-final-audit.json y s07-policy-restored.json. Los intentos fallidos se conservan aparte como históricos de diagnóstico.
+Revisión local final: 136 archivos UTF-8 válidos, 79 XML analizados, 13 scripts PowerShell sin errores sintácticos, 49 enlaces locales y 118 referencias de miembros de manifiestos resueltas. Cinco exclusiones privadas comprobadas, barrido de identidades/secretos y git diff --check satisfactorios. No se versionan identidades, autenticaciones ni evidencias privadas. Resultados en .local/s07-local-verification.json, s07-deploy-4.json, s07-page-deploy.json, s07-tests-*.json, s07-jest.json, s07-npm-audit.json, s07-ui-*.json, s07-api-*.json, s07-final-audit.json y s07-policy-restored.json. Los intentos fallidos se conservan aparte como históricos de diagnóstico.
 
 Archivos: LWC y sus tests; P04ConsultaCaso/P04ConsultaCasoTest; FlexiPage y aplicación; tres accesos de clase; manifiesto; package/lock/Jest; Test-Consulta; documentación e instrucciones. Sin cambios en las cuatro suites publicadas, servicio de garantía, ciclo, triggers, modelo o compartición.
 
-Summary: `feat: añadir consulta de garantías en la ficha del caso`
+## Histórico — Implementación del ciclo publicada en eca51b8
 
-Description:
+Los resultados siguientes son históricos; sus límites no describen la V1 completa.
 
-- Incorpora un LWC de solo lectura con producto actual, evaluación registrada y hasta cinco casos relacionados visibles.
-- Protege consultas con CRUD/FLS y compartición; añade actualización explícita, estados accesibles y control de respuestas tardías.
-- Integra la página propia en P04 conservando evaluación, propietario y cierre.
-- Supera 106 pruebas Apex y 23 Jest; comprueba el panel con usuario ordinario y conserva los ocho originales tras limpiar temporales y restaurar concesiones.
-- Documenta contrato, despliegue, demostración y límites. Informe y cierre global V1 quedan para otro encargo.
+18 de noviembre de 2026. Recorrido de creación, cola, gestión individual, evaluación explícita, seguimiento y cierre implementado y demostrado. Informe, LWC e integraciones quedan fuera.
 
-Alex revisa, hace staging, commit y push manuales. Después se podrá contrastar el commit publicado; no se inicia otro encargo.
+Los resultados siguientes corresponden al árbol desplegado del ciclo, no a CI. Organización dedicada y administrador contrastados antes de escribir; destino explícito p04-posventa-dev y API 68.0. CLI 2.158.7; extensiones Core/Apex/LWC 68.10.0 y JDK 21.0.13 conservados, sin instalaciones. Sin Gmail, otras organizaciones, comunicaciones ni nuevos usuarios persistentes.
 
-## Histórico — Sesión 06 publicada en eca51b8
-
-Los estados y pendientes siguientes pertenecen a aquella sesión; no describen la sesión 07 actual.
-
-# Estado — Sesión 06 completada, pendiente de commit y push de Alex
-
-18 de noviembre de 2026. Recorrido de creación, cola, gestión individual, evaluación explícita, seguimiento y cierre implementado y demostrado. Informe, LWC e integraciones quedan fuera; no se inicia otra fase.
-
-## Punto de partida y Git
-
-Ruta/raíz: C:\Users\kaosk\source\repos\posventa-garantias-salesforce. Rama main; origin https://github.com/AlexC-0/posventa-garantias-salesforce.git. Inicio limpio en HEAD/origin/main locales 70ecc63cd69c9bdced0337ec686352199e90c97b, publicado por Alex según el encargo. No se ha vuelto a consultar la punta remota. Se conserva HEAD; todos los cambios quedan locales sin staging. Codex no hizo staging, commit, push, tags ni releases.
-
-Los resultados siguientes corresponden al árbol desplegado de sesión 06, no a ese commit base ni a CI. Organización dedicada y administrador contrastados antes de escribir; destino explícito p04-posventa-dev y API 68.0. CLI 2.158.7; extensiones Core/Apex/LWC 68.10.0 y JDK 21.0.13 conservados, sin instalaciones. Sin Gmail, otras organizaciones, comunicaciones ni nuevos usuarios persistentes.
-
-## Implementación y decisiones
+### Implementación y decisiones
 
 - Cola P04_Entrada con los grupos P04_Agentes y P04_Responsables, sin superiores ni correo. P04Cola verifica membresía efectiva, usuario activo y asignación directa del conjunto de permisos; no confunde estas condiciones.
 - Flow P04_EntradaCaso anterior al guardado y solo de creación: resuelve tipo/cola por DeveloperName y normaliza IDs con CASESAFEID. P04Autorizacion admite entrada, toma propia y reasignación acotadas. Case sigue Private; tomar no comparte casos individuales con otros agentes.
@@ -205,7 +167,7 @@ Los resultados siguientes corresponden al árbol desplegado de sesión 06, no a 
 
 Se conserva el canal administrativo de preparación/importación con propietario explícito mediante el permiso P04_Administrar existente. No ejecuta el Flow inicial, pero tampoco elude estados, cierre o inmutabilidad. No es una concesión nueva al usuario ordinario. No se añaden campos, perfiles, reglas de compartición ni permisos ViewAll/ModifyAll. Contrato y campos protegidos en [CICLO](CICLO.md).
 
-## Despliegue y pruebas reales
+### Despliegue y pruebas reales
 
 Despliegue principal: **Succeeded, 16 componentes, 93 pruebas y cero errores**. El cliente perdió la respuesta de seguimiento con MetadataTransferError/fetch failed; la consulta posterior al despliegue confirmó su finalización correcta y el resultado íntegro de las cuatro suites. No se trató el fallo de comunicación como éxito sin comprobar el servidor.
 
@@ -227,9 +189,9 @@ Cobertura informada del despliegue principal: P04Cola 21/21 ubicaciones, P04Cicl
 
 Incidencias resueltas: orden de elementos en PermissionSet y navegación de Screen Flow; comparación de IDs de 15/18 caracteres mediante CASESAFEID; layout de acción estándar con dos columnas. La edición normal ocultaba Cerrado por una opción global: se resolvió con la acción específica P04, sin cambiar esa opción. Los intentos fallidos y guardados sin persistencia no cuentan como demostraciones satisfactorias.
 
-## Recorrido comprobado en la interfaz
+### Recorrido comprobado en la interfaz
 
-Identidad ordinaria reutilizable verificada, escenario Agente temporal. Un único Case ficticio de sesión 06, relacionado con cliente/contacto/producto originales; no se crearon otros registros de negocio persistentes.
+Identidad ordinaria reutilizable verificada, escenario Agente temporal. Un único Case ficticio del ciclo, relacionado con cliente/contacto/producto originales; no se crearon otros registros de negocio persistentes.
 
 1. Alta estándar: Nuevo y propietario cola, creados por el usuario ordinario.
 2. Cambiar propietario a sí mismo, con notificación por correo desactivada; posterior edición a En curso conserva propietario individual.
@@ -240,53 +202,33 @@ Identidad ordinaria reutilizable verificada, escenario Agente temporal. Un únic
 
 Las consultas posteriores fueron administrativas y corroboran las escrituras UI; no son una prueba REST ordinaria. Reasignación entre dos agentes y revocación de cola se acreditan mediante Apex aislado, no mediante una nueva sesión UI de responsable. Guía breve reproducible en CICLO.
 
-## Limpieza, estado final y límites
+### Limpieza, estado final y límites
 
-Auditoría satisfactoria: **ocho originales conservados** (dos clientes, contactos, productos y casos); sus dos casos siguen sin evaluar y la garantía/serie originales permanecen iguales. Se eliminó únicamente el Case temporal identificado de sesión 06, sin purga. Cero temporales activos de sesiones 04–06.
+Auditoría satisfactoria: **ocho originales conservados** (dos clientes, contactos, productos y casos); sus dos casos siguen sin evaluar y la garantía/serie originales permanecen iguales. Se eliminó únicamente el Case temporal identificado del ciclo, sin purga. Cero temporales activos de las pruebas de seguridad, garantía y ciclo.
 
 Usuario de pruebas activo en P04_Minimo, sin rol, conjuntos adicionales, grupos ni casos propios activos. Administrador preservado y único titular de P04_DemoAdmin. Dos licencias Salesforce, ambas ocupadas; ninguna cuenta nueva. La cola mantiene únicamente los dos grupos públicos previstos, sin usuarios directos ni superiores. Ambos Flows están activos.
 
 Se salió de Login As, se restauró Administrators Can Log in as Any User a **false** y se verificó tras recargar la página. No se manipularon contraseñas. Los ocho registros de muestra no se utilizaron como casos de trabajo; solo como referencias del temporal.
 
-No se prueban concurrencia real entre transacciones, roles/grupos anidados, shares administrativos ajenos, producción ni nuevas llamadas REST con token ordinario. El bloqueo del producto al cerrar no se presenta como una prueba de carrera real. Informe y LWC pendientes de otro encargo.
+No se prueban concurrencia real entre transacciones, roles/grupos anidados, shares administrativos ajenos, producción ni nuevas llamadas REST con token ordinario. El bloqueo del producto al cerrar no se presenta como una prueba de carrera real. Informe y LWC pendientes de un incremento posterior.
 
 Evidencia privada excluida de Git: .local/s06-after-transfer-error.json (despliegue principal y tests), s06-close-action-deploy-2.json (acción/layout), s06-ui-*.json y s06-api-*.json (interfaz/persistencia), s06-final-audit.json, s06-policy-restored.json y s06-local-verification.json. Los archivos públicos no incluyen IDs privados, autenticaciones ni URLs de acceso.
 
-## Revisión local y entrega
+### Revisión local y entrega
 
-Revisión final satisfactoria: 120 archivos públicos UTF-8, 74 XML válidos, 12 scripts PowerShell sin errores de sintaxis, 38 enlaces locales existentes y 110 referencias de manifiestos resueltas sin comodines. Cinco exclusiones comprobadas (.local, .sf, .sfdx, .env y node_modules); búsqueda de identidades privadas y patrones de secretos sin hallazgos. git diff --check correcto. Estado final: main/70ecc63 conservados, 18 archivos modificados, 14 nuevos y cero en staging. Los avisos LF/CRLF proceden de la configuración Git existente, que se conserva. Las pruebas Apex no se repiten por cambios documentales o formato.
+Revisión final satisfactoria: 120 archivos públicos UTF-8, 74 XML válidos, 12 scripts PowerShell sin errores de sintaxis, 38 enlaces locales existentes y 110 referencias de manifiestos resueltas sin comodines. Cinco exclusiones comprobadas (.local, .sf, .sfdx, .env y node_modules); búsqueda de identidades privadas y patrones de secretos sin hallazgos. git diff --check correcto. Los avisos LF/CRLF proceden de la configuración Git existente, que se conserva. Las pruebas Apex no se repiten por cambios documentales o formato.
 
 Archivos del cambio: P04Cola/P04Ciclo/P04CicloTest y metadatos; adaptación de P04Autorizacion, P04Caso y fixtures de las tres suites; cola, dos Flows, dos acciones, layout y tres permission sets; manifest/sesion06.xml, Test-Ciclo, adaptación de la demo administrativa anterior; README, AGENTS y documentación de ciclo, modelo, seguridad, garantía, pruebas, alcance y estado.
 
-Alex revisa el diff y realiza staging, commit y push manualmente. Después se podrá comprobar el commit publicado. No se inicia el siguiente encargo.
+## Histórico — Evaluación de garantía publicada en 70ecc63
 
-Summary: `feat: completar el ciclo de atención posventa`
+Los resultados siguientes corresponden a la incorporación del servicio de garantía, anterior al ciclo y la consulta.
 
-Description:
-
-- Añade cola y asignación inicial con Flow, toma autorizada y reasignación por permiso y membresía.
-- Aplica transiciones, cierre con evaluación vigente e inmutabilidad del cerrado en servidor.
-- Incorpora evaluación explícita desde la ficha y acción estándar de cierre, conservando permisos e instantáneas.
-- Supera 93 pruebas Apex y demuestra el recorrido con usuario ordinario; restaura concesiones y ajuste temporal, elimina el caso de demo y conserva los ocho originales.
-- Actualiza manifiesto, pruebas reproducibles y documentación. Informe y LWC quedan para otro encargo.
-
-## Histórico — Sesión 05 publicada en 70ecc63
-
-La entrega siguiente se conserva como evidencia histórica de sesión 05. Sus pendientes, cifras y estados de publicación no describen el estado actual de sesión 06.
-
-# Estado — Sesión 05 completada, pendiente de commit y push de Alex
-
-18 de noviembre de 2026. Servicio único de evaluación de garantía desplegado y comprobado en P04. La sesión termina aquí: Flow, cola, ciclo completo, informes y LWC no se han iniciado.
-
-## Punto de partida y Git
-
-Ruta/raíz: C:\Users\kaosk\source\repos\posventa-garantias-salesforce. Rama main, origin https://github.com/AlexC-0/posventa-garantias-salesforce.git. Inicio limpio en HEAD/origin/main locales 4cfaf0bf3709d373fcaa75fc7a76b73dbd2cbbb3, publicación de sesión 04 indicada por Alex. No se hizo una nueva comprobación de la punta remota.
-
-Se conservó ese HEAD y el trabajo queda sin staging. Codex no hizo commit, push, tags ni releases. Los resultados siguientes corresponden al árbol desplegado de sesión 05, no al commit anterior ni a CI.
+18 de noviembre de 2026. Servicio único de evaluación de garantía desplegado y comprobado en P04. En esta versión aún no estaban implementados Flow, cola, ciclo completo, informes ni LWC.
 
 Organización dedicada y API 68.0 comprobadas antes de escribir; clases base activas en esa versión. Alias explícito p04-posventa-dev en cada operación. Herramientas conservadas, sin instalaciones: CLI 2.158.7, Core/Apex/LWC 68.10.0 y JDK 21.0.13. Sin Gmail, otras organizaciones ni nuevos usuarios persistentes.
 
-## Implementación y decisiones
+### Implementación y decisiones
 
 P04Garantia recibe solo identificadores, valida rol, CRUD, lectura de registros/campos y acceso efectivo de edición, recupera datos en USER_MODE y calcula cobertura respecto a incidencia. Límites inclusivos, compra opcional, garantía incompleta pendiente de datos con motivo específico; incoherencias son errores. Guarda los siete campos existentes sin añadir campos al modelo.
 
@@ -296,7 +238,7 @@ La instantánea permanece histórica al modificar producto o incidencia. La reev
 
 Se decidió atomicidad por llamada (hasta 200 solicitudes). Duplicados se deduplican para consulta/cálculo/DML, manteniendo una respuesta por posición. Si una entrada falla, las otras no se guardan. Vacíos, mal formados, no visibles, fuera de ámbito y límites tienen códigos seguros. Detalle y ejemplos en [GARANTIA](GARANTIA.md).
 
-## Despliegue y pruebas reales
+### Despliegue y pruebas reales
 
 Comando ejecutado, previa comprobación de identidad:
 
@@ -332,59 +274,37 @@ Cobertura informada de clases desplegadas: P04Garantia 90/93 ubicaciones, P04Eva
 
 La demo se ejecutó mediante scripts/Demo-Garantia.ps1: dos registros temporales propios y savepoint, verificación de resultados persistidos dentro de la transacción, corrección del producto sin recálculo, reevaluación por invocable, cerrado rechazado y rollback comprobado. Es evidencia administrativa, no UI/REST ordinaria. El wrapper Test-Garantia.ps1 queda reproducible y se revisa sintaxis; las 65 pruebas reales se ejecutaron durante el despliegue, sin repetición innecesaria por documentos.
 
-## Estado final y límites
+### Estado final y límites
 
-Auditoría final satisfactoria: ocho registros originales (dos clientes/contactos/productos/casos), ambos casos de muestra sin evaluar y garantía/serie originales conservadas. Cero temporales de sesión 05, cero temporales activos de sesión 04. Administrador activo y P04_DemoAdmin reservado a él.
+Auditoría final satisfactoria: ocho registros originales (dos clientes/contactos/productos/casos), ambos casos de muestra sin evaluar y garantía/serie originales conservadas. Cero temporales de evaluación de garantía, cero temporales activos de seguridad. Administrador activo y P04_DemoAdmin reservado a él.
 
-Usuario persistente activo en P04_Minimo, sin rol, conjuntos adicionales, grupos ni casos propios activos. Dos licencias Salesforce ocupadas; no se creó otra cuenta. No se cambiaron asignaciones personales ni Login Access Policies en esta sesión, ni se utilizó el navegador o Gmail.
+Usuario persistente activo en P04_Minimo, sin rol, conjuntos adicionales, grupos ni casos propios activos. Dos licencias Salesforce ocupadas; no se creó otra cuenta. No se cambiaron asignaciones personales ni Login Access Policies en esta verificación, ni se utilizó el navegador o Gmail.
 
 No se han realizado nuevas pruebas UI/REST ordinarias: la autorización del servicio se acredita mediante Apex/runAs con lecturas USER_MODE y regresión. No se han provocado concurrencia real, límites irrecuperables ni rechazo DML posterior a prevalidación correcta. Los errores de datos que las reglas impiden guardar se verificaron en el validador privado con datos en memoria. No atribuir esas pruebas a una escritura inválida persistida.
 
 Evidencia privada, excluida de Git: .local/s05-deploy-1.json (fallo revertido), s05-deploy-2.json (éxito y tests) y s05-final-audit.json. Documentación funcional en GARANTIA, modelo en DATA_MODEL, seguridad en SECURITY y procedimiento en TESTING.
 
-Revisión local final: 106 archivos públicos comprobados como UTF-8 estricto, 65 XML válidos, 11 scripts PowerShell sin errores de sintaxis, 28 enlaces locales existentes y 93 referencias de manifiestos resueltas sin comodines. Cinco exclusiones comprobadas (.local, .sf, .sfdx, .env y node_modules); sin identidades privadas ni patrones de secretos en los archivos revisados. git diff --check correcto. Resultado: main/4cfaf0b conservados, 11 archivos modificados, 11 nuevos y cero en staging. Los avisos LF/CRLF corresponden a la configuración existente, que no se cambió. No se repitieron suites por cambios solo documentales.
+Revisión local final: 106 archivos públicos comprobados como UTF-8 estricto, 65 XML válidos, 11 scripts PowerShell sin errores de sintaxis, 28 enlaces locales existentes y 93 referencias de manifiestos resueltas sin comodines. Cinco exclusiones comprobadas (.local, .sf, .sfdx, .env y node_modules); sin identidades privadas ni patrones de secretos en los archivos revisados. git diff --check correcto. Los avisos LF/CRLF corresponden a la configuración existente, que no se cambió. No se repitieron suites por cambios solo documentales.
 
-## Entrega y siguiente paso
+### Archivos y procedimiento
 
 Cambios: P04Garantia/P04EvaluarGarantiaAccion/P04GarantiaTest con metadatos API 68; adaptación de P04Autorizacion; acceso a clases en tres conjuntos; manifest/sesion05.xml; Demo-Garantia y Test-Garantia con plantilla Apex de demo; documentación y AGENTS. No hay cambios de campos, reglas de validación, triggers, perfiles o compartición.
-
-Alex revisa y publica manualmente. Demostración breve:
 
 ```powershell
 ./scripts/Demo-Garantia.ps1 -ExpectedOrgId '<identificador privado P04 verificado>'
 ```
 
-La siguiente fase se revisará antes de iniciarse. No se ha implementado automáticamente el ciclo/asignación ni otros componentes.
+El ciclo y la asignación se incorporaron en la versión posterior.
 
-Summary: `feat: implementar evaluación explícita de garantías`
+## Histórico — Implementación de seguridad publicada en 4cfaf0b
 
-Description:
-
-- Centraliza cobertura, motivos e instantáneas en un servicio Apex con adaptador invocable.
-- Permite evaluación y reevaluación explícita de abiertos; conserva históricos y rechaza cerrados.
-- Mantiene FLS y autorización, limitando la escritura privilegiada a siete campos y casos autorizados.
-- Define lotes atómicos de hasta 200 solicitudes y respuestas ordenadas con errores seguros.
-- Despliega siete componentes y supera 65 pruebas: 25 de garantía y 40 de regresión.
-- Incluye demo administrativa revertida, documentación y verificación de conservación de la muestra; sin Flow, cola, informes ni LWC.
-
-## Histórico — Sesión 04 publicada en 4cfaf0b
-
-El contenido siguiente conserva la entrega anterior; sus estados de publicación y pruebas pertenecen a aquella sesión.
-
-
-# Estado — Sesión 04 completada, pendiente de commit y push de Alex
+Los resultados siguientes corresponden a la incorporación de seguridad por función.
 
 18 de noviembre de 2026. Seguridad por función implementada, desplegada y comprobada exclusivamente en P04. No se ha iniciado la evaluación automática de garantía.
 
-## Git y entorno
+API 68.0 y alias explícito p04-posventa-dev. Se contrastaron identidad Developer Edition y administrador antes de escribir. Sin otras organizaciones ni Gmail. Herramientas conservadas: CLI 2.158.7, extensiones Core/Apex/LWC 68.10.0 y JDK 21.0.13; sin instalaciones en esta verificación.
 
-Ruta y raíz: C:\Users\kaosk\source\repos\posventa-garantias-salesforce. Rama main; origin: https://github.com/AlexC-0/posventa-garantias-salesforce.git.
-
-Inicio limpio en HEAD/origin/main locales de1bfdb0f413ae750abbe39da83db1d62782c30f, sesión 03 publicada por Alex según el encargo. No se realizó una nueva lectura de la punta remota. HEAD se conserva; cambios locales sin staging. No hay commit, push, tags, releases ni CI atribuibles a esta sesión.
-
-API 68.0 y alias explícito p04-posventa-dev. Se contrastaron identidad Developer Edition y administrador antes de escribir. Sin otras organizaciones ni Gmail. Herramientas conservadas: CLI 2.158.7, extensiones Core/Apex/LWC 68.10.0 y JDK 21.0.13; sin instalaciones en esta sesión.
-
-## Implementación y despliegue
+### Implementación y despliegue
 
 - Perfil P04_Minimo; conjuntos P04_Agente/P04_Responsable y permiso administrativo reservado.
 - Tres permisos personalizados, dos grupos directos, cinco reglas de criterios y dos layouts adicionales de cliente/contacto.
@@ -397,7 +317,7 @@ Despliegues satisfactorios: compartición 30 componentes; preparación 49; compl
 
 El primer intento de preparación detectó la dependencia de Opportunity, requisitos de layout y orden de compartición, y se revirtió. Las primeras ejecuciones completas detectaron ContactAccessLevel no escribible con herencia de Account y selección implícita de tipo P04 en fixtures. Se corrigieron antes del despliegue final. Para los fixtures Master se usa un administrador aislado sin los tipos concedidos por P04_DemoAdmin, comprobando RecordTypeId null; no se retiraron permisos del administrador real ni se debilitaron aserciones.
 
-## Resultados comprobados
+### Resultados comprobados
 
 | Contexto | Acción | Esperado | Obtenido |
 | --- | --- | --- | --- |
@@ -424,59 +344,39 @@ Salesforce muestra Change Owner e indica HasTransferAccess al agente propietario
 
 Cobertura informada del despliegue: P04Autorizacion 61/62 ubicaciones y cuatro triggers 10/10, total 71/72 de componentes informados. P04Integridad permaneció sin cambios y no está incluido en esa cifra. Sin nueva ejecución independiente de Test-Seguridad.ps1: el wrapper queda reproducible y las pruebas reales se ejecutaron durante el despliegue.
 
-Los fallos de selectores, aperturas o guardados no persistidos de Lightning no se contaron como éxito. Se comprobó identidad por indicador Login As/enlace del perfil y persistencia después de cada escritura positiva. No se omitieron validaciones. Una interrupción por límite de la revisión automática detuvo el cierre; se reanudó mediante la misma vía autorizada y se completó la limpieza.
+Los fallos de selectores, aperturas o guardados no persistidos de Lightning no se contaron como éxito. Se comprobó identidad por indicador Login As/enlace del perfil y persistencia después de cada escritura positiva. No se omitieron validaciones.
 
-## Cierre de organización
+### Cierre de organización
 
 Auditoría final satisfactoria:
 
 - Administrador activo y P04_DemoAdmin exclusivamente asignado a él.
 - Usuario de pruebas activo, P04_Minimo, sin rol, conjuntos adicionales ni grupos; cero casos propios activos. Dos licencias Salesforce disponibles y dos ocupadas, para reutilizar este usuario secuencialmente.
-- Ocho registros originales conservados: dos clientes, dos contactos, dos productos y dos casos sin evaluar. Clientes marcados P04; serie y asunto revisados de sesión 03 conservados.
+- Ocho registros originales conservados: dos clientes, dos contactos, dos productos y dos casos sin evaluar. Clientes marcados P04; serie y asunto revisados del modelo conservados.
 - Garantía Norte restaurada al 19/10/2027; compra/inicio 19/10/2026. Cero casos temporales activos. Eliminación acotada mediante Remove-SecuritySample, sin purga de papelera.
 - Sesión ordinaria cerrada. Administrators Can Log in as Any User restaurado a false, comprobado tras recargar. El acceso administrativo se conserva.
 
 Evidencias privadas: .local/s04-full-4.json, s04-effective-metadata.json, s04-access-Agente/Responsable/Ninguno.json, s04-agent-persisted.json, s04-manager-persisted.json, s04-transfer-persisted.json, s04-revoked-own-case.json, s04-final-audit.json y s04-policy-final.json. No incluirlas en Git ni publicar identificadores.
 
-## Límites y revisión local
+### Límites y revisión local
 
 No hay autenticación OAuth ordinaria independiente: no se afirma una prueba REST con token ordinario. UI ordinaria y Apex USER_MODE acreditan restricciones; CLI/API administrativos preparan y contrastan. No se probaron concurrencia, colas, nuevas jerarquías, fusiones/undelete ni concesiones futuras. Los rótulos de pestañas previamente abiertas pueden quedar en caché; la revocación impide nuevas consultas, no borra lo ya visto.
 
 No hay motor de evaluación, ciclo completo, asignación automática, informe ni LWC. Detalle en [SECURITY](SECURITY.md) y [TESTING](TESTING.md).
 
-Revisión local final: 95 archivos públicos leídos como UTF-8 estricto, 61 XML válidos, nueve scripts PowerShell sin errores de sintaxis, 22 enlaces locales existentes y 86 referencias de miembros de manifiestos resueltas sin comodines. Cinco exclusiones comprobadas (.local, .sf, .sfdx, .env y node_modules); sin identidades privadas ni patrones de secretos en los archivos revisados. git diff --check correcto. Estado final: 12 archivos modificados, 36 nuevos y cero en staging; HEAD de1bfdb y main conservados. Los avisos LF/CRLF corresponden a la configuración existente de Git; no se modificó configuración global. Estas comprobaciones incluyen archivos nuevos, que git diff por sí solo no enumera.
+Revisión local final: 95 archivos públicos leídos como UTF-8 estricto, 61 XML válidos, nueve scripts PowerShell sin errores de sintaxis, 22 enlaces locales existentes y 86 referencias de miembros de manifiestos resueltas sin comodines. Cinco exclusiones comprobadas (.local, .sf, .sfdx, .env y node_modules); sin identidades privadas ni patrones de secretos en los archivos revisados. git diff --check correcto. Los avisos LF/CRLF corresponden a la configuración existente de Git; no se modificó configuración global. Estas comprobaciones incluyen archivos nuevos, que git diff por sí solo no enumera.
 
-## Entrega y siguiente paso
+### Archivos y procedimiento
 
 Archivos de implementación: clases P04Autorizacion/P04SeguridadTest, fixtures de P04ModeloTest, cuatro triggers, perfil, permisos/grupos/reglas, layouts y configuración de compartición. Tres manifiestos acotados. Procedimientos New-SecurityUser, New-SecuritySample, Set-SecurityScenario, Remove-SecuritySample y Test-Seguridad, con plantillas Apex. Documentación: README, AGENTS, SECURITY, TESTING, DATA_MODEL, PROJECT_BRIEF y este STATUS.
 
-Alex revisa el diff, hace staging, commit y push manualmente. Después se podrá comprobar el nuevo commit sin atribuirle automáticamente las pruebas de un árbol distinto. Próxima fase recomendada: servicio único de evaluación de garantía; no iniciada.
-
-Summary: `feat: implementar seguridad por función en posventa`
-
-Description:
-
-- Añade perfil mínimo, permisos de agente/responsable, compartición acotada y autorización Apex.
-- Protege casos por propietario, compra/garantía, evaluación, borrado y reasignación dentro del equipo.
-- Despliega 56 componentes y supera 40 pruebas Apex, incluidas las 20 de regresión.
-- Comprueba edición y restricciones en UI ordinaria, permisos efectivos y revocación por URL.
-- Conserva la muestra original, elimina temporales, retira concesiones de prueba y restaura la política administrativa.
-- Documenta procedimientos y límites; la evaluación de garantía queda para la siguiente fase.
-
-
-## Histórico — Sesión 03 completada
+## Histórico — Implementación del modelo completada
 
 18 de noviembre de 2026. Primera base funcional implementada, desplegada y comprobada en P04. El usuario ya puede trabajar con los datos ficticios relacionados desde la interfaz estándar. Evaluación de garantía, ciclo completo y seguridad por función siguen pendientes.
 
-## Git y alcance
+Implementación y despliegue acotados a datos ficticios exclusivamente en P04. Antes de escribir se contrastó Organization y, antes de asignar el permiso, la identidad de sesión del administrador esperado. Sin otras organizaciones, destinos predeterminados, usuarios nuevos ni acceso a Gmail.
 
-Ruta y raíz: C:\Users\kaosk\source\repos\posventa-garantias-salesforce. Rama main; origin: https://github.com/AlexC-0/posventa-garantias-salesforce.git.
-
-Inicio: árbol limpio y HEAD/origin/main locales en 4daa849421a9cfe91746a502cab6c2749eed1f83, cierre de sesión 02 publicado por Alex según el encargo. Ese commit se comprobó en el historial local; no se ha hecho una lectura nueva de la punta remota. Los resultados siguientes pertenecen al trabajo posterior, no a ese commit ni a CI. Codex no realiza staging, commits ni push.
-
-El encargo de sesión 03 autoriza implementación, despliegue acotado y datos ficticios exclusivamente en P04. Antes de escribir se contrastó Organization y, antes de asignar el permiso, la identidad de sesión del administrador esperado. Sin otras organizaciones, destinos predeterminados, usuarios nuevos ni acceso a Gmail.
-
-## Implementación y despliegue
+### Implementación y despliegue
 
 Manifiesto explícito manifest/sesion03.xml, 36 componentes y 11 tipos de metadatos:
 
@@ -494,7 +394,7 @@ Despliegue completo final: Succeeded, 36 componentes, cero errores de componente
 
 Los layouts Master y sus asignaciones predeterminadas de Asset y Case permanecen iguales a la referencia previa. No se recuperaron masivamente metadatos ni se usaron destructivos. Los valores CaseStatus se recuperaron y conservaron antes de ampliarlos. Detalles del modelo en [DATA_MODEL](DATA_MODEL.md).
 
-## Comprobaciones reales
+### Comprobaciones reales
 
 | Prueba | Esperado | Obtenido |
 | --- | --- | --- |
@@ -521,7 +421,7 @@ La prueba de salida de ámbito distingue: null no cambia el tipo; Master puede r
 
 Interfaz: app y layouts consultados con Playwright, edición de serie por el control inline de Asset y asunto por el formulario estándar de Case. Se abrieron controles por su evento DOM cuando fallaron las coordenadas. Los primeros intentos de guardar con clic DOM no persistieron, incluso después de Tab, y no se contaron como éxito. La comprobación final confirmó el valor y el indicador de edición, enfocó el botón Save y lo activó con Enter. La lectura posterior por API confirma serie P04-FICT-N1-REV y asunto P04 DEMO - Caso revisado desde interfaz, con evaluación todavía vacía. No se atribuye la causa exacta a Salesforce ni se omite su validación.
 
-## Datos y evidencia
+### Datos y evidencia
 
 Quedan ocho registros de demostración: dos Account, dos Contact, dos Asset y dos Case. AccountNumber P04-S03-DEMO-A/B identifica la muestra; no hay correos reales en los contactos. Se conservaron la muestra y los datos de origen. La última lectura cuenta 2 productos P04 y 2 casos P04 activos, cero cuentas P04 TEST y cero casos temporales P04 API activos. Las pruebas Apex revierten sus fixtures; Test-Api elimina solo su propio caso temporal. No se purga la papelera.
 
@@ -529,7 +429,7 @@ Límites finales observados: almacenamiento de datos máximo 5 MB y restante 5 M
 
 Evidencia local ignorada: s03-deploy-6.json, s03-api-results.json, s03-layout-checks.json, s03-nav-deploy.json y s03-final-remote.json dentro de .local. s03-demo.json contiene identificadores privados y nunca se versiona. El [procedimiento reproducible](TESTING.md) separa despliegue, tests, API y demostración.
 
-## Incidencias corregidas y límites
+### Incidencias corregidas y límites
 
 - Referencias del proceso de soporte corregidas a las etiquetas de CaseStatus; los registros y las fórmulas usan nombres API. Se desplegaron estados/proceso por separado durante el diagnóstico; los intentos completos fallidos se revirtieron.
 - Layout Case corregido para incluir SuppliedEmail y mantener OwnerId editable, no Required. La muestra no envía comunicaciones.
@@ -540,169 +440,12 @@ Evidencia local ignorada: s03-deploy-6.json, s03-api-results.json, s03-layout-ch
 
 Se verifican operaciones secuenciales y lotes, no concurrencia entre transacciones ni fusiones/undelete. La cuenta administrativa puede tener privilegios superiores a los campos configurados como Readonly; no se considera protección de roles. El motor de garantía, transiciones, cierre completo, asignación, informe y LWC no están implementados. La condición de cierre con Pendiente_datos se mantiene como contrato futuro; la evaluación no se precarga.
 
-## Archivos, revisión y siguiente fase
+### Archivos y revisión local
 
 Modificados: AGENTS, README, PROJECT_BRIEF, ENVIRONMENT y STATUS. Nuevos: DATA_MODEL, TESTING, 36 XML de metadatos, seis fuentes Apex/triggers, manifest/sesion03.xml y cinco archivos de scripts. No cambian sfdx-project.json, .gitignore ni .forceignore; API 68.0 y herramientas se conservan.
 
-Al retomar el cierre había tres documentos modificados y los archivos funcionales pendientes; se conservaron. Estado final: main...origin/main, cinco archivos modificados y 50 nuevos, todos sin staging. HEAD continúa en 4daa849; no se ha ejecutado commit ni push.
-
 Revisión local sobre los 59 archivos versionables, incluidos los nuevos: 37 XML válidos (36 metadatos y manifiesto), correspondencia exacta de los 36 componentes en 11 tipos, cuatro scripts PowerShell analizados sin errores, 15 enlaces Markdown locales resueltos, 11 exclusiones privadas y cinco rutas versionables comprobadas. Sin caracteres de sustitución, coincidencias con los patrones de datos privados revisados ni espacios finales; git diff --check satisfactorio. Esto no constituye un escaneo exhaustivo de secretos. No se repitió la suite remota tras cambios exclusivamente documentales; el resultado Apex procede del despliegue real indicado arriba. Evidencia local: .local/s03-local-review.json.
 
-Alex revisa, realiza staging, commit y push; después se contrasta su publicación. Siguiente fase: **seguridad por función**, con pruebas secuenciales para agente, responsable y sin permisos compatibles con una sola plaza Salesforce libre. No se inicia automáticamente.
+## Histórico — Preparación del entorno
 
-Summary: feat: implementar el modelo inicial de posventa y sus validaciones
-
-Description:
-
-- Incorpora campos, relaciones, tipos de registro, estados y presentación administrativa sobre Account, Contact, Asset y Case.
-- Valida coherencia y fechas en servidor y protege cambios de padres y borrados en el ámbito P04.
-- Despliega el conjunto acotado y comprueba 20 pruebas Apex, lotes de 200, API y edición real en la interfaz estándar.
-- Conserva una muestra ficticia de ocho registros y documenta reproducción, límites y seguridad por función como siguiente fase.
-
-## Histórico — Sesión 02 cerrada, publicada en 4daa849
-
-
-Fecha: 18 de noviembre de 2026. **Entorno preparado para comenzar el diseño del modelo.** Herramientas operativas, integración inicial Apex/JDK comprobada, organización dedicada identificada y autenticada, API 68.0 contrastada y capacidades/limitaciones documentadas. No hay un bloqueo conocido para iniciar la sesión 03; su ejecución requiere el encargo correspondiente. Sin implementación funcional, pruebas de producto ni despliegues.
-
-### Git y publicación
-
-Ruta y raíz Git: `C:\Users\kaosk\source\repos\posventa-garantias-salesforce`.
-Rama main; origin: https://github.com/AlexC-0/posventa-garantias-salesforce.git.
-
-La continuación del 18 de noviembre comenzó con árbol limpio; al retomar la comprobación final ya había cuatro documentos modificados sin staging. Se conservaron y completaron. HEAD y referencia local origin/main permanecen en `a9e7a9677232d36908a7d57e790abee0f93ed01d`. El conector GitHub confirmó la existencia de [a9e7a96](https://github.com/AlexC-0/posventa-garantias-salesforce/commit/a9e7a9677232d36908a7d57e790abee0f93ed01d), `chore: preparar herramientas y estructura Salesforce DX`; esa comprobación no establece una nueva lectura de la punta remota actual.
-
-Ese commit publicado por Alex contiene la preparación anterior. Las comprobaciones de este cierre son posteriores y no se atribuyen a ese commit ni a CI. Estado local de entrega: main...origin/main, cuatro documentos modificados, sin archivos nuevos ni staging. Alex realiza exclusivamente staging, commit y push.
-
-### Problemas resueltos y evidencia
-
-- **Apex/JDK:** VS Code 1.146.0 reconoce el proyecto DX y activa Core/Apex 68.10.0. Árbol de procesos y registros de la ventana P04 vinculan ApexLanguageServerLauncher con Temurin 21.0.13+9. El canal Apex Language Server finaliza biblioteca e indexación inicial a las 15:21:47, con cero archivos Apex/objetos personalizados/archivos con error. java/javac terminan con salida 0. No se probó autocompletado interactivo ni compilación remota; Java predeterminado 1.8.0_503 se conserva.
-- **Organización:** el alta directa rechazada por Monocle queda histórica y sin causa concreta conocida. Tras explicar la alternativa, Alex creó P04 Posventa Garantías como Playground nuevo. Su identidad coincide entre Trailhead, Setup, autenticación y consulta API Organization; Developer Edition, IsSandbox=false. El Playground anterior no se reutiliza.
-- **Contraseña y usuario:** las capturas de los primeros correos correspondían al Playground antiguo. Se abrió la pantalla de credenciales del nuevo; Alex completó su contraseña. Después se corrigió el uso del correo receptor como nombre de usuario, proporcionando el usuario real de la organización. No se leyeron contraseñas ni respuestas de seguridad. Gmail queda expresamente fuera de acceso en AGENTS.
-- **CLI:** tras dos intentos caducados, autenticación web oficial completada con salida 0 y organización esperada. Alias p04-posventa-dev comprobado libre antes de conectarlo. Usuario activo con perfil System Administrator y licencia Salesforce. target-org y target-dev-hub siguen sin configurar; todas las lecturas usan destino explícito.
-- **API:** REST devuelve API 68.0, publicada como Winter '27 y Latest Release; HTTP 200. Metadata API describe correctamente los tipos en 68.0. sourceApiVersion conserva 68.0, ahora contrastada. La validación inicial que esperaba una única entrada se corrigió al observar las dos etiquetas para la misma versión.
-
-Herramientas conservadas: Git 2.56.1.windows.1, Node v24.13.0, npm 11.6.2, Salesforce CLI 2.158.7, VS Code 1.146.0, Core/Apex/LWC 68.10.0 y Temurin JDK 21.0.13+9. También está instalada Apex Language Server Extension 0.10.0; su servidor JavaScript no se usa como evidencia del JDK. No hubo reinstalaciones ni cambios de configuración global en este cierre.
-
-### Organización: capacidades y límites
-
-- Account, Contact, Asset y Case descritos por API como estándar; consulta y CRUD disponibles para el administrador. Relaciones principales confirmadas, incluido Case.OwnerId con Group/User. No se crearon ni consultaron registros de negocio.
-- Nueve tipos de metadatos relevantes habilitados: ApexClass, ApexTrigger, Flow, LightningComponentBundle, Queue, Report, ReportType, PermissionSet y CustomObject.
-- UserPermissionAccess confirma ApiEnabled, AuthorApex, ModifyMetadata, ModifyAllData, CustomizeApplication, ViewSetup, ManageInteraction, RunReports, CreateCustomizeReports y LightningExperienceUser. RunFlow y CreateReportInLightning figuran falsos y no se cambian. Se documenta la diferencia entre gestión de Flow, acceso específico de futuros flujos y diseñador Lightning de informes. Permisos observados no equivalen a despliegues ni tests ejecutados.
-- UserLicense: Salesforce 2/1/1, Platform 3/0/3, Integration 1/0/1 e Identity 10/0/10 (totales/usadas/libres), todas activas. Conservar administrador y proponer pruebas secuenciales de agente/responsable/sin permisos con la otra plaza Salesforce. No caben los tres simultáneamente; Platform/Identity no sustituyen automáticamente la licencia para Case. Identidades, activación, propiedad de registros y sesiones se concretarán antes de probar; no se crean usuarios ahora.
-- Límites API observados: 15.000 solicitudes/24 h, 5 MB de datos, 20 MB de archivos y 250.000 ejecuciones Apex asíncronas diarias. Instantánea y otros límites en [ENVIRONMENT](ENVIRONMENT.md). No se prueba carga ni se autorizan comunicaciones reales.
-
-La lectura de tipos y permisos verifica disponibilidad administrativa para el trabajo futuro. Las pruebas funcionales, el acceso de usuarios ordinarios, los flujos concretos, el diseñador de informes y el despliegue reproducible pertenecen a los encargos posteriores. No impiden comenzar el diseño del modelo y no se presentan como ya resueltos.
-
-### Verificación y archivos
-
-Archivos modificados: AGENTS.md, README.md, docs/ENVIRONMENT.md y docs/STATUS.md. AGENTS refleja la prohibición de Gmail y el estado de cierre; los otros documentos registran resultados, límites e históricos. PROJECT_BRIEF, sfdx-project.json, .gitignore, .forceignore y el marcador de fuente se conservan. Sin nuevas dependencias, código funcional ni configuración del editor.
-
-Comprobaciones locales finales: nueve archivos versionados revisados; siete enlaces internos válidos y cero rotos; cero archivos con coincidencias en los patrones acotados de secretos/identificadores privados o caracteres de sustitución. Once de once rutas locales/de autenticación ignoradas y cuatro de cuatro rutas DX versionables. JSON válido, API 68.0 contrastada, paquete force-app existente y un único archivo fuente: el marcador .gitkeep. Cero archivos en staging y git diff --check correcto. Las lecturas remotas anteriores terminaron con estado 0; las solicitudes REST contrastadas respondieron HTTP 200. No se ejecutaron suites, despliegues ni CI.
-
-La evidencia Apex/JDK conserva su alcance de arranque e indexación inicial. Durante el diagnóstico hubo restricciones del sandbox y avisos de las envolturas PowerShell; las lecturas autorizadas y ejecuciones directas posteriores dieron los resultados descritos. No se añadió safe.directory global ni se modificaron credenciales de otras tareas. Autenticaciones y diagnósticos permanecen fuera de Git.
-
-### Intervención de Alex y siguiente paso
-
-No queda ninguna intervención de acceso pendiente. Revisar los cuatro documentos y realizar staging, commit y push manuales desde GitHub Desktop; después contrastar el commit publicado. No se declara publicado este cierre antes de hacerlo.
-
-Sesión 03 propuesta: concretar campos/relaciones sobre Account, Contact, Asset y Case; resolver precedencia de errores de garantía, fecha y zona horaria de referencia, cierre con datos inválidos y reevaluación explícita de abiertos; definir evaluaciones cerradas inmutables y estrategia secuencial de usuarios para permisos. Esta sesión no se ha ejecutado ni se inicia automáticamente.
-
-### Propuesta para GitHub Desktop
-
-Summary: `docs: cerrar la preparación del entorno Salesforce`
-
-Description:
-
-- Registra la comprobación de Apex con JDK 21 en el proyecto y conserva Java 8.
-- Documenta la organización dedicada, la recuperación del acceso y la autenticación web de Salesforce CLI.
-- Contrasta API 68.0, objetos estándar, tipos de metadatos, permisos administrativos, licencias y límites mediante lecturas remotas.
-- Conserva el diagnóstico anterior como histórico y recoge la prohibición de acceder a Gmail.
-- Cierra la sesión 02 y propone el modelo de datos para la siguiente sesión, sin funcionalidades, tests de producto ni despliegues.
-
-### Histórico — entrega del 17 de noviembre, publicada en a9e7a96
-
-El texto siguiente conserva el estado y las comprobaciones anteriores a esa publicación. Su propuesta de commit ya fue utilizada por Alex; sus pendientes locales Apex/JDK quedan actualizados arriba.
-
-Fecha: 17 de noviembre de 2026. **Parcialmente preparado**. Herramientas instaladas y estructura DX mínima creada. El alta de la organización independiente está bloqueada por una respuesta de Salesforce; el entorno no está listo para implementar el modelo.
-
-#### Git y evidencia de publicación
-
-Ruta: `C:\Users\kaosk\source\repos\posventa-garantias-salesforce`.
-Rama main, remoto origin: https://github.com/AlexC-0/posventa-garantias-salesforce.git.
-
-La sesión 02 comenzó con árbol limpio y HEAD/origin/main locales en `d90c2286b9103aedf03a636567403c8369a2572d`, título `docs: preparar alcance y entorno del proyecto de posventa`. La continuación conservó los cuatro cambios documentales aún sin staging.
-
-La publicación de Alex se contrastó mediante el conector GitHub: existen main y [d90c228](https://github.com/AlexC-0/posventa-garantias-salesforce/commit/d90c2286b9103aedf03a636567403c8369a2572d). git ls-remote falló por Schannel SEC_E_NO_CREDENTIALS; no se modificaron credenciales ni remotos. La referencia local origin/main no sustituye una lectura actual de la punta remota.
-
-Los cambios y verificaciones siguientes son posteriores al commit publicado. Codex no realizó staging, commits, push, tags ni publicación.
-
-#### Preparación completada localmente
-
-Alex autorizó expresamente instalar las herramientas y acceder exclusivamente a Salesforce mediante su perfil de Chrome.
-
-- Salesforce CLI 2.158.7 instalada con npm y ejecutada con Node v24.13.0; engines Node >=22 comprobado. El instalador Windows oficial falló al descargar; no se instalaron sustitutos de terceros.
-- Salesforce Extension Pack 68.10.0 y extensiones dependientes instalados; Apex/Core/LWC 68.10.0 comprobados.
-- Temurin JDK 21.0.13+9: ZIP oficial con SHA256 verificado, java y javac operativos. Java predeterminado 1.8.0_503 conservado.
-- JDK configurado solo en .vscode/settings.json, ignorado. No se alteraron PATH ni JAVA_HOME de Java.
-- VS Code 1.146.0 abrió una ventana de este proyecto. Integración del servidor Apex con el JDK en este workspace todavía pendiente de comprobar.
-- Git 2.56.1.windows.1 y npm 11.6.2 conservados.
-- Plantilla DX empty generada mediante sf template generate project. Configuración y directorio fuente vacío incorporados; sin ejemplos, dependencias de proyecto ni configuración scratch.
-- API de plantilla 68.0 **provisional**, sin contraste remoto.
-- sf project list ignored reconoce únicamente el marcador .gitkeep dentro de force-app. JSON válido y directorio de paquete existente.
-- Alias p04-posventa-dev libre en la comprobación; target-org y target-dev-hub sin configurar. Sin autenticación CLI.
-
-Comandos y detalles reproducibles en [ENVIRONMENT](ENVIRONMENT.md).
-
-#### Bloqueo de la organización
-
-La conexión con Chrome funcionó mediante Playwright CLI 0.1.24 y extensión 0.5.0 después de que Alex aceptara la conexión. Se consultó su perfil Trailblazer como contexto de formación; no equivale a una organización de desarrollo.
-
-Alex intentó personalmente el alta oficial. El servicio devolvió HTTP 400 y, en el intento manual observado:
-
-> Monocle API error: Monocle Validation Failed indicating potential fraud
-
-Se conoce el rechazo antifraude, no su causa concreta. Se detuvieron los reintentos y se desconectó Playwright. La herramienta cerró su pestaña de alta al desconectar; se reabrió el formulario normalmente. Alex mostró después el error genérico trial-oops.html tras iniciar sesión, sin Playwright conectado. No hay confirmación de alta completada.
-
-Pendientes: organización/edición, autenticación, API, objetos estándar, capacidades, permisos efectivos, licencias, plazas de usuarios y límites. No hay estrategia de usuarios restringidos validada. No se reutilizó un Playground ni se crearon datos o configuración de negocio.
-
-#### Archivos de la entrega
-
-Modificados: README.md, AGENTS.md, docs/ENVIRONMENT.md y docs/STATUS.md.
-Nuevos: sfdx-project.json, .forceignore y force-app/main/default/.gitkeep.
-
-PROJECT_BRIEF.md y .gitignore se conservan. Descargas, plantilla temporal, diagnósticos de navegador y configuración local del editor están ignorados. Sin código funcional, permisos, Flow, Apex, LWC, CI, tests de producto ni despliegues.
-
-#### Verificación local
-
-- Nueve archivos versionados o candidatos revisados; seis enlaces locales válidos, cero rotos.
-- git diff --check correcto para cambios existentes y revisión no-index correcta para los tres archivos nuevos.
-- Once rutas representativas de autenticación, herramientas, diagnósticos, editor y resultados ignoradas por Git.
-- Cuatro rutas DX versionables no excluidas por error.
-- Cero coincidencias en los patrones de secretos revisados y cero caracteres de sustitución. Revisión acotada al contenido versionable.
-- sfdx-project.json válido, API 68.0 provisional y directorio force-app existente.
-- sf project list ignored --source-dir force-app --json: éxito, un marcador .gitkeep ignorado.
-- PROJECT_BRIEF.md y .gitignore sin cambios. Cero archivos en staging.
-- Estado final: main, cuatro documentos modificados y tres archivos nuevos; HEAD permanece en d90c228. No se ejecutaron pruebas de producto, despliegues ni consultas a una organización Salesforce.
-
-#### Histórico
-
-Sesión 01: se crearon cinco documentos y .gitignore. Codex inicializó Git por petición expresa; Alex publicó después d90c228. El estado anterior «sin commits ni remoto» queda histórico.
-
-Primera parte de sesión 02: se renovó la inspección y se actualizaron cuatro documentos; siete enlaces locales válidos, nueve exclusiones comprobadas, cuatro rutas DX no excluidas, diff --check correcto y ningún archivo en staging. Después Alex autorizó las instalaciones realizadas en esta continuación.
-
-#### Intervención y siguiente paso
-
-Resolver el rechazo del alta mediante los canales oficiales de Salesforce; hay un texto preparado en ENVIRONMENT para envío manual de Alex. No se ha contactado a terceros automáticamente. La creación/activación, contraseña y MFA siguen en navegador.
-
-Una vez exista organización dedicada: comprobar identidad y alias, autenticar, verificar capacidades/licencias solo en lectura y contrastar API 68.0. Comprobar activación Apex/JDK en este workspace antes de declarar el entorno preparado. No avanzar automáticamente a funcionalidades.
-
-#### Propuesta para GitHub Desktop
-
-Summary: `chore: preparar herramientas y estructura Salesforce DX`
-
-Description:
-
-- Incorpora la estructura DX mínima con API 68.0 provisional.
-- Registra la instalación y comprobación de Salesforce CLI, extensiones y JDK 21, conservando Java 8.
-- Actualiza las instrucciones y documenta el rechazo del alta de Developer Edition.
-- Deja pendientes la organización, las licencias, la API remota y la integración Apex/JDK; sin implementación funcional ni despliegues.
+17–18 de noviembre de 2026. Herramientas y estructura DX preparadas; arranque e indexación inicial de Apex con JDK 21 comprobados. Organización dedicada identificada y autenticada, API 68.0 contrastada y capacidades administrativas verificadas. Estas comprobaciones preceden a la implementación funcional y no acreditan por sí solas pruebas de producto ni despliegues. Versiones, comandos, licencias, límites y diagnóstico de acceso en [ENVIRONMENT](ENVIRONMENT.md).

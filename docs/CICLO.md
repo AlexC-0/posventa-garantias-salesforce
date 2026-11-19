@@ -1,8 +1,8 @@
-# Ciclo de atención posventa — sesión 06
+# Ciclo de atención posventa
 
-Sesión 07 añade [CONSULTA](CONSULTA.md), LWC de solo lectura sin nuevos campos ni cambios en las reglas de garantía/ciclo. Lecturas USER_MODE, hasta cinco relacionados visibles y actualización explícita; resultados actuales en STATUS.
+La [consulta LWC](CONSULTA.md) presenta datos de solo lectura sin nuevos campos ni cambios en las reglas de garantía/ciclo. Lecturas USER_MODE, hasta cinco relacionados visibles y actualización explícita; resultados actuales en STATUS.
 
-El recorrido ordinario usa Case, la cola `P04_Entrada`, acciones estándar y la acción **Evaluar garantía**. No incorpora LWC, comunicaciones ni otro cálculo de cobertura. Los resultados ejecutados se registran en [STATUS](STATUS.md); este documento describe el contrato.
+El recorrido ordinario usa Case, la cola `P04_Entrada`, acciones estándar y la acción **Evaluar garantía**. El ciclo no realiza comunicaciones ni duplica el cálculo de cobertura; el LWC complementa la ficha con consulta de datos. Los resultados ejecutados se registran en [STATUS](STATUS.md); este documento describe el contrato.
 
 ## Entrada y asignación
 
@@ -51,6 +51,6 @@ El cierre se ofrece con **Cerrar caso P04**, QuickAction estándar Update `Case.
 6. Contrastar las escrituras con lectura administrativa, distinguiendo ambas identidades. Reasignación entre dos agentes y revocaciones también se prueban con usuarios Apex aislados, sin licencias persistentes adicionales.
 7. Eliminar únicamente los temporales identificados, volver a Ninguno, comprobar ocho originales y restaurar Login Access Policies si se utilizó Login As.
 
-El script administrativo Demo-Garantia de sesión 05 requiere ahora que el usuario reutilizable tenga temporalmente el escenario Agente para ser propietario válido del cierre. Sigue revirtiendo sus dos registros; no constituye demostración ordinaria. La sesión 06 debe acreditar por separado la interfaz real.
+El script administrativo Demo-Garantia requiere ahora que el usuario reutilizable tenga temporalmente el escenario Agente para ser propietario válido del cierre. Sigue revirtiendo sus dos registros; no constituye demostración ordinaria. La evidencia de la interfaz ordinaria se registra por separado en STATUS.
 
 Referencias oficiales: [colas y miembros](https://developer.salesforce.com/docs/platform/api-metadata/references/meta-types/metadata-queue.html), [asignación de casos](https://help.salesforce.com/s/articleView?id=service.cases_assign.htm&language=en_US&type=5) y [acciones Flow](https://developer.salesforce.com/docs/platform/api-metadata/references/meta-types/metadata-quickaction.html). Sin garantía adicional sobre concesiones administrativas ajenas ni concurrencia no probada.
